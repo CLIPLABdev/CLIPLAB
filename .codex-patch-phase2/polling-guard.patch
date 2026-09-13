@@ -1,0 +1,28 @@
+diff --git a/public/assets/js/project-status.js b/public/assets/js/project-status.js
+--- a/public/assets/js/project-status.js
++++ b/public/assets/js/project-status.js
+@@ -19,6 +19,7 @@
+     let errors = 0;
+     let stopped = false;
++    let inFlight = false;
+     let successfulPolls = 0;
+@@ -29,7 +30,8 @@
+     const poll = async () => {
+       timer = null;
+-      if (stopped || document.hidden) return;
++      if (stopped || document.hidden || inFlight) return;
++      inFlight = true;
+       const controller = new AbortController();
+@@ -83,6 +85,7 @@
+         schedule();
+       } finally {
+         window.clearTimeout(timeout);
++        inFlight = false;
+       }
+@@ -92,7 +95,7 @@
+         if (timer !== null) window.clearTimeout(timer);
+         timer = null;
+-      } else if (!stopped && timer === null) {
++      } else if (!stopped && timer === null && !inFlight) {
+         poll();
+       }

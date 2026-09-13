@@ -1,0 +1,1 @@
+ALTER TABLE projects ADD COLUMN auto_render_requested TINYINT UNSIGNED NOT NULL DEFAULT 0;

@@ -1,0 +1,16 @@
+/.env
+/.env.tmp.*
+/.tools/
+/vendor/
+/.phpunit.result.cache
+
+# Development password-reset links are sensitive and must never be committed.
+/storage/logs/
+/.superpowers/
+/node_modules/
+/test-results/
+/playwright-report/
+
+# Arquivos locais de consolidacao e pacotes de entrega.
+/.local-history/
+/dist/

@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "mediapipe:import": "node tools/vendor-mediapipe.mjs import",
+    "mediapipe:verify": "node tools/vendor-mediapipe.mjs verify",
+    "test:mediapipe-real": "playwright test tests/Browser/mediapipe-real.spec.mjs"
+  },
+  "devDependencies": {
+    "@mediapipe/tasks-vision": "1.0.1",
+    "@playwright/test": "1.55.0"
+  }
+}

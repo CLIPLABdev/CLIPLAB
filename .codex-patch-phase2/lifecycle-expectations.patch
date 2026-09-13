@@ -1,0 +1,22 @@
+diff --git a/tests/Integration/MediaProcessingLifecycleTest.php b/tests/Integration/MediaProcessingLifecycleTest.php
+--- a/tests/Integration/MediaProcessingLifecycleTest.php
++++ b/tests/Integration/MediaProcessingLifecycleTest.php
+@@ -134,7 +134,7 @@ final class MediaProcessingLifecycleTest extends TestCase
+         $this->source($projectId, 'upload', 'stored');
+         $this->job($projectId, 'probe_source');
+         $jobId = (int) $this->pdo->query('SELECT id FROM processing_jobs ORDER BY id DESC LIMIT 1')->fetchColumn();
+-        $handler = new ProbeSourceHandler(new ProjectRepository($this->pdo), new ProjectSourceRepository($this->pdo), new LifecycleProcessor(null, new ProcessExecutionException('process_unavailable')), new LeaseProcessingEffectGuard($this->pdo));
++        $handler = new ProbeSourceHandler(new ProjectRepository($this->pdo), new ProjectSourceRepository($this->pdo), new LifecycleProcessor(null, new ProcessExecutionException('process_timeout')), new LeaseProcessingEffectGuard($this->pdo));
+@@ -148,7 +148,7 @@ final class MediaProcessingLifecycleTest extends TestCase
+ 
+         self::assertSame(1, $replay->retried);
+-        self::assertSame(['retry', 'processor_unavailable'], $this->jobState());
++        self::assertSame(['retry', 'process_timeout'], $this->jobState());
+@@ -206,7 +206,8 @@ final class MediaProcessingLifecycleTest extends TestCase
+ 
+         $report = (new QueueWorker($this->jobs, ['probe_source' => $handler], 'worker-lifecycle', 60))->run('media', 1, 10);
+ 
+-        self::assertSame(1, $report->retried);
++        self::assertSame(0, $report->retried);
++        self::assertSame(1, $report->deferred);
+         self::assertSame(['retry', 'processing_persistence_failed'], $this->jobState());

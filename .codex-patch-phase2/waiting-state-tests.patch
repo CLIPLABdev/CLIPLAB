@@ -1,0 +1,19 @@
+diff --git a/tests/Unit/ProbeSourceHandlerTest.php b/tests/Unit/ProbeSourceHandlerTest.php
+--- a/tests/Unit/ProbeSourceHandlerTest.php
++++ b/tests/Unit/ProbeSourceHandlerTest.php
+@@ -58,6 +58,7 @@ final class ProbeSourceHandlerTest extends TestCase
+         self::assertSame(300, $outcome->delaySeconds());
+         self::assertNull($outcome->code());
+         self::assertSame([], $sources->failedIds);
++        self::assertSame([['probing', 70], ['queued', 70]], $projects->states);
+     }
+diff --git a/tests/Integration/MediaProcessingLifecycleTest.php b/tests/Integration/MediaProcessingLifecycleTest.php
+--- a/tests/Integration/MediaProcessingLifecycleTest.php
++++ b/tests/Integration/MediaProcessingLifecycleTest.php
+@@ -88,7 +88,7 @@ final class MediaProcessingLifecycleTest extends TestCase
+         self::assertSame(1, $report->deferred);
+         self::assertSame(0, $report->retried);
+         self::assertSame(0, $report->failed);
+-        self::assertSame('probing', $this->projectState($projectId));
++        self::assertSame('queued', $this->projectState($projectId));
+         self::assertSame('stored', $this->sourceState($sourceId));

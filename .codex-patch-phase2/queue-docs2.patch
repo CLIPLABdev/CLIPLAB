@@ -1,0 +1,15 @@
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -32 +32 @@
+-Em desenvolvimento, repita o comando para consumir a fila. Na Hostinger, agende-o uma vez por minuto. O site continua saudável quando FFprobe ou `proc_open` não estão disponíveis, mas os jobs aguardam um worker compatível.
++Em desenvolvimento, repita o comando para consumir a fila. Na Hostinger, agende-o uma vez por minuto. Quando FFprobe ou `proc_open` não estão disponíveis, o job volta para a fila por cinco minutos sem consumir tentativa, o projeto permanece em “Na fila” com o progresso já alcançado e um worker compatível pode retomá-lo. A saída JSON separa esperas normais (`deferred`) de novas tentativas por falha (`retried`).
+diff --git a/docs/HOSTINGER.md b/docs/HOSTINGER.md
+--- a/docs/HOSTINGER.md
++++ b/docs/HOSTINGER.md
+@@ -126 +126 @@
+-O comando é finito e seguro contra crons sobrepostos por lease no MySQL. A saída JSON informa quantos jobs foram reivindicados, concluídos, reenfileirados ou falharam. Não exponha esse comando como rota web.
++O comando é finito e seguro contra crons sobrepostos por lease no MySQL. A saída JSON informa quantos jobs foram reivindicados, concluídos, tentados novamente, adiados ou falharam nos campos `claimed`, `completed`, `retried`, `deferred` e `failed`; `operational_errors` sinaliza falhas ao persistir transições. Não exponha esse comando como rota web.
+@@ -128 +128 @@
+-Se PHP CLI, `proc_open` ou FFprobe não estiver disponível no plano, a aplicação web continua funcionando e os projetos permanecem na fila. Não habilite execução por shell nem relaxe validações. Configure um VPS com `RemoteMediaProcessor`; mantenha PHP/MySQL como plano de controle. Para mídia fora do servidor web, implemente `S3PrivateStorage` e forneça ao worker somente acesso assinado de curta duração ao objeto privado.
++Se PHP CLI, `proc_open` ou FFprobe não estiver disponível no plano, a aplicação web continua funcionando. A indisponibilidade do processador é uma condição de capacidade, não uma falha do vídeo: o job é adiado por cinco minutos sem consumir `attempts`, volta a `status=retry` sem erro público e o projeto fica em `queued` preservando o progresso de 70%. Não habilite execução por shell nem relaxe validações. Configure um VPS com `RemoteMediaProcessor`; mantenha PHP/MySQL como plano de controle. Quando esse worker compatível reivindicar o job, ele continuará normalmente. Para mídia fora do servidor web, implemente `S3PrivateStorage` e forneça ao worker somente acesso assinado de curta duração ao objeto privado.

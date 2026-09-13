@@ -1,0 +1,7 @@
+.editor-effects-group{min-width:0;margin:18px 0 0;padding:16px;border:1px solid var(--border,#d8dfe7);border-radius:12px}
+.editor-effects-group legend{padding:0 6px;font-weight:650;font-size:.88rem}
+.editor-effects-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.editor-effects-fields>div{min-width:0}.editor-effects-fields label{display:block;margin-bottom:6px;font-size:.82rem}
+.editor-effects-fields input,.editor-effects-fields select{width:100%;min-width:0;box-sizing:border-box}
+.editor-overlay-sample [data-cta-preview]{top:45%;font-size:.85rem}.editor-overlay-sample [data-cta-preview]:empty{display:none}
+@media(max-width:600px){.editor-effects-fields{grid-template-columns:1fr}.editor-effects-group{padding:12px}}

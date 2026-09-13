@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+const source = await readFile(new URL('../../public/assets/js/clip-editor.js', import.meta.url), 'utf8');
+const { readPreviewCues, captionAt, captionStyleForExport } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+assert.equal(captionStyleForExport('none'), 'minimal');
+assert.equal(captionStyleForExport('viral'), 'viral');
+const srt = '1\n00:00:00,000 --> 00:00:01,000\nOlá <b>mundo</b>!\n\n2\n00:00:02,000 --> 00:00:03,000\nOutro texto\n';
+const cues = readPreviewCues(srt);
+assert.equal(captionAt(cues, 0), 'Olá <b>mundo</b>!');
+assert.equal(captionAt(cues, 999), 'Olá <b>mundo</b>!');
+assert.equal(captionAt(cues, 1000), '');
+assert.equal(captionAt(cues, 2100), 'Outro texto');
+assert.equal(captionAt(cues, 3000), '');
+assert.deepEqual(readPreviewCues('1\n00:00:05,000 --> 00:00:02,000\nInvertido'), []);
+assert.deepEqual(readPreviewCues('1\n00:00:00,000 --> 00:00:02,000\nA\n\n2\n00:00:01,000 --> 00:00:03,000\nB'), []);
+assert.deepEqual(readPreviewCues('x'.repeat(262145)), []);
+assert.deepEqual(readPreviewCues('1\n00:99:00,000 --> 00:99:01,000\nInválido'), []);
+console.log('PASS editor subtitle preview timing, bounds, literal text and malformed input');

@@ -1,0 +1,27 @@
+diff --git a/app/Queue/ProbeSourceHandler.php b/app/Queue/ProbeSourceHandler.php
+--- a/app/Queue/ProbeSourceHandler.php
++++ b/app/Queue/ProbeSourceHandler.php
+@@ -63,7 +63,7 @@ final class ProbeSourceHandler implements JobHandler
+         } catch (ProcessExecutionException $exception) {
+             return match ($exception->publicCode()) {
+-                'process_unavailable' => JobOutcome::deferred(self::PROCESSOR_UNAVAILABLE_DEFER_SECONDS),
++                'process_unavailable' => $this->processorUnavailable($job),
+                 'process_timeout' => $this->transientOrTerminal($job, 'process_timeout', 'A inspeção do vídeo excedeu o tempo permitido.'),
+@@ -93,6 +93,20 @@ final class ProbeSourceHandler implements JobHandler
+         return $this->persistReady($job, $source->id(), $metadata);
+     }
+ 
++    private function processorUnavailable(ClaimedJob $job): JobOutcome
++    {
++        try {
++            $this->effects->apply($job, function () use ($job): void {
++                $this->projects->updateProcessingState($job->projectId(), 'queued', 70);
++            });
++        } catch (\Throwable) {
++            // Capability absence is non-terminal even when the waiting state cannot be persisted.
++        }
++
++        return JobOutcome::deferred(self::PROCESSOR_UNAVAILABLE_DEFER_SECONDS);
++    }
++
+     private function transientOrTerminal(ClaimedJob $job, string $code, string $message): JobOutcome

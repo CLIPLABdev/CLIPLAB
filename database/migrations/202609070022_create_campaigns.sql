@@ -1,0 +1,11 @@
+ALTER TABLE communication_campaigns ADD COLUMN title VARCHAR(255) NULL AFTER template_id;
+ALTER TABLE communication_campaigns ADD COLUMN body MEDIUMTEXT NULL AFTER title;
+ALTER TABLE communication_campaigns ADD COLUMN segment ENUM('active','plan','new') NOT NULL DEFAULT 'active' AFTER body;
+ALTER TABLE communication_campaigns ADD COLUMN plan_id BIGINT UNSIGNED NULL AFTER segment;
+ALTER TABLE communication_campaigns ADD COLUMN template_snapshot_ciphertext MEDIUMTEXT NULL AFTER scheduled_at;
+ALTER TABLE communication_campaigns ADD COLUMN recipient_cursor BIGINT UNSIGNED NOT NULL DEFAULT 0 AFTER template_snapshot_ciphertext;
+ALTER TABLE communication_campaigns ADD COLUMN lease_until DATETIME NULL AFTER recipient_cursor;
+ALTER TABLE communication_campaigns ADD COLUMN completed_at DATETIME NULL AFTER lease_until;
+ALTER TABLE communication_campaigns ADD COLUMN cancelled_at DATETIME NULL AFTER completed_at;
+ALTER TABLE communication_campaign_recipients ADD COLUMN queued_at DATETIME NULL AFTER created_at;
+ALTER TABLE communication_campaign_recipients ADD KEY idx_campaign_recipient_queue (campaign_id,status,user_id);

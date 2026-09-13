@@ -1,0 +1,19 @@
+AddType application/wasm .wasm
+AddType application/octet-stream .tflite
+AddType application/javascript .mjs
+
+<Files "reframe-worker.js">
+    Header always set Content-Security-Policy "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'"
+</Files>
+
+Options -Indexes
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+# Self-hosted Smart Reframe assets; no CDN or runtime Node dependency.
+AddType application/wasm .wasm
+AddType application/octet-stream .tflite
+AddType application/javascript .mjs

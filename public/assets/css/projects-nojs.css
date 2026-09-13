@@ -1,0 +1,5 @@
+.source-choice { border:1px solid var(--border); border-radius:12px; display:flex; flex-wrap:wrap; gap:.75rem 1rem; margin:1.5rem 0 .35rem; padding:.8rem 1rem 1rem; }.source-choice legend { color:var(--muted); font-size:.8rem; padding:0 .3rem; }.source-choice label { align-items:center; display:inline-flex; gap:.45rem; margin:0; }.source-choice input[type="radio"] { accent-color:var(--secondary); height:1rem; margin:0; padding:0; width:1rem; }
+
+[data-project-form] .source-tabs[hidden],[data-project-form] .source-choice[hidden],[data-project-form] .source-panel[hidden] { display:none!important; }
+
+[data-reframe-preview-open][hidden],[data-reframe-auto][hidden],[data-reframe-overlay][hidden] { display:none!important; }

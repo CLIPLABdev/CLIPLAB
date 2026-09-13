@@ -1,0 +1,20 @@
+diff --git a/app/Queue/ProbeSourceHandler.php b/app/Queue/ProbeSourceHandler.php
+--- a/app/Queue/ProbeSourceHandler.php
++++ b/app/Queue/ProbeSourceHandler.php
+@@ -66 +66 @@
+-                'process_unavailable' => JobOutcome::deferred(self::PROCESSOR_UNAVAILABLE_DEFER_SECONDS),
++                'process_unavailable' => $this->processorUnavailable($job),
+@@ -96,0 +97,14 @@
++    private function processorUnavailable(ClaimedJob $job): JobOutcome
++    {
++        try {
++            $this->effects->apply($job, function () use ($job): void {
++                $this->projects->updateProcessingState($job->projectId(), 'queued', 70);
++            });
++        } catch (\Throwable) {
++            // Capability absence is non-terminal even when the waiting state cannot be persisted.
++        }
++
++        return JobOutcome::deferred(self::PROCESSOR_UNAVAILABLE_DEFER_SECONDS);
++    }
++

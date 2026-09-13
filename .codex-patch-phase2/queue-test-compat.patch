@@ -1,0 +1,79 @@
+diff --git a/tests/Unit/QueueWorkerBoundedClaimTest.php b/tests/Unit/QueueWorkerBoundedClaimTest.php
+--- a/tests/Unit/QueueWorkerBoundedClaimTest.php
++++ b/tests/Unit/QueueWorkerBoundedClaimTest.php
+@@ -143,7 +143,7 @@ final class CleanupSignalRepository implements JobRepository
+-    public function defer(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool
++    public function defer(ClaimedJob $job, DateTimeImmutable $availableAt): bool
+     {
+         return true;
+     }
+diff --git a/tests/Unit/QueueWorkerHardeningTest.php b/tests/Unit/QueueWorkerHardeningTest.php
+--- a/tests/Unit/QueueWorkerHardeningTest.php
++++ b/tests/Unit/QueueWorkerHardeningTest.php
+@@ -153,7 +153,7 @@ final class TerminalRetryRepository implements JobRepository
+-    public function defer(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool
++    public function defer(ClaimedJob $job, DateTimeImmutable $availableAt): bool
+     {
+         return true;
+     }
+@@ -198,7 +198,7 @@ final class RecordingRetryRepository implements JobRepository
+-    public function defer(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool
++    public function defer(ClaimedJob $job, DateTimeImmutable $availableAt): bool
+     {
+         return true;
+     }
+diff --git a/tests/Unit/QueueWorkerTest.php b/tests/Unit/QueueWorkerTest.php
+--- a/tests/Unit/QueueWorkerTest.php
++++ b/tests/Unit/QueueWorkerTest.php
+@@ -42,7 +42,7 @@ final class QueueWorkerTest extends TestCase
+         $repository = new InMemoryJobRepository([$this->job(1, 'probe_source', 3, 3)]);
+         $worker = new QueueWorker(
+             $repository,
+-            ['probe_source' => new FixedOutcomeHandler(JobOutcome::defer('processing_persistence_failed', 'Não foi possível salvar o processamento agora. Tente novamente.'))],
++            ['probe_source' => new FixedOutcomeHandler(JobOutcome::deferred(15))],
+             'worker-test',
+@@ -50,7 +50,8 @@ final class QueueWorkerTest extends TestCase
+ 
+         $report = $worker->run('media', 1, 50);
+ 
+-        self::assertSame(1, $report->retried);
++        self::assertSame(0, $report->retried);
++        self::assertSame(1, $report->deferred);
+         self::assertSame(0, $report->failed);
+@@ -61,7 +62,7 @@ final class QueueWorkerTest extends TestCase
+         $repository->deferFailure = new \PDOException('database offline');
+         $worker = new QueueWorker(
+             $repository,
+-            ['probe_source' => new FixedOutcomeHandler(JobOutcome::defer('processing_persistence_failed', 'Não foi possível salvar o processamento agora. Tente novamente.'))],
++            ['probe_source' => new FixedOutcomeHandler(JobOutcome::deferred(15))],
+             'worker-test',
+@@ -159,7 +160,7 @@ final class InMemoryJobRepository implements JobRepository
+-    public function defer(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool
++    public function defer(ClaimedJob $job, DateTimeImmutable $availableAt): bool
+     {
+         ++$this->deferCalls;
+diff --git a/tests/Unit/QueueWorkerTransitionFailureTest.php b/tests/Unit/QueueWorkerTransitionFailureTest.php
+--- a/tests/Unit/QueueWorkerTransitionFailureTest.php
++++ b/tests/Unit/QueueWorkerTransitionFailureTest.php
+@@ -43,7 +43,7 @@ final class QueueWorkerTransitionFailureTest extends TestCase
+     public function testDeferredTransitionExceptionLeavesLeaseForRecoveryWithoutTerminalFallback(): void
+     {
+         $repository = new TransitionFailureRepository($this->job(), 'defer');
+-        $outcome = JobOutcome::defer('processing_persistence_failed', 'Não foi possível salvar o processamento agora. Tente novamente.');
++        $outcome = JobOutcome::deferred(15);
+         $report = $this->worker($repository, new TransitionOutcomeHandler($outcome))->run('media', 1, 50);
+@@ -165,7 +165,7 @@ final class TransitionFailureRepository implements JobRepository
+-    public function defer(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool
++    public function defer(ClaimedJob $job, DateTimeImmutable $availableAt): bool
+     {
+         return $this->transition('defer');
+diff --git a/tests/Integration/MediaProcessingLifecycleTest.php b/tests/Integration/MediaProcessingLifecycleTest.php
+--- a/tests/Integration/MediaProcessingLifecycleTest.php
++++ b/tests/Integration/MediaProcessingLifecycleTest.php
+@@ -368,7 +368,7 @@ final class LifecycleTransitionFailureRepository implements JobRepository
+-    public function defer(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool
++    public function defer(ClaimedJob $job, DateTimeImmutable $availableAt): bool
+     {
+-        return $this->transition('defer', fn (): bool => $this->inner->defer($job, $code, $publicMessage, $availableAt));
++        return $this->transition('defer', fn (): bool => $this->inner->defer($job, $availableAt));
+     }

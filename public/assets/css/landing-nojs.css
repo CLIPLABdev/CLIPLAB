@@ -1,0 +1,10 @@
+/* Loaded by noscript only; no inline style exception is needed in CSP. */
+.marketing-page .nav-toggle,.marketing-page .studio-demo-controls { display:none; }
+@media(max-width:767px) {
+    .marketing-page .site-header { position:static; }
+    .marketing-page .nav-shell { flex-wrap:wrap; padding-top:20px; }
+    .marketing-page .nav-links { display:flex; position:static; flex-direction:row; flex-wrap:wrap; width:100%; padding:12px 0 18px; border:0; border-radius:0; background:transparent; box-shadow:none; gap:0 14px; }
+    .marketing-page .nav-links>a:not(.button) { padding:10px 0; }
+    .marketing-page .nav-links .button { margin-top:8px; }
+    .marketing-page .landing-hero { padding-top:40px; }
+}

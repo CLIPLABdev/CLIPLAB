@@ -1,0 +1,71 @@
+/* Preferences only: reuse the shared dark/lime tokens without global overrides. */
+.communications-preferences {
+    display:grid;
+    gap:24px;
+    max-width:1040px;
+    min-width:0;
+    margin-inline:auto;
+}
+.communications-preferences .account-hero,
+.communications-preferences .panel {
+    min-width:0;
+    margin:0;
+    padding:clamp(20px,3vw,32px);
+}
+.communications-preferences .account-hero { gap:20px; }
+.communications-preferences .account-hero p { max-width:58ch; line-height:1.65; }
+.communications-preferences .account-hero a { display:inline-flex; align-items:center; min-height:44px; color:var(--accent); }
+.communications-preferences .panel h2 { margin:0 0 24px; line-height:1.25; }
+.communications-form { display:grid; gap:24px; min-width:0; }
+.communications-choice {
+    min-width:0;
+    margin:0;
+    padding:12px 16px 16px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:var(--card);
+}
+.communications-choice legend {
+    max-width:100%;
+    padding:0 6px;
+    color:var(--text);
+    font-size:.95rem;
+    font-weight:650;
+    line-height:1.5;
+}
+.communications-choice label {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-height:48px;
+    padding:10px 4px;
+    margin:0;
+    border-radius:8px;
+    color:var(--text);
+    font-size:.95rem;
+    line-height:1.5;
+    cursor:pointer;
+}
+.communications-choice label + label { border-top:1px solid var(--border); }
+.communications-choice label:hover { background:var(--card-hover); }
+.communications-choice input[type="checkbox"] { flex:0 0 18px; width:18px; height:18px; margin:0; accent-color:var(--accent); }
+.communications-choice p,
+.communications-required p,
+.communications-verification > p { margin:12px 0 0; color:var(--muted); font-size:.9rem; line-height:1.7; }
+.communications-required { padding:18px 20px; border-left:3px solid var(--accent); border-radius:0 12px 12px 0; background:var(--card); }
+.communications-required p:first-child { margin-top:0; color:var(--text); }
+.communications-preferences .communications-feedback { margin:0; padding:16px 20px; border:1px solid var(--accent); border-radius:14px; background:var(--surface); color:var(--accent); line-height:1.5; }
+.communications-verification > p { margin:0 0 24px; max-width:64ch; }
+.communications-form > .button { justify-self:start; }
+.communications-preferences :is(button,input,a):focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
+@media(max-width:600px) {
+    .communications-preferences { gap:20px; }
+    .communications-preferences .account-hero { flex-direction:column; align-items:flex-start; }
+    .communications-choice { padding-inline:12px; }
+    .communications-preferences .button { width:100%; min-height:48px; white-space:normal; }
+    .communications-required { padding:16px; }
+}
+@media(prefers-reduced-motion:reduce) {
+    .communications-preferences *, .communications-preferences *::before, .communications-preferences *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+    .communications-preferences .button:hover { transform:none; }
+}

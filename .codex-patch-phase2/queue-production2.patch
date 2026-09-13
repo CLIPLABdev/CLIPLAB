@@ -1,0 +1,223 @@
+diff --git a/app/Queue/JobOutcome.php b/app/Queue/JobOutcome.php
+--- a/app/Queue/JobOutcome.php
++++ b/app/Queue/JobOutcome.php
+@@ -11,20 +11,38 @@ final class JobOutcome
+-    private function __construct(private string $status, private ?string $code = null, private ?string $publicMessage = null)
++    private function __construct(
++        private string $status,
++        private ?string $code = null,
++        private ?string $publicMessage = null,
++        private ?int $delaySeconds = null
++    )
+     {
+         if (!in_array($status, ['completed', 'retry', 'deferred', 'failed'], true)) {
+             throw new InvalidArgumentException('Job outcome status is invalid.');
+         }
+-        if ($status === 'completed' && ($code !== null || $publicMessage !== null)) {
+-            throw new InvalidArgumentException('Completed jobs cannot have an error.');
++        if ($status === 'completed' && ($code !== null || $publicMessage !== null || $delaySeconds !== null)) {
++            throw new InvalidArgumentException('Completed jobs cannot have an error or delay.');
+         }
+-        if ($status !== 'completed' && (trim((string) $code) === '' || trim((string) $publicMessage) === '' || strlen((string) $publicMessage) > 255)) {
+-            throw new InvalidArgumentException('Failed, retry, and deferred outcomes require a bounded public error.');
++        if ($status === 'deferred') {
++            if ($code !== null || $publicMessage !== null || $delaySeconds === null || $delaySeconds < 5 || $delaySeconds > 300) {
++                throw new InvalidArgumentException('Deferred jobs require only a delay between 5 and 300 seconds.');
++            }
++
++            return;
++        }
++        if ($status !== 'completed' && (trim((string) $code) === '' || trim((string) $publicMessage) === '' || strlen((string) $publicMessage) > 255 || $delaySeconds !== null)) {
++            throw new InvalidArgumentException('Failed and retry outcomes require a bounded public error and no delay.');
+         }
+     }
+ 
+     public static function completed(): self { return new self('completed'); }
+     public static function retry(string $code, string $publicMessage): self { return new self('retry', $code, $publicMessage); }
+-    public static function defer(string $code, string $publicMessage): self { return new self('deferred', $code, $publicMessage); }
++    public static function deferred(int $delaySeconds): self { return new self('deferred', null, null, $delaySeconds); }
+     public static function failed(string $code, string $publicMessage): self { return new self('failed', $code, $publicMessage); }
+     public function status(): string { return $this->status; }
+     public function code(): ?string { return $this->code; }
+     public function publicMessage(): ?string { return $this->publicMessage; }
++    public function delaySeconds(): ?int { return $this->delaySeconds; }
+ }
+diff --git a/app/Queue/JobRepository.php b/app/Queue/JobRepository.php
+--- a/app/Queue/JobRepository.php
++++ b/app/Queue/JobRepository.php
+@@ -12,6 +12,6 @@ interface JobRepository
+     public function failOneExpiredExhausted(string $queue): bool;
+     public function complete(ClaimedJob $job): bool;
+     public function retry(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool;
+-    public function defer(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool;
++    public function defer(ClaimedJob $job, DateTimeImmutable $availableAt): bool;
+     public function fail(ClaimedJob $job, string $code, string $publicMessage): bool;
+ }
+diff --git a/app/Queue/WorkerReport.php b/app/Queue/WorkerReport.php
+--- a/app/Queue/WorkerReport.php
++++ b/app/Queue/WorkerReport.php
+@@ -8,7 +8,8 @@ final class WorkerReport
+ {
+     public int $claimed = 0;
+     public int $completed = 0;
+     public int $retried = 0;
++    public int $deferred = 0;
+     public int $failed = 0;
+     public int $operationalErrors = 0;
+ }
+diff --git a/app/Repositories/ProcessingJobRepository.php b/app/Repositories/ProcessingJobRepository.php
+--- a/app/Repositories/ProcessingJobRepository.php
++++ b/app/Repositories/ProcessingJobRepository.php
+@@ -230,15 +230,14 @@ final class ProcessingJobRepository implements JobRepository
+-    public function defer(ClaimedJob $job, string $code, string $publicMessage, DateTimeImmutable $availableAt): bool
++    public function defer(ClaimedJob $job, DateTimeImmutable $availableAt): bool
+     {
+-        $this->assertPublicError($code, $publicMessage);
+         $statement = $this->pdo->prepare(
+-            "UPDATE processing_jobs SET status = 'retry', available_at = :available_at,\n"
+-            . "last_error_code = :code, last_error_message = :message, worker_id = NULL,\n"
++            "UPDATE processing_jobs SET status = 'retry', attempts = GREATEST(0, attempts - 1), available_at = :available_at,\n"
++            . "last_error_code = NULL, last_error_message = NULL, worker_id = NULL,\n"
+             . "lease_token_hash = NULL, leased_until = NULL\n"
+             . "WHERE id = :id AND status = 'running' AND worker_id = :worker_id\n"
+             . "  AND lease_token_hash = :lease_token_hash AND leased_until >= UTC_TIMESTAMP()"
+         );
+-        $parameters = $this->transitionParameters($job, $code, $publicMessage);
++        $parameters = $this->leaseParameters($job);
+         $parameters['available_at'] = $availableAt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+         $statement->execute($parameters);
+ 
+diff --git a/app/Services/QueueWorker.php b/app/Services/QueueWorker.php
+--- a/app/Services/QueueWorker.php
++++ b/app/Services/QueueWorker.php
+@@ -120,20 +120,23 @@ final class QueueWorker
+-        $code = (string) $outcome->code();
+-        $message = (string) $outcome->publicMessage();
+         if ($outcome->status() === 'retry') {
++            $code = (string) $outcome->code();
++            $message = (string) $outcome->publicMessage();
+             $this->persistRetry($job, $code, $message, $report);
+ 
+             return;
+         }
+         if ($outcome->status() === 'deferred') {
+             try {
+-                if ($this->jobs->defer($job, $code, $message, $this->retryAt($job))) {
+-                    ++$report->retried;
++                $delaySeconds = $outcome->delaySeconds();
++                if (is_int($delaySeconds) && $this->jobs->defer($job, $this->deferredAt($delaySeconds))) {
++                    ++$report->deferred;
+                 }
+             } catch (Throwable) {
+                 ++$report->operationalErrors;
+             }
+ 
+             return;
+         }
+ 
++        $code = (string) $outcome->code();
++        $message = (string) $outcome->publicMessage();
+         $this->persistFailure($job, $code, $message, $report);
+     }
+@@ -183,8 +186,13 @@ final class QueueWorker
+     private function retryAt(ClaimedJob $job): DateTimeImmutable
+     {
+         $seconds = min(900, 15 * (2 ** max(0, $job->attempts() - 1)));
+ 
+         return (new DateTimeImmutable('now', new DateTimeZone('UTC')))->modify('+' . $seconds . ' seconds');
+     }
++
++    private function deferredAt(int $delaySeconds): DateTimeImmutable
++    {
++        return (new DateTimeImmutable('now', new DateTimeZone('UTC')))->modify('+' . $delaySeconds . ' seconds');
++    }
+ 
+     private function transientMessage(string $code): ?string
+diff --git a/app/Queue/ProbeSourceHandler.php b/app/Queue/ProbeSourceHandler.php
+--- a/app/Queue/ProbeSourceHandler.php
++++ b/app/Queue/ProbeSourceHandler.php
+@@ -17,7 +17,9 @@ final class ProbeSourceHandler implements JobHandler
+     private const INVALID_MEDIA_CODE = 'invalid_media';
+     private const INVALID_MEDIA_MESSAGE = 'O vídeo enviado não pôde ser processado.';
+     private const WORKER_ERROR_MESSAGE = 'O processamento falhou. Tente novamente.';
++    private const PERSISTENCE_DEFER_SECONDS = 15;
++    private const PROCESSOR_UNAVAILABLE_DEFER_SECONDS = 300;
+ 
+     public function __construct(
+@@ -47,7 +49,7 @@ final class ProbeSourceHandler implements JobHandler
+             if (!$this->effects->apply($job, function () use ($job): void {
+                 $this->projects->updateProcessingState($job->projectId(), 'probing', 70);
+             })) {
+-                return JobOutcome::defer(self::PERSISTENCE_CODE, self::PERSISTENCE_MESSAGE);
++                return JobOutcome::deferred(self::PERSISTENCE_DEFER_SECONDS);
+             }
+@@ -61,7 +63,7 @@ final class ProbeSourceHandler implements JobHandler
+         } catch (ProcessExecutionException $exception) {
+             return match ($exception->publicCode()) {
+-                'process_unavailable' => $this->transientOrTerminal($job, 'processor_unavailable', 'Processador temporariamente indisponível.'),
++                'process_unavailable' => JobOutcome::deferred(self::PROCESSOR_UNAVAILABLE_DEFER_SECONDS),
+                 'process_timeout' => $this->transientOrTerminal($job, 'process_timeout', 'A inspeção do vídeo excedeu o tempo permitido.'),
+@@ -81,7 +83,7 @@ final class ProbeSourceHandler implements JobHandler
+                 $this->projects->updateProcessingState($job->projectId(), 'ready', 100);
+             })) {
+-                return JobOutcome::defer(self::PERSISTENCE_CODE, self::PERSISTENCE_MESSAGE);
++                return JobOutcome::deferred(self::PERSISTENCE_DEFER_SECONDS);
+             }
+@@ -117,7 +119,7 @@ final class ProbeSourceHandler implements JobHandler
+                 $this->projects->updateProcessingState($job->projectId(), 'failed', 100, $code, $message);
+             })) {
+-                return JobOutcome::defer(self::PERSISTENCE_CODE, self::PERSISTENCE_MESSAGE);
++                return JobOutcome::deferred(self::PERSISTENCE_DEFER_SECONDS);
+             }
+@@ -126,7 +128,7 @@ final class ProbeSourceHandler implements JobHandler
+ 
+             return JobOutcome::defer(self::PERSISTENCE_CODE, self::PERSISTENCE_MESSAGE);
++            return JobOutcome::deferred(self::PERSISTENCE_DEFER_SECONDS);
+         }
+     }
+diff --git a/app/Queue/FetchAndProbeHandler.php b/app/Queue/FetchAndProbeHandler.php
+--- a/app/Queue/FetchAndProbeHandler.php
++++ b/app/Queue/FetchAndProbeHandler.php
+@@ -17,7 +17,8 @@ final class FetchAndProbeHandler implements JobHandler
+     private const INVALID_MEDIA_CODE = 'invalid_media';
+     private const INVALID_MEDIA_MESSAGE = 'O vídeo enviado não pôde ser processado.';
+     private const WORKER_ERROR_MESSAGE = 'O processamento falhou. Tente novamente.';
++    private const PERSISTENCE_DEFER_SECONDS = 15;
+ 
+     public function __construct(
+@@ -64,7 +65,7 @@ final class FetchAndProbeHandler implements JobHandler
+             if (!$this->effects->apply($job, function () use ($job): void {
+                 $this->projects->updateProcessingState($job->projectId(), 'fetching', 20);
+             })) {
+-                return JobOutcome::defer(self::PERSISTENCE_CODE, self::PERSISTENCE_MESSAGE);
++                return JobOutcome::deferred(self::PERSISTENCE_DEFER_SECONDS);
+             }
+@@ -93,7 +94,7 @@ final class FetchAndProbeHandler implements JobHandler
+             })) {
+                 $this->deleteNewObject($object);
+ 
+-                return JobOutcome::defer(self::PERSISTENCE_CODE, self::PERSISTENCE_MESSAGE);
++                return JobOutcome::deferred(self::PERSISTENCE_DEFER_SECONDS);
+             }
+@@ -146,7 +147,7 @@ final class FetchAndProbeHandler implements JobHandler
+                 $this->projects->updateProcessingState($job->projectId(), 'failed', 100, $code, $message);
+             })) {
+-                return JobOutcome::defer(self::PERSISTENCE_CODE, self::PERSISTENCE_MESSAGE);
++                return JobOutcome::deferred(self::PERSISTENCE_DEFER_SECONDS);
+             }
+@@ -155,7 +156,7 @@ final class FetchAndProbeHandler implements JobHandler
+ 
+-            return JobOutcome::defer(self::PERSISTENCE_CODE, self::PERSISTENCE_MESSAGE);
++            return JobOutcome::deferred(self::PERSISTENCE_DEFER_SECONDS);
+         }
+     }
+diff --git a/bin/process-jobs.php b/bin/process-jobs.php
+--- a/bin/process-jobs.php
++++ b/bin/process-jobs.php
+@@ -111,7 +111,8 @@ try {
+         'claimed' => $report->claimed,
+         'completed' => $report->completed,
+         'retried' => $report->retried,
++        'deferred' => $report->deferred,
+         'failed' => $report->failed,
+         'operational_errors' => $report->operationalErrors,

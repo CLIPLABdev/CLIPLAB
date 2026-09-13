@@ -1,0 +1,36 @@
+CREATE TABLE IF NOT EXISTS user_editor_templates (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    name VARCHAR(80) NOT NULL,
+    category VARCHAR(16) NOT NULL,
+    options_json JSON NOT NULL,
+    aspect_ratio VARCHAR(5) NOT NULL DEFAULT '9:16',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_editor_templates_owner (user_id, updated_at),
+    CONSTRAINT fk_editor_templates_owner FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS user_brand_kits (
+    user_id BIGINT UNSIGNED PRIMARY KEY,
+    options_json JSON NOT NULL,
+    aspect_ratio VARCHAR(5) NOT NULL DEFAULT '9:16',
+    favorites_json JSON NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_brand_kits_owner FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS user_brand_logos (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    object_key VARCHAR(255) NOT NULL,
+    size_bytes BIGINT UNSIGNED NOT NULL,
+    sha256 CHAR(64) NOT NULL,
+    width SMALLINT UNSIGNED NOT NULL,
+    height SMALLINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_brand_logo_key (object_key),
+    INDEX idx_brand_logos_owner (user_id),
+    CONSTRAINT fk_brand_logos_owner FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

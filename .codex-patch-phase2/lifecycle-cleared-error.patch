@@ -1,0 +1,6 @@
+diff --git a/tests/Integration/MediaProcessingLifecycleTest.php b/tests/Integration/MediaProcessingLifecycleTest.php
+--- a/tests/Integration/MediaProcessingLifecycleTest.php
++++ b/tests/Integration/MediaProcessingLifecycleTest.php
+@@ -211 +211 @@
+-        self::assertSame(['retry', 'processing_persistence_failed'], $this->jobState());
++        self::assertSame(['retry', null], $this->jobState());

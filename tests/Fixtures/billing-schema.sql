@@ -1,0 +1,15 @@
+CREATE TABLE users(id INTEGER PRIMARY KEY,plan_id INTEGER,email TEXT);
+CREATE TABLE plans(id INTEGER PRIMARY KEY,name TEXT,price_cents INTEGER,is_active INTEGER);
+CREATE TABLE billing_gateway_settings(id INTEGER PRIMARY KEY,provider TEXT,environment TEXT,is_active INTEGER DEFAULT 0,public_key TEXT,secret_ciphertext TEXT,webhook_secret_ciphertext TEXT,configuration_status TEXT,updated_by INTEGER,UNIQUE(provider,environment));
+CREATE TABLE billing_checkout_attempts(id TEXT PRIMARY KEY,user_id INTEGER,plan_id INTEGER,provider TEXT,environment TEXT,request_key TEXT,quote_json TEXT,status TEXT,provider_checkout_id TEXT,provider_plan_id TEXT,checkout_url TEXT,lease_until INTEGER DEFAULT 0,created_epoch INTEGER,failure_code TEXT,UNIQUE(user_id,request_key),UNIQUE(provider,environment,provider_checkout_id));
+CREATE TABLE billing_webhook_events(id INTEGER PRIMARY KEY,provider TEXT,environment TEXT,provider_event_id TEXT,payload_sha256 TEXT,status TEXT,received_at TEXT,processed_at TEXT,failure_code TEXT,UNIQUE(provider,environment,provider_event_id));
+CREATE TABLE billing_subscriptions(id INTEGER PRIMARY KEY,user_id INTEGER,plan_id INTEGER,provider TEXT,environment TEXT,provider_subscription_id TEXT,status TEXT,currency TEXT,amount_cents INTEGER,interval_unit TEXT DEFAULT 'month',interval_count INTEGER DEFAULT 1,plan_snapshot TEXT,current_period_starts_at TEXT,current_period_ends_at TEXT,cancel_at_period_end INTEGER DEFAULT 0,provider_customer_id TEXT,checkout_attempt_id TEXT,last_confirmed_epoch INTEGER DEFAULT 0,UNIQUE(provider,environment,provider_subscription_id));
+CREATE TABLE billing_payments(id INTEGER PRIMARY KEY,user_id INTEGER,subscription_id INTEGER,plan_id INTEGER,provider TEXT,environment TEXT,provider_payment_id TEXT,provider_invoice_id TEXT,status TEXT,currency TEXT,gross_amount_cents INTEGER,discount_cents INTEGER DEFAULT 0,paid_amount_cents INTEGER DEFAULT 0,paid_at TEXT,failure_code TEXT,UNIQUE(provider,environment,provider_payment_id));
+CREATE TABLE coupons(id INTEGER PRIMARY KEY,code TEXT UNIQUE,discount_type TEXT,discount_value INTEGER,currency TEXT,starts_at TEXT,ends_at TEXT,max_redemptions INTEGER,per_user_limit INTEGER DEFAULT 1,is_active INTEGER DEFAULT 1);
+CREATE TABLE coupon_plans(coupon_id INTEGER,plan_id INTEGER,PRIMARY KEY(coupon_id,plan_id));
+CREATE TABLE coupon_redemptions(id INTEGER PRIMARY KEY,coupon_id INTEGER,user_id INTEGER,checkout_attempt_id TEXT UNIQUE,coupon_code TEXT,price_snapshot TEXT,payment_id INTEGER UNIQUE,discount_cents INTEGER,status TEXT,applied_at TEXT,released_at TEXT);
+CREATE TABLE billing_entitlements(user_id INTEGER PRIMARY KEY,subscription_id INTEGER,plan_id INTEGER,valid_until TEXT);
+ALTER TABLE billing_subscriptions ADD COLUMN canceled_at TEXT;
+ALTER TABLE billing_payments ADD COLUMN period_ends_at TEXT;
+ALTER TABLE billing_payments ADD COLUMN refunded_amount_cents INTEGER DEFAULT 0;
+CREATE TABLE billing_refunds(id INTEGER PRIMARY KEY,provider TEXT,environment TEXT,provider_charge_id TEXT,payment_id INTEGER,amount_cents INTEGER,confirmed_at TEXT,UNIQUE(provider,environment,provider_charge_id));

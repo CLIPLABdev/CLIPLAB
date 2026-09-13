@@ -1,0 +1,24 @@
+# Self-hosted Smart Reframe assets; no CDN or runtime Node dependency.
+AddType application/wasm .wasm
+AddType application/octet-stream .tflite
+AddType application/javascript .mjs
+
+<Files "reframe-worker.js">
+    Header always set Content-Security-Policy "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'"
+</Files>
+
+Options -Indexes
+
+RewriteEngine On
+
+# Protect private application code and data when the hosting account exposes the project root.
+RewriteRule ^(?:app|bootstrap|config|database|storage|tests|vendor)(?:/|$) - [F,L,NC]
+RewriteRule ^(?:\.env(?:\..*)?|composer\.(?:json|lock)|phpunit\.xml(?:\.dist)?|\.git(?:/|$)) - [F,L,NC]
+
+# Root document-root fallback: serve only files from public/ and send routes to its front controller.
+RewriteRule ^public/ - [L,NC]
+RewriteRule ^assets/(.*)$ public/assets/$1 [L,NC]
+RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
+RewriteCond %{DOCUMENT_ROOT}/public/$1 -d
+RewriteRule ^(.+)$ public/$1 [L]
+RewriteRule ^ public/index.php [QSA,L]

@@ -1,0 +1,137 @@
+diff --git a/tests/Unit/ProbeSourceHandlerTest.php b/tests/Unit/ProbeSourceHandlerTest.php
+--- a/tests/Unit/ProbeSourceHandlerTest.php
++++ b/tests/Unit/ProbeSourceHandlerTest.php
+@@ -44,7 +44,7 @@ final class ProbeSourceHandlerTest extends TestCase
+         self::assertSame(['failed', 100], $projects->states[1]);
+     }
+ 
+-    public function testReturnsRetryWhenTheProcessorIsUnavailable(): void
++    public function testDefersWithoutFailingWhenTheProcessorCapabilityIsUnavailable(): void
+     {
+         $projects = new HandlerProjectRepository();
+         $sources = new HandlerSourceRepository(new ProjectSource(10, 4, 'local', 'imports/video.mp4', 'video/mp4'));
+@@ -52,11 +52,25 @@ final class ProbeSourceHandlerTest extends TestCase
+ 
+         $outcome = $handler->handle($this->job());
+ 
+-        self::assertSame('retry', $outcome->status());
+-        self::assertSame('processor_unavailable', $outcome->code());
++        self::assertSame('deferred', $outcome->status());
++        self::assertSame(300, $outcome->delaySeconds());
++        self::assertNull($outcome->code());
+         self::assertSame([], $sources->failedIds);
+     }
+ 
++    public function testProcessTimeoutStillConsumesANormalRetryAttempt(): void
++    {
++        $projects = new HandlerProjectRepository();
++        $sources = new HandlerSourceRepository(new ProjectSource(10, 4, 'local', 'imports/video.mp4', 'video/mp4'));
++        $handler = new ProbeSourceHandler($projects, $sources, new HandlerProcessor(null, new ProcessExecutionException('process_timeout')), new HandlerProcessingEffectGuard(new HandlerPdo()));
++
++        $outcome = $handler->handle($this->job());
++
++        self::assertSame('retry', $outcome->status());
++        self::assertSame('process_timeout', $outcome->code());
++        self::assertSame([], $sources->failedIds);
++    }
++
+     public function testRollsBackMetadataPersistenceAndRetriesTheJob(): void
+     {
+         $projects = new HandlerProjectRepository();
+@@ -136,7 +150,8 @@ final class ProbeSourceHandlerTest extends TestCase
+         $outcome = $handler->handle($this->job(3, 3));
+ 
+         self::assertSame('deferred', $outcome->status());
+-        self::assertSame('processing_persistence_failed', $outcome->code());
++        self::assertSame(15, $outcome->delaySeconds());
++        self::assertNull($outcome->code());
+     }
+ 
+     private function job(int $attempts = 1, int $maxAttempts = 3): ClaimedJob
+diff --git a/tests/Integration/ProcessingJobRepositoryTest.php b/tests/Integration/ProcessingJobRepositoryTest.php
+--- a/tests/Integration/ProcessingJobRepositoryTest.php
++++ b/tests/Integration/ProcessingJobRepositoryTest.php
+@@ -95,17 +95,19 @@ final class ProcessingJobRepositoryTest extends TestCase
+ 
+         self::assertTrue($this->repository->defer(
+             $job,
+-            'processing_persistence_failed',
+-            'Não foi possível salvar o processamento agora. Tente novamente.',
+             new DateTimeImmutable('now', new DateTimeZone('UTC'))
+         ));
+-        self::assertSame('retry', $this->jobRow($jobId)['status']);
++        $deferred = $this->jobRow($jobId);
++        self::assertSame('retry', $deferred['status']);
++        self::assertSame(0, (int) $deferred['attempts']);
++        self::assertNull($deferred['last_error_code']);
++        self::assertNull($deferred['last_error_message']);
+ 
+         $reclaimed = $this->repository->claimNext('media', 'worker-b', 120);
+         self::assertNotNull($reclaimed);
+         self::assertSame($jobId, $reclaimed->id());
+-        self::assertSame(2, $reclaimed->attempts());
++        self::assertSame(1, $reclaimed->attempts());
+     }
+ 
+     public function testTransitionRejectsCodesOutsideThePublicAllowlist(): void
+@@ -140,7 +142,7 @@ final class ProcessingJobRepositoryTest extends TestCase
+     /** @return array<string, mixed> */
+     private function jobRow(int $jobId): array
+     {
+-        $statement = $this->pdo->prepare('SELECT status, last_error_code, last_error_message FROM processing_jobs WHERE id = ?');
++        $statement = $this->pdo->prepare('SELECT status, attempts, last_error_code, last_error_message FROM processing_jobs WHERE id = ?');
+         $statement->execute([$jobId]);
+ 
+         return $statement->fetch(PDO::FETCH_ASSOC) ?: [];
+diff --git a/tests/Integration/MediaProcessingLifecycleTest.php b/tests/Integration/MediaProcessingLifecycleTest.php
+--- a/tests/Integration/MediaProcessingLifecycleTest.php
++++ b/tests/Integration/MediaProcessingLifecycleTest.php
+@@ -72,7 +72,7 @@ final class MediaProcessingLifecycleTest extends TestCase
+         self::assertSame(['retry', 'processing_persistence_failed'], $this->jobState());
+     }
+ 
+-    public function testFinalTransientAttemptTerminalizesSourceAndProjectBeforeWorkerFailsJob(): void
++    public function testUnavailableProcessorNeverTerminalizesSourceOrProjectOrConsumesAttempt(): void
+     {
+         $projectId = $this->project('queued');
+         $sourceId = $this->source($projectId, 'upload', 'stored');
+@@ -82,10 +82,12 @@ final class MediaProcessingLifecycleTest extends TestCase
+ 
+         $report = (new QueueWorker($this->jobs, ['probe_source' => $handler], 'worker-lifecycle', 60))->run('media', 1, 10);
+ 
+-        self::assertSame(1, $report->failed);
+-        self::assertSame('failed', $this->projectState($projectId));
+-        self::assertSame('failed', $this->sourceState($sourceId));
+-        self::assertSame(['failed', 'processor_unavailable'], $this->jobState());
++        self::assertSame(1, $report->deferred);
++        self::assertSame(0, $report->retried);
++        self::assertSame(0, $report->failed);
++        self::assertSame('probing', $this->projectState($projectId));
++        self::assertSame('stored', $this->sourceState($sourceId));
++        self::assertSame(['retry', null], $this->jobState());
+     }
+ 
+     public function testReadyProbeReplayAcknowledgesWithoutReopeningTheProject(): void
+diff --git a/tests/Feature/ProcessJobsCommandTest.php b/tests/Feature/ProcessJobsCommandTest.php
+--- a/tests/Feature/ProcessJobsCommandTest.php
++++ b/tests/Feature/ProcessJobsCommandTest.php
+@@ -58,7 +58,7 @@ final class ProcessJobsCommandTest extends TestCase
+         self::assertSame('', $result['stderr']);
+         $summary = json_decode($result['stdout'], true, 512, JSON_THROW_ON_ERROR);
+-        self::assertSame(['claimed', 'completed', 'retried', 'failed', 'operational_errors'], array_keys($summary));
++        self::assertSame(['claimed', 'completed', 'retried', 'deferred', 'failed', 'operational_errors'], array_keys($summary));
+         self::assertSame(0, $summary['operational_errors']);
+         self::assertArrayNotHasKey('payload', $summary);
+         self::assertArrayNotHasKey('lease_token', $summary);
+diff --git a/tests/Feature/ProcessJobsCompositionTest.php b/tests/Feature/ProcessJobsCompositionTest.php
+--- a/tests/Feature/ProcessJobsCompositionTest.php
++++ b/tests/Feature/ProcessJobsCompositionTest.php
+@@ -66,7 +66,8 @@ final class ProcessJobsCompositionTest extends TestCase
+         self::assertSame('', $stderr);
+         self::assertSame(1, $summary['claimed']);
+-        self::assertSame(1, $summary['retried']);
++        self::assertSame(0, $summary['retried']);
++        self::assertSame(1, $summary['deferred']);
+         self::assertSame(0, $summary['failed']);
+     }
+ 

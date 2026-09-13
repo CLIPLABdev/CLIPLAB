@@ -1,0 +1,13 @@
+diff --git a/tests/Integration/MediaProcessingLifecycleTest.php b/tests/Integration/MediaProcessingLifecycleTest.php
+--- a/tests/Integration/MediaProcessingLifecycleTest.php
++++ b/tests/Integration/MediaProcessingLifecycleTest.php
+@@ -139 +139 @@
+-        $handler = new ProbeSourceHandler(new ProjectRepository($this->pdo), new ProjectSourceRepository($this->pdo), new LifecycleProcessor(null, new ProcessExecutionException('process_unavailable')), new LeaseProcessingEffectGuard($this->pdo));
++        $handler = new ProbeSourceHandler(new ProjectRepository($this->pdo), new ProjectSourceRepository($this->pdo), new LifecycleProcessor(null, new ProcessExecutionException('process_timeout')), new LeaseProcessingEffectGuard($this->pdo));
+@@ -150 +150 @@
+-        self::assertSame(['retry', 'processor_unavailable'], $this->jobState());
++        self::assertSame(['retry', 'process_timeout'], $this->jobState());
+@@ -209 +209,2 @@
+-        self::assertSame(1, $report->retried);
++        self::assertSame(0, $report->retried);
++        self::assertSame(1, $report->deferred);
