@@ -170,12 +170,12 @@ final class AiAnalysisRepository
             ? 'SELECT a.id, a.project_id, NULL AS user_id, a.prompt_version, a.model, a.status,
                     a.gemini_file_name, a.gemini_file_uri, a.gemini_file_mime, a.gemini_file_state,
                     a.video_summary, a.validated_response_json, a.validation_attempts,
-                    a.error_code, a.error_message, NULL AS duration_seconds
+                    a.error_code, a.error_message, a.provider_request_id, NULL AS duration_seconds
                FROM ai_analyses a'
             : 'SELECT a.id, a.project_id, p.user_id, a.prompt_version, a.model, a.status,
                     a.gemini_file_name, a.gemini_file_uri, a.gemini_file_mime, a.gemini_file_state,
                     a.video_summary, a.validated_response_json, a.validation_attempts,
-                    a.error_code, a.error_message, s.duration_seconds
+                    a.error_code, a.error_message, a.provider_request_id, s.duration_seconds
                FROM ai_analyses a
                INNER JOIN projects p ON p.id = a.project_id
                LEFT JOIN project_sources s ON s.project_id = a.project_id AND s.status = \'ready\'';

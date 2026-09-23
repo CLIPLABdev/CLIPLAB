@@ -99,6 +99,6 @@ final class HttpSmoke
             ]);
             $success=curl_exec($curl);
             return [$success===false ? 0 : (int)curl_getinfo($curl,CURLINFO_RESPONSE_CODE),$headers];
-        } finally { curl_close($curl); }
+        } finally { /* curl_close() é no-op desde PHP 8.0; removido para evitar aviso de depreciação no PHP 8.5+ */ }
     }
 }

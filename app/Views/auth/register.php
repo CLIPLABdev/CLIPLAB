@@ -13,7 +13,7 @@ use App\Core\Csrf;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Crie sua conta — ClipForge</title>
+    <title>Crie sua conta — ClipLab</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/assets/css/design-system.css">

@@ -1,5 +1,5 @@
 <section class="auth-story" aria-labelledby="auth-story-title">
-    <a class="brand" href="/" aria-label="ClipForge, início"><?php $logoId = 'auth-logo'; require __DIR__ . '/../components/logo.php'; ?></a>
+    <a class="brand" href="/" aria-label="ClipLab, início"><?php $logoId = 'auth-logo'; require __DIR__ . '/../components/logo.php'; ?></a>
     <p class="eyebrow">Seu próximo corte começa aqui</p>
     <p class="auth-story-title" id="auth-story-title">Você já gravou.<br><span>Agora, faça render.</span></p>
     <ol class="auth-story-list" aria-label="Do vídeo ao clipe">

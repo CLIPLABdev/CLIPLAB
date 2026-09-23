@@ -13,7 +13,7 @@ use App\Core\Csrf;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Recupere sua senha — ClipForge</title>
+    <title>Recupere sua senha — ClipLab</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/assets/css/design-system.css">
@@ -21,7 +21,7 @@ use App\Core\Csrf;
 <body class="auth-body">
 <a class="skip-link" href="#auth-content">Pular para o conteúdo</a>
 <main class="auth-card" id="auth-content">
-    <a class="brand" href="/" aria-label="ClipForge, início"><?php $logoId = 'auth-logo'; require __DIR__ . '/../components/logo.php'; ?></a>
+    <a class="brand" href="/" aria-label="ClipLab, início"><?php $logoId = 'auth-logo'; require __DIR__ . '/../components/logo.php'; ?></a>
     <h1>Recupere sua senha</h1>
     <p>Enviaremos um link de redefinição se houver uma conta com este e-mail.</p>
     <?php if ($message !== null): ?><p class="notice" role="status"><?= e($message) ?></p><?php endif; ?>

@@ -8,6 +8,8 @@ use App\Ai\ViralClipPrompt;
 use App\Core\Config;
 use App\Core\Database;
 use App\Gemini\CurlGeminiTransport;
+use App\OpusClip\OpusClipClient;
+use App\Queue\OpusClipProcessHandler;
 use App\Media\DirectUrlValidator;
 use App\Media\LocalFfprobeProcessor;
 use App\Media\LocalFfmpegClipRenderer;
@@ -219,12 +221,12 @@ try {
     $validator = new AnalysisResponseValidator();
     $configuredModel = (string) ($gemini['model'] ?? '');
     $analysisModel = trim($configuredModel) === '' ? 'unconfigured' : $configuredModel;
-    $provider = new GeminiService(
+    $provider = new \App\Services\OpenAiVideoAnalysisService(
         new CurlGeminiTransport(),
         $storage,
         (string) ($gemini['api_key'] ?? ''),
         $configuredModel,
-        (string) ($gemini['base_url'] ?? 'https://generativelanguage.googleapis.com'),
+        (string) ($gemini['base_url'] ?? 'https://api.openai.com/v1'),
         $httpTimeoutSeconds,
         (int) ($gemini['response_limit_bytes'] ?? 1048576)
     );
@@ -235,8 +237,8 @@ try {
         $analyses,
         $credits,
         new DatabaseJobDispatcher($pdo, 'media', max(1, min(8, (int) ($gemini['analysis_max_attempts'] ?? 6)))),
-        ViralClipPrompt::VERSION,
-        $analysisModel,
+        'opusclip-v1',
+        'opusclip',
         $quotas
     );
     $sourceDurations = new \App\Services\SourceDurationPreflight($pdo,$sources,$mediaProcessor);
@@ -290,6 +292,18 @@ try {
             },
             static function (array $event) use ($systemLogs): void {
                 $systemLogs->tryRecord('warning', 'ai.provider_failure', $event, null, 'job', $event['job_id']);
+            }
+        ),
+        'opusclip_process' => new OpusClipProcessHandler(
+            $pdo,
+            $analyses,
+            $sources,
+            $storage,
+            new OpusClipClient((string) \App\Core\Env::get('OPUSCLIP_API_KEY', '')),
+            $effects,
+            $credits,
+            static function (array $event) use ($systemLogs): void {
+                $systemLogs->tryRecord('info', 'opusclip.raw_clip', $event);
             }
         ),
         'generate_clips' => new GenerateClipsHandler(
@@ -352,5 +366,7 @@ try {
     exit($report->operationalErrors > 0 ? 1 : 0);
 } catch (Throwable $exception) {
     fwrite(STDERR, "Falha ao iniciar o worker.\n");
+    fwrite(STDERR, "[DIAGNOSTICO] " . get_class($exception) . ': ' . $exception->getMessage() . "\n");
+    fwrite(STDERR, $exception->getTraceAsString() . "\n");
     exit(1);
 }

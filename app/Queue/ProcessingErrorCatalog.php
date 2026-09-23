@@ -47,6 +47,8 @@ final class ProcessingErrorCatalog
         'ai_timeout' => 'A análise por IA excedeu o tempo limite.',
         'ai_rate_limited' => 'O serviço de IA está temporariamente sobrecarregado.',
         'ai_unavailable' => 'O serviço de IA está temporariamente indisponível.',
+        'opusclip_unavailable' => 'O serviço OpusClip está temporariamente indisponível.',
+        'opusclip_failed' => 'O processamento pela OpusClip falhou.',
         'ai_unconfigured' => 'A análise por IA não está configurada.',
         'ai_provider_rejected' => 'O serviço de IA rejeitou a solicitação.',
         'ai_file_failed' => 'O arquivo não pôde ser analisado pela IA.',

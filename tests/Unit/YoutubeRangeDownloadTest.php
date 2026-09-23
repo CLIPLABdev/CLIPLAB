@@ -37,7 +37,7 @@ final class YoutubeRangeDownloadTest extends TestCase
         $transport = new RangeFixtureTransport(function (DownloadRequest $request, callable $write, int $call) use ($bytes): DownloadResponse {
             $options = (new CurlDownloadTransport())->optionsFor($request, static fn (): int => 0, static fn (): int => 0);
             self::assertSame($call === 1 ? '0-10485759' : '10485760-10485791', $options[CURLOPT_RANGE] ?? null);
-            self::assertSame(['cdn.googlevideo.com:443:1.1.1.1'], $options[CURLOPT_RESOLVE]);
+            self::assertArrayNotHasKey(CURLOPT_RESOLVE, $options);
             $body = $call === 1 ? substr($bytes, 0, 10485760) : substr($bytes, 10485760);
             $write($body);
             return new DownloadResponse(206, ['content-type' => 'video/mp4', 'content-length' => (string) strlen($body), 'content-range' => $call === 1 ? 'bytes 0-10485759/10485792' : 'bytes 10485760-10485791/10485792']);

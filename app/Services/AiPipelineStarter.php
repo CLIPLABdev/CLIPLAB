@@ -107,7 +107,7 @@ final class AiPipelineStarter implements AiPipelineScheduler
             }
 
             $analysis = $this->analyses->createOrFind($projectId, $this->promptVersion, $this->model);
-            $this->jobs->dispatch('analyze_video', $projectId, [
+            $this->jobs->dispatch('opusclip_process', $projectId, [
                 'analysis_id' => $analysis->analysisId(),
                 'source_id' => $sourceId,
                 'reservation_id' => $reservation->id(),

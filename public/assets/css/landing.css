@@ -1,19 +1,28 @@
 /* The marketing studio: editorial type, deliberate space, real product. */
 .marketing-page { background:var(--bg); }
-.marketing-page .container { width:calc(100% - 96px); max-width:1280px; margin-inline:auto; }
+.marketing-page .container { width:calc(100% - clamp(32px, 6vw, 96px)); max-width:none; margin-inline:auto; }
 .marketing-page .site-header { background:rgb(11 13 16 / 96%); border-bottom:1px solid #242b31; }
 .marketing-page .nav-shell { min-height:88px; }
-.marketing-page .nav-links { gap:28px; }
-.marketing-page .nav-links>a:not(.button) { font-size:14px; color:var(--muted); }
+.marketing-page .nav-links { flex:1; gap:28px; margin-left:48px; margin-right:0; }
+.marketing-page .nav-links .button { margin-left:0; }
+.marketing-page .nav-login { margin-left:auto; }
+.marketing-page .nav-login { border:1px solid rgb(255 255 255 / 42%); border-radius:8px; color:#FFFFFF !important; padding:9px 16px; }
+.marketing-page .nav-login:hover { background:rgb(255 255 255 / 8%); border-color:#FFFFFF; }
+.marketing-page .brand-mark { display:none; }
+.marketing-page .brand-wordmark { color:#FFFFFF; text-transform:uppercase; }
+.marketing-page .brand-wordmark span { color:var(--secondary); }
+.marketing-page .nav-links>a:not(.button) { font-size:14px; color:#FFFFFF; }
 .marketing-page .nav-links>a:hover { color:var(--text); }
 .marketing-page .button { min-height:50px; padding:14px 21px; }
-.marketing-page .button-small { min-height:42px; padding:9px 16px; }
+.marketing-page .button-small { min-height:42px; padding:9px 16px; background:linear-gradient(135deg,#07070A 0%,#7C3AED 62%,#A855F7 100%); border-color:#9333EA; box-shadow:0 8px 22px rgb(124 58 237 / 24%); }
+.marketing-page .button-small:hover { background:linear-gradient(135deg,#111116 0%,#9333EA 68%,#C026FF 100%); }
 .marketing-page section[id],.landing-studio { scroll-margin-top:110px; }
 .landing-kicker { display:flex; align-items:center; gap:10px; color:var(--accent); font-size:11px; line-height:1.6; font-weight:700; letter-spacing:.13em; margin:0 0 25px; }
 .landing-status-dot { display:inline-block; flex:none; width:6px; height:6px; background:var(--accent); border-radius:50%; }
-.landing-hero { padding:162px 0 0; }
+.landing-hero { padding:120px 0 0; }
 .landing-hero-grid { display:grid; grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr); align-items:center; gap:58px; }
 .landing-hero-copy h1 { font-size:clamp(48px,5.2vw,74px); font-weight:650; letter-spacing:-.065em; line-height:1.025; margin:0; }
+.landing-hero-copy { margin-left:0; }
 .marketing-page em { font-style:normal; color:var(--accent); }
 .landing-hero-copy h1 em { display:block; }
 .landing-lede { font-size:17px; color:var(--muted); line-height:1.75; max-width:455px; margin:28px 0 29px; }
@@ -137,3 +146,92 @@
 .marketing-page .landing-plan-card li,
 .marketing-page #planos .section-heading p:not(.eyebrow),
 .marketing-page #relatos .section-heading p:not(.eyebrow) { font-size:16px; }
+/* ==== ClipLab rebrand overrides: roxo no lugar do verde-oliva legado ==== */
+.marketing-page .site-header { border-bottom-color: #242233; }
+.landing-demo-link { border-bottom-color: var(--accent); }
+.landing-audience-plus { color: var(--electric); }
+.landing-step-number { color: #4c3866; }
+.landing-step-foot { color: #9a86ad; }
+
+/* Cartão de demonstração / estúdio, se ainda existir algum resquício */
+.studio-source-screen { background: #1c1128; border-color: #4c2f6b; }
+.studio-screen-top { color: #c9b8db; }
+.studio-screen-title { color: #eee0fa; }
+.studio-video-bar { color: #d9cce8; }
+.studio-track { background: #4a3363; }
+.studio-demo-steps button[aria-current="step"] { background: #2b1a3d; }
+.studio-demo-controls button:hover:not(:disabled) { border-color: var(--accent); }
+.studio-suggestion { background: #1c1128; border-color: #4c2f6b; }
+.studio-transcript mark { background: #2e1a42; color: #f0e3ff; }
+.studio-wave>span { background: #6b5a80; }
+.studio-selection { background: #3a1a52b3; }
+.studio-portrait { background: #221530; border-color: #4c2f6b; }
+.studio-portrait>span { color: #d9c3ea; }
+
+/* Planos */
+.landing-plan-card--recommended { background: #1c1030; }
+.marketing-page .landing-plan-card .button { background: #241a33; border-color: #6b4f8a; color: #ecdcf7; }
+.marketing-page .landing-plan-card .button:hover { background: #3a2450; }
+.marketing-page .landing-plan-card--recommended .button:hover { background: var(--electric); }
+
+/* Depoimentos */
+.landing-proof-card { border-top-color: #4c2f6b; }
+
+/* Seção final (CTA em bloco sólido) */
+.marketing-page .landing-final .button { background: #07070A; color: #fff; border-color: #07070A; }
+.landing-final-mark { color: var(--glow); opacity: .55; }
+
+/* ==== Hero com imagem de fundo em tela cheia ==== */
+.landing-hero {
+    position: relative;
+    background-image:
+        linear-gradient(90deg, var(--bg) 0%, var(--bg) 32%, rgba(7,7,10,.68) 55%, rgba(7,7,10,0) 82%),
+        url('/assets/images/mascote-cliplab-bg.jpg');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: auto, cover;
+    min-height: 640px;
+    padding-bottom: 0;
+}
+.landing-hero-grid { grid-template-columns: 1fr; }
+.landing-hero-copy { max-width: 520px; padding-right: 28px; position: relative; z-index: 1; }
+.landing-hero-copy :is(.studio-chrome,.studio-project,.studio-stage,.studio-demo-controls) { display:none; }
+.landing-audience {
+    display:flex;
+    position:relative;
+    z-index:2;
+    align-items:center;
+    justify-content:space-between;
+    gap:40px;
+    margin-top:1px !important;
+    padding:25px 82px;
+    background:linear-gradient(90deg,#07070A 0%,#111116 55%,rgba(41, 1, 110, 0.34) 100%);
+    border-top:1px solid rgb(168 85 247 / 35%);
+    border-bottom:1px solid rgb(168 85 247 / 18%);
+    width:100%;
+    max-width:none;
+    margin-inline:auto;
+}
+.landing-audience>span:first-child { color:var(--muted); font-size:9px; letter-spacing:.11em; max-width:100px; }
+.landing-audience p { display:flex; align-items:center; gap:10px; margin:0; font-size:13px; font-weight:550; }
+.landing-audience p svg { width:20px; height:20px; color:var(--secondary); flex:none; filter:drop-shadow(0 0 6px rgb(192 38 255 / 65%)); }
+@media (max-width:900px) {
+    .marketing-page .nav-links { flex:initial; margin-left:0; margin-right:0; }
+    .marketing-page .nav-links .button { margin-left:0; }
+    .marketing-page .nav-login { margin-left:0; }
+    .marketing-page .nav-login { width:100%; text-align:center; }
+    .landing-audience { flex-wrap:wrap; justify-content:flex-start; margin-top:20px !important; padding:18px 20px; gap:16px 24px; }
+    .landing-audience>span:first-child { width:100%; max-width:none; }
+}
+
+@media (max-width: 900px) {
+    .landing-hero {
+        background-image:
+            linear-gradient(180deg, var(--bg) 0%, rgba(7,7,10,.38) 52%, rgba(7,7,10,.92) 100%),
+            url('/assets/images/mascote-cliplab-bg.jpg');
+        background-position: right top;
+        background-size: auto, cover;
+        min-height: 520px;
+    }
+    .landing-hero-copy { max-width: 600px; padding-right: 0; }
+}

@@ -139,7 +139,7 @@ ob_start();
         <section class="panel reframe-consent" aria-labelledby="reframe-consent-title">
             <details>
                 <summary id="reframe-consent-title">Privacidade do enquadramento inteligente</summary>
-                <p>Os frames usados para detectar rostos são processados neste dispositivo. O SDK pode enviar métricas técnicas de desempenho e uso, mas nenhum frame ou resultado facial é enviado pelo ClipForge.</p>
+                <p>Os frames usados para detectar rostos são processados neste dispositivo. O SDK pode enviar métricas técnicas de desempenho e uso, mas nenhum frame ou resultado facial é enviado pelo ClipLab.</p>
             </details>
             <form method="post" action="<?= $mediaPipeConsentActive ? '/privacidade/consentimentos/mediapipe/revogar' : '/privacidade/consentimentos/mediapipe' ?>">
                 <input type="hidden" name="_token" value="<?= e(Csrf::token()) ?>">

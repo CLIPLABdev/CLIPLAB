@@ -61,7 +61,8 @@ final class CurlDownloadTransport implements DownloadTransport
             $status = (int) curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
             $error = curl_errno($handle);
         } finally {
-            curl_close($handle);
+            // curl_close() é no-op desde o PHP 8.0 e gera aviso de depreciação
+            // no PHP 8.5+; o CurlHandle é liberado automaticamente pelo garbage collector.
         }
         if ($failure instanceof MediaValidationException) {
             throw $failure;
@@ -100,12 +101,19 @@ final class CurlDownloadTransport implements DownloadTransport
             CURLOPT_TIMEOUT => $request->timeoutSeconds(),
             CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
             CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS,
-            CURLOPT_RESOLVE => $resolve,
             CURLOPT_RETURNTRANSFER => false,
             CURLOPT_HEADERFUNCTION => $headerCallback,
             CURLOPT_WRITEFUNCTION => $writeCallback,
             CURLOPT_USERAGENT => 'Clipforge-Media-Importer/1.0',
         ];
+            $caBundle = getenv('CURL_CA_BUNDLE');
+            if (is_string($caBundle) && is_file($caBundle) && is_readable($caBundle)) {
+                $options[CURLOPT_CAINFO] = $caBundle;
+            }
+        // YouTube signs googlevideo URLs for a CDN endpoint and may reject a different pinned address.
+        if (!str_ends_with($request->url()->host(), '.googlevideo.com') && $request->url()->host() !== 'googlevideo.com') {
+            $options[CURLOPT_RESOLVE] = $resolve;
+        }
         if ($request->rangeStart() !== null) {
             $options[CURLOPT_RANGE] = $request->rangeStart() . '-' . $request->rangeEnd();
         }

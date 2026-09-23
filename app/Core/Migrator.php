@@ -501,10 +501,7 @@ final class Migrator
 
     private static function canonicalCheck(string $clause): ?string
     {
-        $clause = trim($clause);
-        $clause = str_replace(["\\'", '\\"'], ["'", '"'], $clause);
-        $clause = preg_replace("/(?<![A-Za-z0-9_])(?:_utf8mb4|_utf8mb3|_utf8|_binary)(?=(?:\\\\)?['\"])/i", '', $clause);
-        $clause = preg_replace("/\b_[a-z0-9]+\s*(?=(?:\\\\)?['\"])/i", '', $clause);
+        $clause = preg_replace("/\\b_[a-z0-9]+\\s*(?=')/i", '', trim($clause));
         if (!is_string($clause) || $clause === '') {
             return null;
         }

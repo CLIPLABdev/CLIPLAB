@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tente novamente | ClipForge</title>
+    <title>Tente novamente | ClipLab</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/assets/css/design-system.css">
 </head>
 <body class="error-body">
     <main class="error-card">
-        <a class="brand" href="/" aria-label="ClipForge, início">ClipForge</a>
+        <a class="brand" href="/" aria-label="ClipLab, início">ClipLab</a>
         <p class="eyebrow">429 / Uma breve pausa</p>
         <h1>Muitas tentativas</h1>
         <p>Aguarde alguns minutos antes de tentar novamente.</p>

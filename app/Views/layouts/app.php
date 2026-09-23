@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Core\Csrf;
-$platformBranding ??= ['name'=>'ClipForge','description'=>'','logo_url'=>null,'favicon_url'=>null];
+$platformBranding ??= ['name'=>'ClipLab','description'=>'','logo_url'=>null,'favicon_url'=>null];
 $platformFeatures ??= [];
 $notificationUnread ??= 0;
 $headerAvatar ??= false;

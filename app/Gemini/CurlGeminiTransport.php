@@ -388,7 +388,8 @@ final class CurlGeminiTransport implements GeminiTransport
 
             public function close($handle): void
             {
-                curl_close($handle);
+                // curl_close() é no-op desde o PHP 8.0 e gera aviso de depreciação no PHP 8.5+;
+                // o CurlHandle é fechado automaticamente via garbage collection.
             }
         };
     }

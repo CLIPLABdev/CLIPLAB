@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-$platformBranding ??= ['name'=>'ClipForge','description'=>'','logo_url'=>null,'favicon_url'=>null];
+$platformBranding ??= ['name'=>'ClipLab','description'=>'','logo_url'=>null,'favicon_url'=>null];
 
 /** @var string $content */
 /** @var string $title */
@@ -11,7 +11,7 @@ $platformBranding ??= ['name'=>'ClipForge','description'=>'','logo_url'=>null,'f
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Seu próximo corte já está gravado. Encontre trechos com IA, revise no editor e exporte novos vídeos com o ClipForge.">
+    <meta name="description" content="Seu próximo corte já está gravado. Encontre trechos com IA, revise no editor e exporte novos vídeos com o ClipLab.">
     <title><?= e($title) ?> — <?= e($platformBranding['name']) ?></title>
     <?php require __DIR__.'/../components/favicon.php'; ?>
     <link rel="stylesheet" href="/assets/css/app.css">

@@ -24,7 +24,7 @@ final class GeminiFile
 
     public function __construct(string $name, string $uri, string $mimeType, string $state)
     {
-        if (preg_match('/\Afiles\/[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?\z/D', $name) !== 1) {
+        if (preg_match('/\A(?:files\/[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?|file-[a-zA-Z0-9_-]{4,128}|[a-zA-Z0-9_-]{8,128})\z/D', $name) !== 1) {
             throw new InvalidArgumentException('Gemini file resource name is invalid.');
         }
 
@@ -85,6 +85,9 @@ final class GeminiFile
 
         $host = strtolower((string) ($parts['host'] ?? ''));
 
-        return $host === 'generativelanguage.googleapis.com' || str_ends_with($host, '.googleapis.com');
+        return $host === 'generativelanguage.googleapis.com'
+            || str_ends_with($host, '.googleapis.com')
+            || $host === 'api.openai.com'
+            || str_ends_with($host, '.openai.com');
     }
 }

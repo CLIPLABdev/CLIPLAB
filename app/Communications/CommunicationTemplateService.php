@@ -19,9 +19,9 @@ final class CommunicationTemplateService
     public function systemTemplate(string $event):array {
         if(!isset((new CommunicationEventCatalog())->events()[$event]))throw new \InvalidArgumentException('Evento não permitido.');
         [$subject,$intro]=match($event) {
-            'auth.welcome'=>['Bem-vindo ao ClipForge','Sua próxima ideia começa aqui.'],
-            'auth.password_reset'=>['Redefina sua senha do ClipForge','Vamos recuperar seu acesso.'],
-            'auth.email_verification'=>['Confirme seu e-mail no ClipForge','Um passo para confirmar que este e-mail é seu.'],
+            'auth.welcome'=>['Bem-vindo ao ClipLab','Sua próxima ideia começa aqui.'],
+            'auth.password_reset'=>['Redefina sua senha do ClipLab','Vamos recuperar seu acesso.'],
+            'auth.email_verification'=>['Confirme seu e-mail no ClipLab','Um passo para confirmar que este e-mail é seu.'],
             'account.email_change_requested'=>['Confirme seu novo e-mail','Seu novo endereço precisa da sua confirmação.'],
             'account.email_changed'=>['Seu e-mail foi alterado','O e-mail da sua conta mudou.'],
             'account.password_changed'=>['Sua senha foi alterada','Sua nova senha já está em uso.'],
@@ -31,7 +31,7 @@ final class CommunicationTemplateService
             'billing.payment_approved'=>['Pagamento aprovado','Recebemos a confirmação do seu pagamento.'],
             'billing.payment_pending'=>['Seu pagamento está pendente','Estamos aguardando a confirmação do pagamento.'],
             'billing.payment_failed'=>['Seu pagamento não foi aprovado','Não foi possível confirmar o pagamento.'],
-            'billing.subscription_created'=>['Assinatura criada no ClipForge','Sua assinatura foi registrada.'],
+            'billing.subscription_created'=>['Assinatura criada no ClipLab','Sua assinatura foi registrada.'],
             'billing.subscription_renewed'=>['Sua assinatura foi renovada','Um novo ciclo da sua assinatura começou.'],
             'billing.subscription_canceled'=>['Sua assinatura foi cancelada','O cancelamento da sua assinatura foi registrado.'],
             'billing.subscription_changed'=>['Sua assinatura foi atualizada','Os dados da sua assinatura mudaram.'],
@@ -40,14 +40,14 @@ final class CommunicationTemplateService
         };
         $html='<p>Olá, {{nome_usuario}}.</p><h1>'.$intro.'</h1>';
         $html.=match($event) {
-            'auth.welcome'=>'<p>Bem-vindo ao ClipForge. Transforme suas ideias em conteúdo, organize seus projetos e acompanhe cada criação em um só lugar.</p><p>Quando quiser começar, acesse sua conta e crie seu primeiro projeto.</p>',
+            'auth.welcome'=>'<p>Bem-vindo ao ClipLab. Transforme suas ideias em conteúdo, organize seus projetos e acompanhe cada criação em um só lugar.</p><p>Quando quiser começar, acesse sua conta e crie seu primeiro projeto.</p>',
             'auth.password_reset'=>'<p>Recebemos um pedido para redefinir a senha da sua conta. Use o botão abaixo para escolher uma nova senha.</p><p><a href="{{link_recuperacao}}">Redefinir minha senha</a></p><p>O link expira em 30 minutos. Se você não fez este pedido, ignore a mensagem. Sua senha permanece a mesma.</p>',
-            'auth.email_verification'=>'<p>Confirme este endereço para concluir a verificação do e-mail da sua conta ClipForge.</p><p><a href="{{link_confirmacao}}">Confirmar meu e-mail</a></p><p>Se você não criou esta conta, ignore esta mensagem. Não compartilhe este link.</p>',
-            'account.email_change_requested'=>'<p>Recebemos um pedido para usar este endereço na sua conta ClipForge. Confirme apenas se foi você quem solicitou a alteração.</p><p><a href="{{link_confirmacao}}">Confirmar novo e-mail</a></p><p>Se você não solicitou a troca, não use o link e revise a segurança da sua conta.</p>',
-            'account.email_changed'=>'<p>A alteração de e-mail foi concluída. Use o novo endereço para acessar sua conta ClipForge.</p><p>Não reconhece esta alteração? Procure o suporte do ClipForge para revisar seu acesso.</p>',
-            'account.password_changed'=>'<p>A senha da sua conta ClipForge foi alterada. Use a nova senha no próximo acesso.</p><p>Se não foi você, solicite a recuperação de senha na tela de acesso e revise a segurança da sua conta.</p>',
-            'media.processing_completed'=>'<p><strong>Projeto: {{nome_projeto}}</strong></p><p>O processamento foi concluído. Acesse seus projetos no ClipForge para conferir o resultado e continuar sua criação.</p>',
-            'media.processing_failed'=>'<p><strong>Projeto: {{nome_projeto}}</strong></p><p>Acesse o projeto no ClipForge para conferir os detalhes e as opções disponíveis antes de tentar novamente.</p>',
+            'auth.email_verification'=>'<p>Confirme este endereço para concluir a verificação do e-mail da sua conta ClipLab.</p><p><a href="{{link_confirmacao}}">Confirmar meu e-mail</a></p><p>Se você não criou esta conta, ignore esta mensagem. Não compartilhe este link.</p>',
+            'account.email_change_requested'=>'<p>Recebemos um pedido para usar este endereço na sua conta ClipLab. Confirme apenas se foi você quem solicitou a alteração.</p><p><a href="{{link_confirmacao}}">Confirmar novo e-mail</a></p><p>Se você não solicitou a troca, não use o link e revise a segurança da sua conta.</p>',
+            'account.email_changed'=>'<p>A alteração de e-mail foi concluída. Use o novo endereço para acessar sua conta ClipLab.</p><p>Não reconhece esta alteração? Procure o suporte do ClipLab para revisar seu acesso.</p>',
+            'account.password_changed'=>'<p>A senha da sua conta ClipLab foi alterada. Use a nova senha no próximo acesso.</p><p>Se não foi você, solicite a recuperação de senha na tela de acesso e revise a segurança da sua conta.</p>',
+            'media.processing_completed'=>'<p><strong>Projeto: {{nome_projeto}}</strong></p><p>O processamento foi concluído. Acesse seus projetos no ClipLab para conferir o resultado e continuar sua criação.</p>',
+            'media.processing_failed'=>'<p><strong>Projeto: {{nome_projeto}}</strong></p><p>Acesse o projeto no ClipLab para conferir os detalhes e as opções disponíveis antes de tentar novamente.</p>',
             'media.usage_limit_reached'=>'<p>Você atingiu o limite de uso do plano <strong>{{nome_plano}}</strong>.</p><p>Confira seu consumo e as opções do seu plano na conta antes de iniciar novos processamentos.</p>',
             'marketing.campaign'=>'<h2>{{titulo}}</h2><p>{{conteudo}}</p>',
             default=>'<table><tr><th>Plano</th><td>{{nome_plano}}</td></tr><tr><th>Valor</th><td>{{valor}} {{moeda}}</td></tr></table><p>{{motivo}}</p><p><a href="{{link_assinatura}}">Consultar minha assinatura</a></p><p>Confira os detalhes atualizados e as opções disponíveis na sua conta.</p>',

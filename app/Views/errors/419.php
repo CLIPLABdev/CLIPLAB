@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sessão expirada | ClipForge</title>
+    <title>Sessão expirada | ClipLab</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/assets/css/design-system.css">
 </head>
 <body class="error-body">
     <main class="error-card">
-        <a class="brand" href="/" aria-label="ClipForge, início">ClipForge</a>
+        <a class="brand" href="/" aria-label="ClipLab, início">ClipLab</a>
         <p class="eyebrow">419 / Vamos retomar</p>
         <h1>Sua sessão expirou</h1>
         <p>Atualize a página e envie o formulário novamente.</p>

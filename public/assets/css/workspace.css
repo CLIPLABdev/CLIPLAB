@@ -1,26 +1,26 @@
 /* Shared workspace presentation. Public/auth pages and business behaviour stay untouched. */
-.app-body,.admin-body{--workspace-muted:#a8b3c3;--workspace-line:#2b3441;--workspace-ease:cubic-bezier(.2,.7,.3,1);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.app-body,.admin-body{--workspace-muted:var(--muted);--workspace-line:var(--border);--workspace-ease:cubic-bezier(.2,.7,.3,1);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 :where(.app-body,.admin-body) :where(button,a,input,select,textarea){-webkit-tap-highlight-color:transparent}
 :where(.app-body,.admin-body) :where(button,.button,.btn,a){transition:background-color .16s var(--workspace-ease),border-color .16s var(--workspace-ease),color .16s var(--workspace-ease),box-shadow .16s var(--workspace-ease)}
 :where(.app-body,.admin-body) :where(button,.button,.btn):active{translate:0 1px}
 :where(.app-body,.admin-body) :where(h1,h2,h3){text-wrap:balance}
 :where(.app-body,.admin-body) :where(p,small,label){text-wrap:pretty}
-:where(.app-body,.admin-body) :where(input,textarea,select):focus-visible{outline:2px solid var(--accent);outline-offset:3px;box-shadow:0 0 0 5px #d2f86b0c}
+:where(.app-body,.admin-body) :where(input,textarea,select):focus-visible{outline:2px solid var(--secondary);outline-offset:3px;box-shadow:0 0 0 5px rgb(192 38 255 / 12%)}
 :where(.app-body,.admin-body) :where(table,.metric-card,.stat-card){font-variant-numeric:tabular-nums}
 :where(.app-body,.admin-body) :where(.panel,.platform-card){border-color:var(--workspace-line);border-radius:18px}
 :where(.app-body,.admin-body) :where(.platform-field small,.platform-help){color:var(--workspace-muted);line-height:1.65}
 :where(.app-body,.admin-body) [hidden]{display:none!important}
 .app-body .app-shell{grid-template-columns:248px minmax(0,1fr)}
-.app-body .app-sidebar{padding:28px 16px 18px;background:#10141a;border-right:1px solid #242c37;scrollbar-width:thin;scrollbar-color:#3b4654 transparent}
+.app-body .app-sidebar{padding:28px 16px 18px;background:var(--surface);border-right:1px solid var(--border);scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .app-body .app-brand{margin-bottom:28px;padding-left:7px}
 .app-body .app-nav{gap:4px}
 .app-body .app-nav>a{min-height:43px;padding:10px 13px;border:1px solid transparent;border-radius:10px;color:#b7c1ce;font-size:.83rem;font-weight:520;line-height:1.3}
 .app-body .app-nav>a svg{width:18px;height:18px;stroke-width:1.7;flex-shrink:0}
 .app-body .app-nav>a:hover{background:#1c232d;color:#f4f6f8}
-.app-body .app-nav>a[aria-current=page]{background:#d2f86b12;border-color:#d2f86b29;color:#daf993}
+.app-body .app-nav>a[aria-current=page]{background:rgb(147 51 234 / 14%);border-color:rgb(168 85 247 / 28%);color:var(--secondary)}
 .app-body .workspace-nav-heading{margin:19px 13px 6px;color:#8090a3;text-transform:uppercase;letter-spacing:.13em;font-size:.62rem;font-weight:750;line-height:1.4}
-.app-body .workspace-create{display:flex;gap:10px;align-items:center;min-height:45px;padding:11px 13px;border-radius:11px;background:var(--accent);color:#172007;text-decoration:none;font-size:.84rem;font-weight:750;box-shadow:0 4px 18px #d2f86b0a}
-.app-body .workspace-create:hover{background:#dfffa0;box-shadow:0 4px 22px #d2f86b20}
+.app-body .workspace-create{display:flex;gap:10px;align-items:center;min-height:45px;padding:11px 13px;border-radius:11px;background:var(--secondary);color:#FFFFFF;text-decoration:none;font-size:.84rem;font-weight:750;box-shadow:0 4px 18px rgb(192 38 255 / 12%)}
+.app-body .workspace-create:hover{background:var(--electric);box-shadow:0 4px 22px rgb(192 38 255 / 22%)}
 .workspace-create svg{width:18px;height:18px}.workspace-create svg:last-child{margin-left:auto;width:15px}
 .app-body .sidebar-plan{margin-top:25px;padding:16px;background:linear-gradient(135deg,#1b2424,#171e27);border:1px solid #33413f;border-radius:13px}
 .app-body .sidebar-plan>span{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#a5b4b4}
@@ -34,7 +34,7 @@
 .workspace-finder-trigger svg{width:15px;height:15px}.workspace-finder-trigger:hover{border-color:#768947;color:#f4f6f8}
 .workspace-finder-trigger kbd,.workspace-command kbd{font-family:inherit;font-size:.65rem;color:#98a6b8;border:1px solid #3a4554;border-radius:4px;padding:2px 5px}
 .app-body .header-profile{margin-left:0;gap:10px;max-width:190px;color:#c8d2dd;font-size:.78rem}
-.app-body .header-profile>strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.app-body .header-profile>span{background:#263b35;color:#d2f86b;border:1px solid #405943;width:37px;height:37px;border-radius:12px}
+.app-body .header-profile>strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.app-body .header-profile>span{background:var(--card);color:var(--secondary);border:1px solid var(--border);width:37px;height:37px;border-radius:12px}
 .app-body .header-profile img{object-fit:cover;border-radius:11px;width:100%;height:100%}
 .app-body .app-content{padding:30px clamp(20px,3vw,44px) 48px;animation:workspace-arrive .25s var(--workspace-ease) both;min-width:0}
 @keyframes workspace-arrive{from{transform:translateY(5px)}to{transform:translateY(0)}}

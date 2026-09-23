@@ -28,6 +28,8 @@ final class CreditReservationService
         'ai_timeout',
         'ai_rate_limited',
         'ai_unavailable',
+        'opusclip_unavailable',
+        'opusclip_failed',
     ];
 
     private PDO $pdo;

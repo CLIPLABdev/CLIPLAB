@@ -13,7 +13,7 @@ declare(strict_types=1);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?= e($introduction) ?>">
-    <title><?= e($title) ?> — ClipForge</title>
+    <title><?= e($title) ?> — ClipLab</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/assets/css/informational.css">
@@ -23,7 +23,7 @@ declare(strict_types=1);
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 <header class="information-header">
     <nav class="information-shell information-navigation" aria-label="Navegação principal">
-        <a class="brand" href="/" aria-label="ClipForge, início"><?php $logoId='information-header-logo'; require dirname(__DIR__).'/components/logo.php'; ?></a>
+        <a class="brand" href="/" aria-label="ClipLab, início"><?php $logoId='information-header-logo'; require dirname(__DIR__).'/components/logo.php'; ?></a>
         <div class="information-links">
             <a href="/privacidade"<?= $page==='privacy' ? ' aria-current="page"' : '' ?>>Privacidade</a>
             <a href="/termos"<?= $page==='terms' ? ' aria-current="page"' : '' ?>>Termos</a>
@@ -73,7 +73,7 @@ declare(strict_types=1);
 </main>
 <footer class="site-footer information-footer">
     <div class="information-shell information-footer-content">
-        <p>ClipForge · Conteúdo que continua em movimento.</p>
+        <p>ClipLab · Conteúdo que continua em movimento.</p>
         <nav aria-label="Navegação do rodapé"><a href="/">Início</a><a href="/privacidade">Privacidade</a><a href="/termos">Termos</a></nav>
     </div>
 </footer>

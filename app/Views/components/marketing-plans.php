@@ -26,7 +26,7 @@ foreach ($publicPlans as $plan) {
 ?>
 <section id="planos" class="section" aria-labelledby="planos-titulo">
     <div class="container">
-        <div class="section-heading centered"><p class="eyebrow">Catálogo atual</p><h2 id="planos-titulo">Planos reais do ClipForge</h2><p>Valores e limites vêm do catálogo ativo. A contratação ou alteração é confirmada pela administração, sem cobrança online automática.</p></div>
+        <div class="section-heading centered"><p class="eyebrow">Catálogo atual</p><h2 id="planos-titulo">Planos reais do ClipLab</h2><p>Valores e limites vêm do catálogo ativo. A contratação ou alteração é confirmada pela administração, sem cobrança online automática.</p></div>
         <div class="landing-plan-grid">
             <?php foreach ($publicPlans as $plan):
                 $features = is_array($plan['features'] ?? null) ? $plan['features'] : [];
@@ -50,6 +50,6 @@ foreach ($publicPlans as $plan) {
                 </article>
             <?php endforeach; ?>
         </div>
-        <p class="landing-plan-note">A ativação do plano é confirmada pela administração. O ClipForge não realiza cobrança automática nesta página.</p>
+        <p class="landing-plan-note">A ativação do plano é confirmada pela administração. O ClipLab não realiza cobrança automática nesta página.</p>
     </div>
 </section>
