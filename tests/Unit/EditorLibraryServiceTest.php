@@ -13,7 +13,7 @@ final class EditorLibraryServiceTest extends TestCase
 {
     use EditorLibraryFixture;
     private string $root;
-    protected function setUp(): void { $this->root = sys_get_temp_dir() . '/clipforge-brand-test-' . bin2hex(random_bytes(8)); mkdir($this->root); }
+    protected function setUp(): void { $this->root = sys_get_temp_dir() . '/cliplab-brand-test-' . bin2hex(random_bytes(8)); mkdir($this->root); }
     protected function tearDown(): void
     {
         $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->root, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);

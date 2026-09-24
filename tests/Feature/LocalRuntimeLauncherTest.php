@@ -15,7 +15,7 @@ final class LocalRuntimeLauncherTest extends TestCase
         if (DIRECTORY_SEPARATOR !== '\\') {
             self::markTestSkipped('The local launcher targets Windows PowerShell.');
         }
-        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-local-launcher-' . bin2hex(random_bytes(8));
+        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-local-launcher-' . bin2hex(random_bytes(8));
         mkdir($this->temporaryDirectory . DIRECTORY_SEPARATOR . 'public', 0700, true);
         mkdir($this->temporaryDirectory . DIRECTORY_SEPARATOR . 'bin', 0700, true);
         file_put_contents(
@@ -134,7 +134,7 @@ PHP
     {
         file_put_contents($this->temporaryDirectory . DIRECTORY_SEPARATOR . 'hold-worker-output', '1');
         $port = $this->availablePort();
-        $workerDirectoriesBefore = glob(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-local-worker-*') ?: [];
+        $workerDirectoriesBefore = glob(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-local-worker-*') ?: [];
 
         $result = $this->runPowerShell([
             '-PhpBin', PHP_BINARY,
@@ -150,7 +150,7 @@ PHP
         self::assertStringContainsString('"event":"runtime_stopped"', $result['stdout']);
         self::assertSame(
             $workerDirectoriesBefore,
-            glob(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-local-worker-*') ?: [],
+            glob(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-local-worker-*') ?: [],
             'The launcher left redirected worker output in the temporary directory.'
         );
     }

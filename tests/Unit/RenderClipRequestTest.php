@@ -150,7 +150,7 @@ final class RenderClipRequestTest extends TestCase
 
     public function testArtifactsExposeMetadataAndCleanupOnlyTheirExactFilesRepeatedly(): void
     {
-        $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-artifacts-' . bin2hex(random_bytes(8));
+        $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-artifacts-' . bin2hex(random_bytes(8));
         self::assertTrue(mkdir($directory, 0700));
         $videoPath = $directory . DIRECTORY_SEPARATOR . 'video.mp4';
         $thumbnailPath = $directory . DIRECTORY_SEPARATOR . 'thumb.jpg';

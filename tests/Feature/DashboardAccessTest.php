@@ -31,7 +31,7 @@ final class DashboardAccessTest extends TestCase
         $response = $router->dispatch(Request::fake('POST', '/perfil', ['name' => 'Ana', 'email' => 'ana@example.test']));
 
         self::assertSame(419, $response->status());
-        self::assertStringContainsString('<title>Sessão expirada | ClipForge</title>', $response->body());
+        self::assertStringContainsString('<title>Sessão expirada | ClipLab</title>', $response->body());
         self::assertStringContainsString('<h1>Sua sessão expirou</h1>', $response->body());
         self::assertStringContainsString('Atualize a página e envie o formulário novamente.', $response->body());
         self::assertStringNotContainsString('CSRF token mismatch.', $response->body());

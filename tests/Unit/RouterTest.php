@@ -96,9 +96,9 @@ final class RouterTest extends TestCase
         file_put_contents($directory . '/welcome.php', '<h1><?= e($name) ?></h1>');
 
         try {
-            $response = (new View($directory))->render('welcome', ['name' => '<ClipForge>']);
+            $response = (new View($directory))->render('welcome', ['name' => '<ClipLab>']);
 
-            self::assertSame('<h1>&lt;ClipForge&gt;</h1>', $response->body());
+            self::assertSame('<h1>&lt;ClipLab&gt;</h1>', $response->body());
         } finally {
             unlink($directory . '/welcome.php');
             rmdir($directory);

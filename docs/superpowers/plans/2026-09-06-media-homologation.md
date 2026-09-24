@@ -8,7 +8,7 @@
 ## Global Constraints
 - Trabalhar somente no worktree fase1-worktree existente; preservar alterações anteriores, .env, segredos, planos e arquivos reais. Não commit/push/merge/deploy.
 - PHP 8.0/MySQL existentes; CSS/JS locais, CSP atual sem unsafe-inline. Não trocar stack nem adicionar rede/IA fictícia.
-- Testes de unidade/feature usam clipforge_phase5_test; nunca DROP/TRUNCATE banco real. Migrações aditivas novas; não editar migrações aplicadas.
+- Testes de unidade/feature usam cliplab_phase5_test; nunca DROP/TRUNCATE banco real. Migrações aditivas novas; não editar migrações aplicadas.
 - Toda leitura/gravação é por proprietário ativo; POST com CSRF; 404 uniforme para recursos alheios; saídas privadas no-store; texto escapado.
 - Nunca receber caminho, URL de logo, filtergraph, argumentos FFmpeg ou dimensões arbitrárias do cliente. IDs/valores allowlisted; limites de tamanho/tempo; ProcessRunner com array.
 - Renderer consome snapshots imutáveis. Mudanças em template/brand não alteram jobs anteriores. Originais continuam preservados.

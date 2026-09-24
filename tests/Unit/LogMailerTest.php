@@ -13,7 +13,7 @@ final class LogMailerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logFile = sys_get_temp_dir() . '/clipforge-password-reset-' . bin2hex(random_bytes(8)) . '.log';
+        $this->logFile = sys_get_temp_dir() . '/cliplab-password-reset-' . bin2hex(random_bytes(8)) . '.log';
     }
 
     protected function tearDown(): void

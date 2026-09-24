@@ -1,4 +1,4 @@
-# Verificação do redesign ClipForge
+# Verificação do redesign ClipLab
 
 Concluída em 6 de setembro de 2026, horário de São Paulo.
 
@@ -16,7 +16,7 @@ Concluída em 6 de setembro de 2026, horário de São Paulo.
 
 | Verificação | Resultado |
 | --- | --- |
-| PHPUnit Unit,Feature no banco clipforge_phase5_test | 1.365 testes, 6.286 assertivas, nenhuma falha/erro, 1 ignorado; 1 min 12 s |
+| PHPUnit Unit,Feature no banco cliplab_phase5_test | 1.365 testes, 6.286 assertivas, nenhuma falha/erro, 1 ignorado; 1 min 12 s |
 | Redesign no Chrome | 6/6 passaram; landing em 360/768/1440 e 8 rotas autenticadas em 360/1440 |
 | Formulário de criação | 6/6 passaram |
 | Editor e exportação via fixture isolada | 7/7 passaram |
@@ -63,6 +63,6 @@ Segredos, .env, planos e credenciais existentes foram preservados nesta rodada. 
 ## Referências e evidências
 
 Decisões originais e atribuição da amostra Sintel: REFERENCIAS_REDESIGN.md.
-Plano e spec: docs/superpowers/plans/2026-09-06-clipforge-redesign.md e docs/superpowers/specs/2026-09-06-clipforge-redesign-design.md.
-Relatórios, revisões e capturas: .superpowers/sdd/2026-09-06-clipforge-redesign/.
+Plano e spec: docs/superpowers/plans/2026-09-06-cliplab-redesign.md e docs/superpowers/specs/2026-09-06-cliplab-redesign-design.md.
+Relatórios, revisões e capturas: .superpowers/sdd/2026-09-06-cliplab-redesign/.
 Captura final somente local do editor real: actual-editor-final.png nessa pasta. A imagem pública usa fixture isolada e amostra pública autorizada, sem dados privados.

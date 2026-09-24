@@ -58,7 +58,7 @@ final class LocalFfmpegAudioExtractor implements ClipAudioExtractor
             || !is_finite($durationSeconds) || $durationSeconds < 1 || $durationSeconds > 180) {
             throw SubtitleException::withCode('subtitle_audio_invalid');
         }
-        $output = $this->temporaryDirectory . DIRECTORY_SEPARATOR . 'clipforge-audio-' . bin2hex(random_bytes(16)) . '.wav';
+        $output = $this->temporaryDirectory . DIRECTORY_SEPARATOR . 'cliplab-audio-' . bin2hex(random_bytes(16)) . '.wav';
         try {
             $input = $this->storage->absolutePath($source->objectKey());
             if (!is_file($input) || !is_readable($input)) {

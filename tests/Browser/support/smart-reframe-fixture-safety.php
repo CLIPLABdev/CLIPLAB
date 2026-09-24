@@ -42,14 +42,14 @@ try {
 function safetyIdentity(string $runId): array
 {
     $hex = substr($runId, 3);
-    $ownerEmail = 'sr-owner+' . $hex . '@clipforge.test';
+    $ownerEmail = 'sr-owner+' . $hex . '@cliplab.test';
 
     return [
         'owner_email' => $ownerEmail,
-        'foreign_email' => 'sr-foreign+' . $hex . '@clipforge.test',
+        'foreign_email' => 'sr-foreign+' . $hex . '@cliplab.test',
         'ingest_key' => hash('sha256', 'smart-reframe-e2e-' . $runId),
         'guard_plan_slug' => 'sr-guard-' . $hex,
-        'guard_email' => 'sr-guard+' . $hex . '@clipforge.test',
+        'guard_email' => 'sr-guard+' . $hex . '@cliplab.test',
         'guard_ingest_key' => hash('sha256', 'smart-reframe-guard-' . $runId),
         'rate_key' => hash('sha256', '127.0.0.1|' . $ownerEmail),
     ];
@@ -69,7 +69,7 @@ function safetyDatabase(): PDO
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
     $pdo->exec("SET time_zone = '+00:00'");
-    if ((string) $pdo->query('SELECT DATABASE()')->fetchColumn() !== 'clipforge_phase5_test') {
+    if ((string) $pdo->query('SELECT DATABASE()')->fetchColumn() !== 'cliplab_phase5_test') {
         throw new RuntimeException('invalid_database');
     }
 

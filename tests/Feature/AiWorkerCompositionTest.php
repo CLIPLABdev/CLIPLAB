@@ -46,7 +46,7 @@ final class AiWorkerCompositionTest extends TestCase
             self::markTestSkipped('The shared test queue is not empty.');
         }
 
-        $root = sys_get_temp_dir() . '/clipforge-ai-worker-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-ai-worker-' . bin2hex(random_bytes(6));
         mkdir($root, 0700, true);
         $prepend = tempnam(sys_get_temp_dir(), 'ai-worker-prepend-');
         $networkMarker = tempnam(sys_get_temp_dir(), 'ai-worker-network-');
@@ -86,7 +86,7 @@ final class AiWorkerCompositionTest extends TestCase
         if (!is_string($dsn) || $dsn === '') {
             self::markTestSkipped('TEST_DB_DSN is not configured.');
         }
-        $root = sys_get_temp_dir() . '/clipforge-ai-lease-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-ai-lease-' . bin2hex(random_bytes(6));
         mkdir($root, 0700, true);
         try {
             $result = $this->runWorker([
@@ -121,7 +121,7 @@ final class AiWorkerCompositionTest extends TestCase
         $command[] = '--time-budget=5';
         $environment = getenv();
         $environment = array_merge(is_array($environment) ? $environment : [], [
-            'APP_ENV_FILE' => sys_get_temp_dir() . '/clipforge-no-env-file',
+            'APP_ENV_FILE' => sys_get_temp_dir() . '/cliplab-no-env-file',
         ], $overrides);
         $process = proc_open($command, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $environment, ['bypass_shell' => true]);
         self::assertIsResource($process);

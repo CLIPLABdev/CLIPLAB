@@ -18,7 +18,7 @@ final class BootstrapEnvFileTest extends TestCase
 
     public function testExplicitOverrideLoadsOnlyTheSelectedFile(): void
     {
-        $selected = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-selected-env-' . bin2hex(random_bytes(6));
+        $selected = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-selected-env-' . bin2hex(random_bytes(6));
         $result = $this->runBootstrap($selected);
         self::assertSame(0, $result['exit'], $result['stderr']);
         self::assertSame('', $result['stdout']);
@@ -36,8 +36,8 @@ final class BootstrapEnvFileTest extends TestCase
     /** @return array{exit:int,stdout:string,stderr:string,loaded:?string} */
     private function runBootstrap(?string $override): array
     {
-        $prepend = tempnam(sys_get_temp_dir(), 'clipforge-bootstrap-prepend-');
-        $capture = tempnam(sys_get_temp_dir(), 'clipforge-bootstrap-capture-');
+        $prepend = tempnam(sys_get_temp_dir(), 'cliplab-bootstrap-prepend-');
+        $capture = tempnam(sys_get_temp_dir(), 'cliplab-bootstrap-capture-');
         self::assertNotFalse($prepend);
         self::assertNotFalse($capture);
         unlink($capture);
@@ -66,7 +66,7 @@ PHP
         $script = dirname(__DIR__, 2) . '/bootstrap/app.php';
         $runner = null;
         if ($override === '') {
-            $runner = tempnam(sys_get_temp_dir(), 'clipforge-bootstrap-runner-');
+            $runner = tempnam(sys_get_temp_dir(), 'cliplab-bootstrap-runner-');
             self::assertNotFalse($runner);
             file_put_contents(
                 $runner,

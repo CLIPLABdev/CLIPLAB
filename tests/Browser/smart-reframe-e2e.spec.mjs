@@ -44,7 +44,7 @@ function validateTestDsn(dsn) {
   if (!/^mysql:[^\r\n\0\s]+$/.test(dsn)) throw new Error('Test database must be isolated.');
   const tokens = dsn.slice('mysql:'.length).split(';').filter(Boolean);
   const databases = tokens.filter(token => token.split('=', 1)[0] === 'dbname');
-  if (databases.length !== 1 || databases[0] !== 'dbname=clipforge_phase5_test') {
+  if (databases.length !== 1 || databases[0] !== 'dbname=cliplab_phase5_test') {
     throw new Error('Test database must be isolated.');
   }
 }
@@ -81,7 +81,7 @@ function buildExplicitEnvironment() {
     FFMPEG_BINARY: requiredEnv('TEST_FFMPEG_BIN'),
     FFPROBE_BINARY: requiredEnv('TEST_FFPROBE_BIN'),
     MAIL_TRANSPORT: 'log',
-    MAIL_FROM_ADDRESS: 'e2e@clipforge.test',
+    MAIL_FROM_ADDRESS: 'e2e@cliplab.test',
     MAIL_LOG_FILE: join(runRoot, 'mail.log'),
     GEMINI_API_KEY: '',
     GEMINI_MODEL: '',

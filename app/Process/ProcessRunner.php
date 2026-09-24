@@ -69,8 +69,8 @@ class ProcessRunner
         $command[0] = $resolvedBinary;
 
         $windows = DIRECTORY_SEPARATOR === '\\';
-        $stdoutFile = $windows ? tempnam($this->temporaryDirectory, 'clipforge-process-') : false;
-        $stderrFile = $windows ? tempnam($this->temporaryDirectory, 'clipforge-process-') : false;
+        $stdoutFile = $windows ? tempnam($this->temporaryDirectory, 'cliplab-process-') : false;
+        $stderrFile = $windows ? tempnam($this->temporaryDirectory, 'cliplab-process-') : false;
         if ($windows && (!is_string($stdoutFile) || !is_string($stderrFile))) {
             $this->cleanupTemporaryFiles([$stdoutFile, $stderrFile]);
             throw new ProcessExecutionException('process_unavailable');

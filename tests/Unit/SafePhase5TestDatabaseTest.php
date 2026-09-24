@@ -33,7 +33,7 @@ final class SafePhase5TestDatabaseTest extends TestCase
                 self::fail('Unsafe TEST_DB_DSN was accepted.');
             } catch (InvalidArgumentException $exception) {
                 self::assertSame(
-                    'TEST_DB_DSN must target only clipforge_phase5_test.',
+                    'TEST_DB_DSN must target only cliplab_phase5_test.',
                     $exception->getMessage()
                 );
             }
@@ -51,25 +51,25 @@ final class SafePhase5TestDatabaseTest extends TestCase
             'empty' => [''],
             'database absent' => ['mysql:host=127.0.0.1;port=3306;charset=utf8mb4'],
             'database empty' => ['mysql:host=127.0.0.1;dbname=;charset=utf8mb4'],
-            'duplicate matching databases' => ['mysql:dbname=clipforge_phase5_test;dbname=clipforge_phase5_test'],
-            'conflicting database after allowed database' => ['mysql:host=127.0.0.1;dbname=clipforge_phase5_test;dbname=production'],
-            'conflicting database before allowed database' => ['mysql:host=127.0.0.1;dbname=production;dbname=clipforge_phase5_test'],
-            'case aliased duplicate' => ['mysql:dbname=clipforge_phase5_test;DBNAME=production'],
-            'percent encoded database key' => ['mysql:host=127.0.0.1;db%6Eame=clipforge_phase5_test'],
-            'percent encoded database value' => ['mysql:host=127.0.0.1;dbname=clipforge_phase5%5Ftest'],
-            'percent encoded conflicting duplicate' => ['mysql:dbname=clipforge_phase5_test;db%6Eame=production'],
-            'leading whitespace alias' => ['mysql:host=127.0.0.1; dbname=clipforge_phase5_test'],
-            'whitespace before equals alias' => ['mysql:host=127.0.0.1;dbname =clipforge_phase5_test'],
-            'whitespace before database value' => ['mysql:host=127.0.0.1;dbname= clipforge_phase5_test'],
-            'whitespace after database value' => ['mysql:host=127.0.0.1;dbname=clipforge_phase5_test '],
-            'whitespace conflicting duplicate' => ['mysql:dbname=clipforge_phase5_test; dbname = production'],
-            'non mysql driver' => ['sqlite:dbname=clipforge_phase5_test'],
+            'duplicate matching databases' => ['mysql:dbname=cliplab_phase5_test;dbname=cliplab_phase5_test'],
+            'conflicting database after allowed database' => ['mysql:host=127.0.0.1;dbname=cliplab_phase5_test;dbname=production'],
+            'conflicting database before allowed database' => ['mysql:host=127.0.0.1;dbname=production;dbname=cliplab_phase5_test'],
+            'case aliased duplicate' => ['mysql:dbname=cliplab_phase5_test;DBNAME=production'],
+            'percent encoded database key' => ['mysql:host=127.0.0.1;db%6Eame=cliplab_phase5_test'],
+            'percent encoded database value' => ['mysql:host=127.0.0.1;dbname=cliplab_phase5%5Ftest'],
+            'percent encoded conflicting duplicate' => ['mysql:dbname=cliplab_phase5_test;db%6Eame=production'],
+            'leading whitespace alias' => ['mysql:host=127.0.0.1; dbname=cliplab_phase5_test'],
+            'whitespace before equals alias' => ['mysql:host=127.0.0.1;dbname =cliplab_phase5_test'],
+            'whitespace before database value' => ['mysql:host=127.0.0.1;dbname= cliplab_phase5_test'],
+            'whitespace after database value' => ['mysql:host=127.0.0.1;dbname=cliplab_phase5_test '],
+            'whitespace conflicting duplicate' => ['mysql:dbname=cliplab_phase5_test; dbname = production'],
+            'non mysql driver' => ['sqlite:dbname=cliplab_phase5_test'],
         ];
     }
 
     public function testCanonicalDsnIsPassedUnchangedToConsumer(): void
     {
-        $dsn = 'mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4';
+        $dsn = 'mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4';
 
         $result = SafePhase5TestDatabase::using(
             $dsn,

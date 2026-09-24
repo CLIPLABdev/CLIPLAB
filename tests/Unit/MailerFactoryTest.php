@@ -49,6 +49,6 @@ final class MailerFactoryTest extends TestCase
     /** @return array<string, mixed> */
     private function smtpConfig(): array
     {
-        return ['transport' => 'smtp', 'smtp_host' => 'smtp.example.test', 'smtp_port' => 587, 'smtp_encryption' => 'tls', 'smtp_username' => 'user', 'smtp_password' => 'secret', 'from_address' => 'no-reply@example.test', 'from_name' => 'ClipForge', 'smtp_timeout' => 10];
+        return ['transport' => 'smtp', 'smtp_host' => 'smtp.example.test', 'smtp_port' => 587, 'smtp_encryption' => 'tls', 'smtp_username' => 'user', 'smtp_password' => 'secret', 'from_address' => 'no-reply@example.test', 'from_name' => 'ClipLab', 'smtp_timeout' => 10];
     }
 }

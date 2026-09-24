@@ -1,4 +1,4 @@
-# ClipForge
+# ClipLab
 
 Plataforma SaaS em PHP 8/MySQL para ingestão e processamento assíncrono de vídeos, sem Node.js, Docker, Redis ou WebSocket em produção. O site pode usar hospedagem PHP; o processamento precisa de FFmpeg/FFprobe e jobs CLI finitos. Na Hostinger, FFmpeg exige VPS: um plano Web/Cloud sozinho não executa a geração completa dos vídeos.
 
@@ -60,9 +60,9 @@ Os artefatos concluídos são acessados apenas por `GET /clips/{id}/thumbnail` e
     node tools/vendor-mediapipe.mjs verify
     php bin/check-requirements.php
 
-As integrações exigem banco isolado `clipforge_phase5_test` via `TEST_DB_DSN`, `TEST_DB_USERNAME` e `TEST_DB_PASSWORD`. Nunca use o banco do site nos testes: alguns testes de migração removem e recriam tabelas. O isolamento de processos libera conexões entre casos de teste. Para FFmpeg real, defina `TEST_FFMPEG_BIN` e `TEST_FFPROBE_BIN`.
+As integrações exigem banco isolado `cliplab_phase5_test` via `TEST_DB_DSN`, `TEST_DB_USERNAME` e `TEST_DB_PASSWORD`. Nunca use o banco do site nos testes: alguns testes de migração removem e recriam tabelas. O isolamento de processos libera conexões entre casos de teste. Para FFmpeg real, defina `TEST_FFMPEG_BIN` e `TEST_FFPROBE_BIN`.
 
-O pacote reproduzível é criado por `php bin/build-release.php --output=/caminho/fora/do/projeto/clipforge.zip`. Ele inclui manifesto SHA-256, dependências, assets, configuração de exemplo e instruções; não inclui `.env`, mídias, logs ou testes. Verifique o host com `php bin/check-production.php --role=all-in-one --verify-http --verify-gemini`. Esse comando confirma capacidades reais, não a instalação do cron ou a entrega de e-mail, que exigem homologação separada.
+O pacote reproduzível é criado por `php bin/build-release.php --output=/caminho/fora/do/projeto/cliplab.zip`. Ele inclui manifesto SHA-256, dependências, assets, configuração de exemplo e instruções; não inclui `.env`, mídias, logs ou testes. Verifique o host com `php bin/check-production.php --role=all-in-one --verify-http --verify-gemini`. Esse comando confirma capacidades reais, não a instalação do cron ou a entrega de e-mail, que exigem homologação separada.
 
 A configuração detalhada de produção, cron, armazenamento privado, HTTPS, SMTP, deploy e rollback está em `docs/HOSTINGER.md`. O artefato inclui `vendor/` do Composer e os assets pré-compilados em `public/assets/vendor/mediapipe-tasks-vision-1.0.1/`; exclui `node_modules`, caches npm/pnpm e package-manager caches. Node/pnpm são apenas de desenvolvimento: produção não usa npm, processo permanente, Redis, Docker ou WebSocket.
 

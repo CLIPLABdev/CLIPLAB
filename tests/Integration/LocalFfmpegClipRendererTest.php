@@ -29,7 +29,7 @@ final class LocalFfmpegClipRendererTest extends TestCase
     {
         $this->ffmpegBinary = $this->requiredBinary('TEST_FFMPEG_BIN');
         $this->ffprobeBinary = $this->requiredBinary('TEST_FFPROBE_BIN');
-        $this->root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-real-render-' . bin2hex(random_bytes(8));
+        $this->root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-real-render-' . bin2hex(random_bytes(8));
         $this->storageRoot = $this->root . DIRECTORY_SEPARATOR . 'storage';
         $this->renderRoot = $this->root . DIRECTORY_SEPARATOR . 'render';
 
@@ -122,7 +122,7 @@ final class LocalFfmpegClipRendererTest extends TestCase
             $audio = (new LocalFfmpegAudioExtractor($storage, $runner, $this->ffmpegBinary, $this->renderRoot, 30, 1024 * 1024))
                 ->extract(new ProjectSource(1, 1, 'local', $sourceKey, 'video/mp4'), 1.0, 2.0);
             self::assertSame('RIFF', substr($audio, 0, 4));
-            self::assertSame([], glob($this->renderRoot . '/clipforge-audio-*.wav'));
+            self::assertSame([], glob($this->renderRoot . '/cliplab-audio-*.wav'));
             $audioFixture = $this->renderRoot . '/probe-extracted-audio.wav';
             file_put_contents($audioFixture, $audio);
             try {
@@ -260,7 +260,7 @@ final class LocalFfmpegClipRendererTest extends TestCase
         } catch (\App\Exceptions\ClipRenderException $error) {
             self::assertSame('render_output_invalid',$error->publicCode());
         }
-        self::assertSame([],glob($this->renderRoot.'/clipforge-*'));
+        self::assertSame([],glob($this->renderRoot.'/cliplab-*'));
         $artifacts=$renderer->render(new RenderClipRequest($source,0.0,2.1,str_repeat('e',32)));
         try {
             $metadata=$this->probe($runner,$artifacts->videoPath());

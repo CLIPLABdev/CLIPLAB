@@ -42,7 +42,7 @@ final class ProjectWorkflowTest extends TestCase
         $planId = (int) $this->pdo->query("SELECT id FROM plans WHERE slug = 'free'")->fetchColumn();
         $this->userId = $this->insertUser($planId, 'workflow');
         $this->otherUserId = $this->insertUser($planId, 'other');
-        $this->root = sys_get_temp_dir() . '/clipforge-workflow-' . bin2hex(random_bytes(6));
+        $this->root = sys_get_temp_dir() . '/cliplab-workflow-' . bin2hex(random_bytes(6));
         mkdir($this->root, 0700, true);
     }
 

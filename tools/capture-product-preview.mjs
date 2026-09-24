@@ -28,9 +28,9 @@ try {
   browser = await chromium.launch({ channel:'chrome', headless:true });
   const page = await browser.newPage({ viewport: {width:1480,height:1080}, deviceScaleFactor:1, reducedMotion:'reduce' });
   await page.route('**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
-  if (process.env.CLIPFORGE_PREVIEW_SAMPLE) {
+  if (process.env.CLIPLAB_PREVIEW_SAMPLE) {
     // Use only an explicitly supplied licensed public sample, never account media.
-    const sample = await readFile(process.env.CLIPFORGE_PREVIEW_SAMPLE);
+    const sample = await readFile(process.env.CLIPLAB_PREVIEW_SAMPLE);
     await page.route('**/clips/41/source-preview', route => {
       const range=/^bytes=(\d+)-(\d*)$/.exec(route.request().headers().range || '');
       if (!range) return route.fulfill({status:200,contentType:'video/mp4',body:sample});
@@ -41,7 +41,7 @@ try {
   }
   await page.goto(origin+'/clips/41/editar');
   await page.locator('[data-style-preview]').waitFor({state:'visible'});
-  if (process.env.CLIPFORGE_PREVIEW_SAMPLE) {
+  if (process.env.CLIPLAB_PREVIEW_SAMPLE) {
     await page.getByRole('button',{name:'Abrir prévia',exact:true}).click();
     await page.waitForFunction(()=>document.querySelector('video')?.readyState>=2);
     await page.locator('video').evaluate(async video => {

@@ -15,7 +15,7 @@ final class SmtpMailerTest extends TestCase
         $socket=new FakeSmtpSocket(["220 ready\r\n","250 hello\r\n","250 sender\r\n","250 recipient\r\n","354 data\r\n","250 queued\r\n","221 bye\r\n"]);
         $url='https://example.test/confirmar?token='.str_repeat('abcdef0123456789',90).'&origem=conta';
         $html=(new \App\Communications\EmailDocument())->render('Confirmação de e-mail','<h1>Olá, João &amp; Lívia.</h1><p><a href="'.$url.'">Confirmar endereço</a></p>')."\n.ponto\rÚltima linha\r\n";
-        (new SmtpMailer('smtp.example.test',465,'ssl','','','no-reply@example.test','ClipForge',8,$socket))->send('person@example.test','Confirmação de e-mail',$html);
+        (new SmtpMailer('smtp.example.test',465,'ssl','','','no-reply@example.test','ClipLab',8,$socket))->send('person@example.test','Confirmação de e-mail',$html);
         $message=$socket->writes[4];
         self::assertStringEndsWith("\r\n.\r\n",$message);
         [$headers,$wireBody]=explode("\r\n\r\n",substr($message,0,-5),2);
@@ -34,13 +34,13 @@ final class SmtpMailerTest extends TestCase
     public function testQuitDisconnectDoesNotTurnAcceptedMessageIntoRetry():void
     {
         $socket=new FakeSmtpSocket(["220 ready\r\n","250 hello\r\n","250 sender\r\n","250 recipient\r\n","354 data\r\n","250 queued\r\n"]);
-        (new SmtpMailer('smtp.example.test',465,'ssl','','','no-reply@example.test','ClipForge',8,$socket))->send('person@example.test','Assunto','<p>Oi</p>');
+        (new SmtpMailer('smtp.example.test',465,'ssl','','','no-reply@example.test','ClipLab',8,$socket))->send('person@example.test','Assunto','<p>Oi</p>');
         self::assertContains("QUIT\r\n",$socket->writes);
     }
     public function testTlsAuthenticationAndMessageProtocolAreCompletedWithDotStuffing(): void
     {
         $socket = new FakeSmtpSocket(["220 ready\r\n", "250-smtp.example.test\r\n", "250 STARTTLS\r\n", "220 tls\r\n", "250 hello\r\n", "334 user\r\n", "334 pass\r\n", "235 authenticated\r\n", "250 sender\r\n", "250 recipient\r\n", "354 data\r\n", "250 queued\r\n", "221 bye\r\n"]);
-        $mailer = new SmtpMailer('smtp.example.test', 587, 'tls', 'mailer@example.test', 'top-secret', 'no-reply@example.test', 'ClipForge', 10, $socket);
+        $mailer = new SmtpMailer('smtp.example.test', 587, 'tls', 'mailer@example.test', 'top-secret', 'no-reply@example.test', 'ClipLab', 10, $socket);
         $mailer->send('person@example.test', 'Redefina sua senha', "<p>linha</p>\r\n.ponto");
 
         self::assertSame(['smtp.example.test', 587, 10, false], $socket->connection);
@@ -54,7 +54,7 @@ final class SmtpMailerTest extends TestCase
     public function testSslConnectsImplicitlyWithoutStartTls(): void
     {
         $socket = new FakeSmtpSocket(["220 ready\r\n", "250 hello\r\n", "250 sender\r\n", "250 recipient\r\n", "354 data\r\n", "250 queued\r\n", "221 bye\r\n"]);
-        (new SmtpMailer('smtp.example.test', 465, 'ssl', '', '', 'no-reply@example.test', 'ClipForge', 8, $socket))->send('person@example.test', 'Assunto', '<p>Oi</p>');
+        (new SmtpMailer('smtp.example.test', 465, 'ssl', '', '', 'no-reply@example.test', 'ClipLab', 8, $socket))->send('person@example.test', 'Assunto', '<p>Oi</p>');
 
         self::assertSame(['smtp.example.test', 465, 8, true], $socket->connection);
         self::assertNotContains("STARTTLS\r\n", $socket->writes);

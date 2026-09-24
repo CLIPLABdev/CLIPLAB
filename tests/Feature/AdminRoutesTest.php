@@ -131,8 +131,8 @@ final class AdminRoutesTest extends TestCase
     {
         $_SESSION = ['user_id' => $this->ids['admin_id'], '_csrf' => str_repeat('c', 64)]; $router=$this->router();
         self::assertSame(200, $router->dispatch(Request::fake('GET','/admin/configuracoes'))->status());
-        $saved=$router->dispatch(Request::fake('POST','/admin/configuracoes',['_token'=>str_repeat('c',64),'name'=>'ClipForge Pro','description'=>'Vídeos melhores','logo_url'=>'/assets/images/logo.png','favicon_url'=>'/assets/images/favicon.ico']));
-        self::assertSame(302,$saved->status()); self::assertSame('ClipForge Pro',$this->pdo->query("SELECT setting_value FROM platform_settings WHERE setting_key='name'")->fetchColumn());
+        $saved=$router->dispatch(Request::fake('POST','/admin/configuracoes',['_token'=>str_repeat('c',64),'name'=>'ClipLab Pro','description'=>'Vídeos melhores','logo_url'=>'/assets/images/logo.png','favicon_url'=>'/assets/images/favicon.ico']));
+        self::assertSame(302,$saved->status()); self::assertSame('ClipLab Pro',$this->pdo->query("SELECT setting_value FROM platform_settings WHERE setting_key='name'")->fetchColumn());
         self::assertSame(200,$router->dispatch(Request::fake('GET','/admin/promocoes'))->status());
         $created=$router->dispatch(Request::fake('POST','/admin/promocoes',['_token'=>str_repeat('c',64),'title'=>'Upgrade','body'=>'Mais minutos','cta_label'=>'Ver plano','cta_url'=>'/conta/plano','placement'=>'dashboard','audience'=>'plan','plan_id'=>(string)$this->ids['plan_id'],'is_active'=>'1']));
         self::assertSame(302,$created->status()); self::assertSame('Upgrade',$this->pdo->query('SELECT title FROM promotions')->fetchColumn());

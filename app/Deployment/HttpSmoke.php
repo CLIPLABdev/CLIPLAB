@@ -81,7 +81,7 @@ final class HttpSmoke
             curl_setopt_array($curl,[
                 CURLOPT_HTTPGET=>true,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_CONNECTTIMEOUT=>5,CURLOPT_TIMEOUT=>10,
                 CURLOPT_SSL_VERIFYPEER=>true,CURLOPT_SSL_VERIFYHOST=>2,CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS,
-                CURLOPT_HTTPHEADER=>['Accept: text/html','User-Agent: ClipForge-Smoke/2'],
+                CURLOPT_HTTPHEADER=>['Accept: text/html','User-Agent: ClipLab-Smoke/2'],
                 CURLOPT_HEADERFUNCTION=>static function ($handle,string $line) use (&$headers,&$headerBytes): int {
                     $headerBytes+=strlen($line);
                     if ($headerBytes>32768) return 0;

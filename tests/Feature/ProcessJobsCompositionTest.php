@@ -26,7 +26,7 @@ final class ProcessJobsCompositionTest extends TestCase
         $statement = $this->pdo->prepare('INSERT INTO users (name, email, password_hash, plan_id) VALUES (?, ?, ?, ?)');
         $statement->execute(['CLI composition', 'cli-' . bin2hex(random_bytes(7)) . '@example.test', 'x', $planId]);
         $this->userId = (int) $this->pdo->lastInsertId();
-        $this->mediaRoot = sys_get_temp_dir() . '/clipforge-cli-' . bin2hex(random_bytes(6));
+        $this->mediaRoot = sys_get_temp_dir() . '/cliplab-cli-' . bin2hex(random_bytes(6));
         mkdir($this->mediaRoot, 0700, true);
     }
 

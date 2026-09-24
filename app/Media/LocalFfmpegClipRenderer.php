@@ -291,7 +291,7 @@ final class LocalFfmpegClipRenderer implements ClipRenderer
     {
         for ($attempt = 0; $attempt < 3; $attempt++) {
             $path = $this->temporaryDirectory . DIRECTORY_SEPARATOR
-                . 'clipforge-' . $kind . '-' . bin2hex(random_bytes(16)) . '.' . $extension;
+                . 'cliplab-' . $kind . '-' . bin2hex(random_bytes(16)) . '.' . $extension;
             if (!file_exists($path)) {
                 return $path;
             }

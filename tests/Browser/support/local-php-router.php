@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-$nonce = getenv('CLIPFORGE_TEST_SERVER_NONCE');
-$configuredRoot = getenv('CLIPFORGE_TEST_SERVER_ROOT');
+$nonce = getenv('CLIPLAB_TEST_SERVER_NONCE');
+$configuredRoot = getenv('CLIPLAB_TEST_SERVER_ROOT');
 $documentRoot = is_string($configuredRoot) ? realpath($configuredRoot) : false;
 if (!is_string($nonce) || preg_match('/\A[a-f0-9]{32}\z/D', $nonce) !== 1 || $documentRoot === false) {
     http_response_code(500);
@@ -12,7 +12,7 @@ if (!is_string($nonce) || preg_match('/\A[a-f0-9]{32}\z/D', $nonce) !== 1 || $do
 }
 
 $requestPath = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH);
-if ($requestPath === '/__clipforge_test_server_ready') {
+if ($requestPath === '/__cliplab_test_server_ready') {
     header('Cache-Control: no-store');
     header('Content-Type: text/plain; charset=UTF-8');
     http_response_code(200);

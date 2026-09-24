@@ -14,7 +14,7 @@ final class ProcessRunnerDescendantTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-runner-descendant-' . bin2hex(random_bytes(8));
+        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-runner-descendant-' . bin2hex(random_bytes(8));
         mkdir($this->temporaryDirectory, 0700);
         @chmod($this->temporaryDirectory, 0700);
     }
@@ -80,7 +80,7 @@ final class ProcessRunnerDescendantTest extends TestCase
     /** @return list<string> */
     private function processTemporaryFiles(): array
     {
-        $files = glob($this->temporaryDirectory . DIRECTORY_SEPARATOR . 'clipforge-process-*');
+        $files = glob($this->temporaryDirectory . DIRECTORY_SEPARATOR . 'cliplab-process-*');
 
         return $files === false ? [] : array_values($files);
     }

@@ -18,7 +18,7 @@ final class FfmpegRequirementsTest extends TestCase
         if ($cmd === '' || !is_file($cmd)) {
             self::markTestSkipped('cmd.exe is unavailable for the Windows boundary regression.');
         }
-        $root = sys_get_temp_dir() . '/clipforge-ffmpeg-name-check-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-ffmpeg-name-check-' . bin2hex(random_bytes(6));
         self::assertTrue(mkdir($root, 0700, true));
 
         try {
@@ -41,7 +41,7 @@ final class FfmpegRequirementsTest extends TestCase
 
     public function testCheckerAcceptsExpectedAbsoluteBinaryNamesWithoutExecutingThem(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-ffmpeg-absolute-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-ffmpeg-absolute-' . bin2hex(random_bytes(6));
         self::assertTrue(mkdir($root, 0700, true));
         $suffix = DIRECTORY_SEPARATOR === '\\' ? '.exe' : '';
         $ffprobe = $root . '/ffprobe' . $suffix;
@@ -74,7 +74,7 @@ final class FfmpegRequirementsTest extends TestCase
 
     public function testCheckerResolvesExpectedBareNamesFromPathWithoutExecutingThem(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-ffmpeg-path-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-ffmpeg-path-' . bin2hex(random_bytes(6));
         self::assertTrue(mkdir($root, 0700, true));
         $suffix = DIRECTORY_SEPARATOR === '\\' ? '.exe' : '';
         $ffprobe = $root . '/ffprobe' . $suffix;
@@ -106,7 +106,7 @@ final class FfmpegRequirementsTest extends TestCase
 
     public function testCheckerInspectsRenderCapacityWithoutExecutingBinariesOrPrintingPaths(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-ffmpeg-check-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-ffmpeg-check-' . bin2hex(random_bytes(6));
         self::assertTrue(mkdir($root, 0700, true));
         $ffprobe = $root . '/private-ffprobe-sentinel';
         $ffmpeg = $root . '/private-ffmpeg-sentinel';
@@ -142,7 +142,7 @@ final class FfmpegRequirementsTest extends TestCase
 
     public function testCheckerFailsWhenLeaseDoesNotCoverLargestOperationBudget(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-lease-check-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-lease-check-' . bin2hex(random_bytes(6));
         self::assertTrue(mkdir($root, 0700, true));
 
         try {

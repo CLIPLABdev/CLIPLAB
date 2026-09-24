@@ -33,7 +33,7 @@ final class RenderWorkerCompositionTest extends TestCase
 
     public function testRenderBudgetMakesUnsafeLeaseFailBeforeDatabaseOrExternalEffects(): void
     {
-        $directory = sys_get_temp_dir() . '/clipforge-render-worker-' . bin2hex(random_bytes(6));
+        $directory = sys_get_temp_dir() . '/cliplab-render-worker-' . bin2hex(random_bytes(6));
         self::assertTrue(mkdir($directory, 0700, true));
         $bootstrap = $directory . '/bootstrap.php';
         $effectMarker = $directory . '/external-effect-called';

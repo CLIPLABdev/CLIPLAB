@@ -32,7 +32,7 @@ $renderBootstrapFailure = static function () use (&$bootstrapResponseSent, $boot
     }
 
     $bootstrapResponseSent = true;
-    error_log('ClipForge bootstrap failure [' . $bootstrapCorrelationId . ']');
+    error_log('ClipLab bootstrap failure [' . $bootstrapCorrelationId . ']');
 
     if (!headers_sent()) {
         http_response_code(500);

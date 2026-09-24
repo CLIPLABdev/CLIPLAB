@@ -1,12 +1,12 @@
-# ClipForge — reforma de apresentação e experiência
+# ClipLab — reforma de apresentação e experiência
 Data: 2026-09-06. Direção aprovada no anexo do usuário e autorização para execução integral.
 
 ## Objetivo e limites
 Reformular a landing e levar uma identidade coerente a todas as telas existentes, sem substituir o PHP/MySQL nem os fluxos reais de importação, Gemini, edição e exportação. Localhost 127.0.0.1:8093 permanece ativo. A hospedagem futura é Hostinger; nenhuma publicação externa ou troca de stack está incluída.
 
 ## Referências e originalidade
-Analisados https://cut.pro/pt-BR e https://realoficial.com.br/pt em 2026-09-06. Usar somente princípios: demonstração antes de explicação longa, jornada curta, CTA contextual, três etapas, benefício concreto e prova verificável. Não copiar headlines, código, imagens, identidade nem números. A ClipForge não anuncia publicação automática, redes conectadas, analytics sociais, billing automático ou viralização garantida.
-Marca preservada: ClipForge. Tese: um estúdio editorial grafite com acento lima, onde a linha do tempo e os recortes são a linguagem visual.
+Analisados https://cut.pro/pt-BR e https://realoficial.com.br/pt em 2026-09-06. Usar somente princípios: demonstração antes de explicação longa, jornada curta, CTA contextual, três etapas, benefício concreto e prova verificável. Não copiar headlines, código, imagens, identidade nem números. A ClipLab não anuncia publicação automática, redes conectadas, analytics sociais, billing automático ou viralização garantida.
+Marca preservada: ClipLab. Tese: um estúdio editorial grafite com acento lima, onde a linha do tempo e os recortes são a linguagem visual.
 
 ## Sistema visual
 Tokens: background #0b0d10, surface #12161b, elevated #191f26, border #303942, text #f4f6f8, muted #aab4c0, accent #d2f86b, accent-ink #142009, secondary #8cdce8. Fonte system-ui/Segoe UI, títulos compactos e grandes na landing, corpo >=16px; controles >=14px. Radius 12px controles, 20px superfícies; sombras discretas. Sem dependências novas, fontes remotas, imagens genéricas ou arte representacional em CSS. Reutilizar ícones locais e componentes reais. CSS geométrico para interface/timeline é adequado.

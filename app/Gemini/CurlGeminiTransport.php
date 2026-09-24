@@ -211,7 +211,7 @@ final class CurlGeminiTransport implements GeminiTransport
             CURLOPT_HEADERFUNCTION => $headerCallback,
             CURLOPT_WRITEFUNCTION => $writeCallback,
             CURLOPT_HTTPHEADER => $this->headerLines($headers),
-            CURLOPT_USERAGENT => 'ClipForge-Gemini-Worker/1.0',
+            CURLOPT_USERAGENT => 'ClipLab-Gemini-Worker/1.0',
             CURLOPT_VERBOSE => false,
             CURLOPT_FAILONERROR => false,
             CURLOPT_NOSIGNAL => true,

@@ -99,7 +99,7 @@ final class MediaProcessingLifecycleTest extends TestCase
             ->execute([$projectId]);
         $this->pdo->prepare("UPDATE processing_jobs SET last_error_code = 'worker_error', last_error_message = 'O processamento falhou. Tente novamente.' WHERE project_id = ?")
             ->execute([$projectId]);
-        $missingBinary = 'clipforge-missing-' . bin2hex(random_bytes(12));
+        $missingBinary = 'cliplab-missing-' . bin2hex(random_bytes(12));
         $processor = new LifecycleMissingProcessProcessor(
             new ProcessRunner([$missingBinary], sys_get_temp_dir()),
             $missingBinary

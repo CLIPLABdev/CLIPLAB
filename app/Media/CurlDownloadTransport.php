@@ -104,7 +104,7 @@ final class CurlDownloadTransport implements DownloadTransport
             CURLOPT_RETURNTRANSFER => false,
             CURLOPT_HEADERFUNCTION => $headerCallback,
             CURLOPT_WRITEFUNCTION => $writeCallback,
-            CURLOPT_USERAGENT => 'Clipforge-Media-Importer/1.0',
+            CURLOPT_USERAGENT => 'ClipLab-Media-Importer/1.0',
         ];
             $caBundle = getenv('CURL_CA_BUNDLE');
             if (is_string($caBundle) && is_file($caBundle) && is_readable($caBundle)) {

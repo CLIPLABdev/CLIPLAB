@@ -98,7 +98,7 @@ O aceite completo continua pendente: ainda falta auditoria ouvindo o áudio, rev
 
 ## Incidente do banco e estado atual
 
-Um teste adicional de recuperação em clipforge_phase5_test executou CREATE TEMPORARY TABLE ... LIKE clip_render_profiles e bloqueou internamente o MariaDB 10.4.32, afetando também leituras de clipforge. O teste foi removido e as conexões de teste receberam cancelamento; a operação continuou como Killed/Creating table.
+Um teste adicional de recuperação em cliplab_phase5_test executou CREATE TEMPORARY TABLE ... LIKE clip_render_profiles e bloqueou internamente o MariaDB 10.4.32, afetando também leituras de cliplab. O teste foi removido e as conexões de teste receberam cancelamento; a operação continuou como Killed/Creating table.
 
 O desligamento gracioso foi solicitado, mas inicialmente o processo local mysqld PID 6640 permaneceu presente. A tentativa posterior de encerramento forçado foi rejeitada pela auto-review por risco de perda/corrupção. Essa chamada rejeitada não executou encerramento nem cópia. Posteriormente, duas verificações confirmaram que o processo já havia encerrado, sem intervenção forçada, e a porta 3306 estava livre.
 
@@ -110,7 +110,7 @@ A autorização específica para recuperar a tabela interna de permissões foi a
 
 Após a autorização, o clone `mysql-repair-rehearsal-20260907` recebeu um ensaio offline em bootstrap com `REPAIR TABLE db USE_FRM`, que recuperou quatro linhas. Uma cópia adicional, `mysql-db-before-authorized-repair`, preservou `db.frm`, `db.MAI` e `db.MAD` antes de alterar o original. Essas cópias preservam os arquivos disponíveis; não constituem garantia de integridade lógica completa. Referência: [documentação oficial de REPAIR TABLE](https://mariadb.com/docs/server/reference/sql-statements/table-statements/repair-table).
 
-O original foi reparado offline em 07/09 às 00:02:48 pelo mesmo procedimento, sem reset de grants. O mysqld iniciou normalmente às 00:02:50, PID 14996, com bind em `127.0.0.1`. `CHECK TABLE mysql.db` retornou OK; `mysqlcheck --check --quick clipforge` retornou OK para todas as tabelas verificadas. Uma conta desconhecida foi negada com erro 1045. São verificações de estrutura e acesso, não uma demonstração de integridade lógica de todos os dados ou de todas as funcionalidades.
+O original foi reparado offline em 07/09 às 00:02:48 pelo mesmo procedimento, sem reset de grants. O mysqld iniciou normalmente às 00:02:50, PID 14996, com bind em `127.0.0.1`. `CHECK TABLE mysql.db` retornou OK; `mysqlcheck --check --quick cliplab` retornou OK para todas as tabelas verificadas. Uma conta desconhecida foi negada com erro 1045. São verificações de estrutura e acesso, não uma demonstração de integridade lógica de todos os dados ou de todas as funcionalidades.
 
 O servidor PHP web-only permaneceu separado, PID 13084, supervisor 22516, porta 8093. No Chrome separado, o login da conta demo chegou ao dashboard; projeto 2011, `/templates`, `/marca` e `/clips` responderam HTTP 200, sem erros JavaScript observados. O usuário havia relatado `ERR_CONNECTION_REFUSED` no navegador interno, cuja inspeção falhou por ACL; o fluxo posterior no Chrome não constitui nova verificação do navegador interno do usuário.
 

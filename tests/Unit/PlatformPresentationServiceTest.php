@@ -25,7 +25,7 @@ final class PlatformPresentationServiceTest extends TestCase
     public function testGuestContextHasBrandingButNoPrivateData(): void
     {
         $context=$this->service->context('home.index',[]);
-        self::assertSame('ClipForge',$context['platformBranding']['name']);
+        self::assertSame('ClipLab',$context['platformBranding']['name']);
         self::assertSame([],$context['currentPromotions']);
         self::assertSame(0,$context['notificationUnread']);
     }

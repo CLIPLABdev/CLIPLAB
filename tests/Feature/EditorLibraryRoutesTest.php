@@ -22,7 +22,7 @@ final class EditorLibraryRoutesTest extends TestCase
     {
         $_SESSION = []; Session::put('user_id', 1);
         $pdo = $this->libraryDatabase(); $this->repo = new EditorLibraryRepository($pdo);
-        $this->root = sys_get_temp_dir() . '/clipforge-library-http-' . bin2hex(random_bytes(8)); mkdir($this->root);
+        $this->root = sys_get_temp_dir() . '/cliplab-library-http-' . bin2hex(random_bytes(8)); mkdir($this->root);
         $this->service = new EditorLibraryService($this->repo, new LocalPrivateStorage($this->root, 2097152), static function (): void {}, static fn (): bool => true);
         $this->router = $this->routes($pdo);
     }

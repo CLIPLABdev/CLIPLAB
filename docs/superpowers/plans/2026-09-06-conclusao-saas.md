@@ -9,7 +9,7 @@
 
 ## Global Constraints
 - PHP 8.0+, sem Node em produção, sem processo permanente/Redis/Docker obrigatório.
-- Testes apenas em clipforge_phase5_test; nenhuma leitura/exposição de .env ou segredo, nem provider real durante tests.
+- Testes apenas em cliplab_phase5_test; nenhuma leitura/exposição de .env ou segredo, nem provider real durante tests.
 - Root integra routes/web.php, app/Views/layouts/app.php, bootstrap/worker e configurações comuns. Cada implementador altera só seus paths. Nenhum staging concorrente.
 - CSRF, autorização por sessão e role consultada no banco; HTML escapado e projeção allowlist. Nenhuma exclusão de dados para resolver quota.
 - Continuar até todas as tasks; não encerrar após módulo individual. Publicação/accessos externos são gate separado.

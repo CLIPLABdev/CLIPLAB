@@ -23,7 +23,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
-    if ((string) $pdo->query('SELECT DATABASE()')->fetchColumn() !== 'clipforge_phase5_test') {
+    if ((string) $pdo->query('SELECT DATABASE()')->fetchColumn() !== 'cliplab_phase5_test') {
         throw new RuntimeException('invalid_database');
     }
 

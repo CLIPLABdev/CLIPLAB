@@ -21,7 +21,7 @@ final class MailerFactory
             return new LogMailer((string) ($config['log_file'] ?? ''));
         }
         if ($transport === 'mail') {
-            return new NativeMailer((string) ($config['from_address'] ?? ''), (string) ($config['from_name'] ?? 'ClipForge'));
+            return new NativeMailer((string) ($config['from_address'] ?? ''), (string) ($config['from_name'] ?? 'ClipLab'));
         }
         if ($transport !== 'smtp') {
             throw new RuntimeException('Unsupported mail transport.');
@@ -38,6 +38,6 @@ final class MailerFactory
             throw new RuntimeException('Invalid SMTP configuration.');
         }
 
-        return new SmtpMailer($host, $port, $encryption, $username, $password, $fromAddress, (string) ($config['from_name'] ?? 'ClipForge'), $timeout);
+        return new SmtpMailer($host, $port, $encryption, $username, $password, $fromAddress, (string) ($config['from_name'] ?? 'ClipLab'), $timeout);
     }
 }

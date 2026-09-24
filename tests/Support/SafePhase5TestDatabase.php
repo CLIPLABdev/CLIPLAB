@@ -8,8 +8,8 @@ use InvalidArgumentException;
 
 final class SafePhase5TestDatabase
 {
-    private const DATABASE = 'clipforge_phase5_test';
-    private const ERROR = 'TEST_DB_DSN must target only clipforge_phase5_test.';
+    private const DATABASE = 'cliplab_phase5_test';
+    private const ERROR = 'TEST_DB_DSN must target only cliplab_phase5_test.';
 
     public static function validatedDsn(mixed $dsn): string
     {

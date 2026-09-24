@@ -9,7 +9,7 @@ use RuntimeException;
 
 final class NativeMailer implements Mailer
 {
-    public function __construct(private string $fromAddress, private string $fromName = 'ClipForge')
+    public function __construct(private string $fromAddress, private string $fromName = 'ClipLab')
     {
     }
 

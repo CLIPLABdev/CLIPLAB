@@ -20,7 +20,7 @@ final class WebUploadLimitCompositionTest extends TestCase
         $environment = getenv();
         $environment = array_merge(is_array($environment) ? $environment : [], [
             'MEDIA_MAX_UPLOAD_BYTES' => '52428800',
-            'MEDIA_PRIVATE_ROOT' => sys_get_temp_dir() . '/clipforge-web-limit-' . bin2hex(random_bytes(6)),
+            'MEDIA_PRIVATE_ROOT' => sys_get_temp_dir() . '/cliplab-web-limit-' . bin2hex(random_bytes(6)),
             'WEB_UPLOAD_LIMIT_CAPTURE' => $capture,
         ]);
 

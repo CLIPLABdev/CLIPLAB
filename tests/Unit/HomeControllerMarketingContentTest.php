@@ -14,7 +14,7 @@ final class HomeControllerMarketingContentTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->views = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-home-' . bin2hex(random_bytes(6));
+        $this->views = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-home-' . bin2hex(random_bytes(6));
         mkdir($this->views);
         file_put_contents($this->views . DIRECTORY_SEPARATOR . 'home.php', '<?php echo json_encode([$publicPlans, $publicTestimonials], JSON_THROW_ON_ERROR);');
     }

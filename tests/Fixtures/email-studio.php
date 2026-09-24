@@ -15,7 +15,7 @@ session_set_save_handler(new class implements SessionHandlerInterface {
 session_start();$_SESSION=['user_id'=>1];
 $pdo=new PDO('sqlite::memory:',null,null,[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
 $pdo->exec('CREATE TABLE users(id INTEGER PRIMARY KEY,name TEXT,email TEXT,role TEXT,status TEXT)');
-$pdo->exec("INSERT INTO users VALUES(1,'Equipe ClipForge','admin@example.test','admin','active')");
+$pdo->exec("INSERT INTO users VALUES(1,'Equipe ClipLab','admin@example.test','admin','active')");
 $pdo->exec('CREATE TABLE communication_email_templates(id INTEGER PRIMARY KEY AUTOINCREMENT,event TEXT,locale TEXT,subject_template TEXT,html_template TEXT,text_template TEXT,is_active INTEGER,version INTEGER,updated_by INTEGER,updated_at TEXT DEFAULT CURRENT_TIMESTAMP)');
 $pdo->exec('CREATE TABLE communication_mail_settings(id INTEGER PRIMARY KEY)');
 $service=new CommunicationTemplateService($pdo);$service->installDefaults();

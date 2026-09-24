@@ -19,10 +19,10 @@ final class InformationalController
         return $this->view->render('informational.page',[
             'page'=>'privacy',
             'title'=>'Privacidade',
-            'introduction'=>'Entenda quais dados entram no ClipForge, o que é enviado para serviços externos e quais controles estão disponíveis.',
+            'introduction'=>'Entenda quais dados entram no ClipLab, o que é enviado para serviços externos e quais controles estão disponíveis.',
             'sections'=>[
                 ['id'=>'dados','title'=>'Dados usados para operar sua conta','paragraphs'=>[
-                    'O ClipForge armazena dados de cadastro, como nome e e-mail, senha em formato de hash, informações do plano, saldo e movimentações de créditos. Projetos incluem títulos, vídeos, características técnicas da mídia, sugestões de cortes, legendas e configurações de edição.',
+                    'O ClipLab armazena dados de cadastro, como nome e e-mail, senha em formato de hash, informações do plano, saldo e movimentações de créditos. Projetos incluem títulos, vídeos, características técnicas da mídia, sugestões de cortes, legendas e configurações de edição.',
                     'A sessão do navegador mantém sua autenticação e protege os formulários. Registros de processamento, falhas e ações administrativas ajudam a operar o serviço. O provedor de hospedagem também pode manter seus próprios registros de acesso.',
                 ]],
                 ['id'=>'gemini','title'=>'Vídeo e áudio enviados ao Gemini','paragraphs'=>[
@@ -32,10 +32,10 @@ final class InformationalController
                 ]],
                 ['id'=>'midia-privada','title'=>'Mídia privada e acesso','paragraphs'=>[
                     'Os originais, vídeos exportados e miniaturas ficam em armazenamento privado. As rotas de prévia e download verificam a sessão, o proprietário e a análise atual. Não há galeria pública nem publicação automática em redes sociais.',
-                    'Privado não significa processamento exclusivamente local: o envio ao Gemini descrito acima continua necessário para os recursos de IA. A operação da infraestrutura exige acesso técnico controlado. Quem baixa ou publica um arquivo passa a controlar essa cópia fora do ClipForge.',
+                    'Privado não significa processamento exclusivamente local: o envio ao Gemini descrito acima continua necessário para os recursos de IA. A operação da infraestrutura exige acesso técnico controlado. Quem baixa ou publica um arquivo passa a controlar essa cópia fora do ClipLab.',
                 ]],
                 ['id'=>'enquadramento','title'=>'MediaPipe, processamento local e consentimento','paragraphs'=>[
-                    'O enquadramento inteligente usa MediaPipe para detectar rostos nos frames processados no seu dispositivo. Para aplicar o recorte, o ClipForge envia ao servidor apenas tempos e posições de enquadramento, não imagens faciais separadas, detecções brutas, embeddings ou identidade.',
+                    'O enquadramento inteligente usa MediaPipe para detectar rostos nos frames processados no seu dispositivo. Para aplicar o recorte, o ClipLab envia ao servidor apenas tempos e posições de enquadramento, não imagens faciais separadas, detecções brutas, embeddings ou identidade.',
                     'O SDK pode enviar ao Google métricas técnicas de desempenho e uso. Por isso, a ativação automática exige consentimento afirmativo na seção de privacidade do projeto ou editor. Abrir esta página não carrega o SDK nem ativa essa análise.',
                     'Você pode revogar esse consentimento no projeto ou editor. A revogação impede novas análises automáticas; não desfaz versões já geradas nem apaga os registros anteriores de consentimento. Os modos centralizado e manual continuam disponíveis sem essa autorização.',
                 ]],
@@ -60,7 +60,7 @@ final class InformationalController
             'sections'=>[
                 ['id'=>'seu-conteudo','title'=>'Sua conta e seu conteúdo','paragraphs'=>[
                     'Use uma conta própria e mantenha suas credenciais protegidas. Envie apenas material que você possa usar e autorizar a processar, incluindo a imagem, voz, música e demais elementos de terceiros. Não use o serviço para conteúdo ilícito, fraude ou para violar direitos de outras pessoas.',
-                    'Você escolhe o material, revisa os resultados e decide se e onde publicar. O ClipForge não publica em redes sociais por você.',
+                    'Você escolhe o material, revisa os resultados e decide se e onde publicar. O ClipLab não publica em redes sociais por você.',
                 ]],
                 ['id'=>'ia','title'=>'IA exige revisão','paragraphs'=>[
                     'A análise do vídeo e a transcrição automática de áudio usam Gemini. Leia a página de Privacidade antes de enviar conteúdo. O enquadramento inteligente MediaPipe é um recurso separado e só pode ser ativado após o consentimento correspondente.',

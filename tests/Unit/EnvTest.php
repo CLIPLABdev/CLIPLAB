@@ -14,11 +14,11 @@ final class EnvTest extends TestCase
     {
         $file = tempnam(sys_get_temp_dir(), 'env');
         self::assertNotFalse($file);
-        file_put_contents($file, "APP_NAME=ClipForge\nAPP_ENV=\"testing\"\n");
+        file_put_contents($file, "APP_NAME=ClipLab\nAPP_ENV=\"testing\"\n");
 
         Env::load($file);
 
-        self::assertSame('ClipForge', Env::get('APP_NAME'));
+        self::assertSame('ClipLab', Env::get('APP_NAME'));
         self::assertSame('testing', Env::get('APP_ENV'));
 
         unlink($file);

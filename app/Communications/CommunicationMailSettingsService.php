@@ -11,7 +11,7 @@ final class CommunicationMailSettingsService
     public function __construct(private PDO $pdo,private SecretCipher $cipher,private array $fallback) {}
     private function row():?array {$row=$this->pdo->query('SELECT * FROM communication_mail_settings WHERE id=1')->fetch(PDO::FETCH_ASSOC);return is_array($row)?$row:null;}
     public function save(int $actor,array $input):void {
-        $host=strtolower(trim((string)($input['smtp_host']??'')));$from=mb_strtolower(trim((string)($input['from_address']??'')));$port=(int)($input['smtp_port']??0);$enc=strtolower(trim((string)($input['smtp_encryption']??'')));$user=trim((string)($input['smtp_username']??''));$password=(string)($input['smtp_password']??'');$name=trim((string)($input['from_name']??'ClipForge'));
+        $host=strtolower(trim((string)($input['smtp_host']??'')));$from=mb_strtolower(trim((string)($input['from_address']??'')));$port=(int)($input['smtp_port']??0);$enc=strtolower(trim((string)($input['smtp_encryption']??'')));$user=trim((string)($input['smtp_username']??''));$password=(string)($input['smtp_password']??'');$name=trim((string)($input['from_name']??'ClipLab'));
         if($actor<1 || !preg_match('/^[a-z0-9][a-z0-9.-]{0,253}$/D',$host) || preg_match('/[\r\n\x00]/',$name.$user) || strlen($name)>120 || strlen($user)>254 || strlen($password)>4096)throw new InvalidArgumentException('Configuração SMTP inválida.');
         $previous=$this->row();$secret=null;
         if($password!=='' && $user==='')throw new InvalidArgumentException('Informe o usuário SMTP.');

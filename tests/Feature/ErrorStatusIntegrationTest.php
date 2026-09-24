@@ -21,7 +21,7 @@ final class ErrorStatusIntegrationTest extends TestCase
     protected function setUp(): void
     {
         $_SESSION = [];
-        $this->directory = sys_get_temp_dir() . '/clipforge-error-status-' . bin2hex(random_bytes(4));
+        $this->directory = sys_get_temp_dir() . '/cliplab-error-status-' . bin2hex(random_bytes(4));
         self::assertTrue(mkdir($this->directory));
         $this->logFile = $this->directory . '/app.log';
     }

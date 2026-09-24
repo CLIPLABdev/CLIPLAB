@@ -61,7 +61,7 @@ final class MediaPipeAssetManifestTest extends TestCase
 
     private function copyAssetRoot(): string
     {
-        $root = sys_get_temp_dir() . '/clipforge-mediapipe-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-mediapipe-' . bin2hex(random_bytes(6));
         self::copyDirectory(self::ASSET_ROOT, $root);
         return $root;
     }

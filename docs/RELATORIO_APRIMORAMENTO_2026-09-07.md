@@ -91,7 +91,7 @@ O projeto oficial 2011 e seus clipes anteriores foram preservados. A homologaç�
 
 ## Pendências para conclusão integral
 
-O checkpoint desta integração é `dist/clipforge-platform-20260907-checkpoint.zip`. Inclui código, migrações, dependências e os guias de operação/Hostinger. Não inclui `.env`, mídia privada, bancos, logs, sessões de navegador ou backups. O manifesto registra hashes dos arquivos; a verificação de integridade e exclusões fica no ledger privado. O pacote ainda exige homologação do destino e não é liberação comercial.
+O checkpoint desta integração é `dist/cliplab-platform-20260907-checkpoint.zip`. Inclui código, migrações, dependências e os guias de operação/Hostinger. Não inclui `.env`, mídia privada, bancos, logs, sessões de navegador ou backups. O manifesto registra hashes dos arquivos; a verificação de integridade e exclusões fica no ledger privado. O pacote ainda exige homologação do destino e não é liberação comercial.
 
 1. Configurar e homologar cron de projeção, campanhas e entrega de e-mail no host de destino. A inicialização local do projetor não substitui isso. Usar o guia `docs/PLATAFORMA_OPERACAO.md`.
 2. Homologar sandbox de Stripe/Pagar.me com credenciais próprias e webhook HTTPS; validar SMTP real e recebimento. Um aceite SMTP não comprova chegada à caixa de entrada. Nenhuma publicação/integração externa foi inventada.
@@ -108,4 +108,4 @@ Painéis administrativo e do usuário receberam navegação agrupada, composiç�
 
 Validação visual: 24 vistas autenticadas somente por GET/HEAD, sem erros JS/CSP ou overflow; browsers isolados de administração/e-mail também passaram. Unit: 1.551 testes, 5.854 asserções, zero falhas/erros, 2 skips; três testes MySQL dedicados foram excluídos explicitamente. Recorte Feature pertinente: 81 testes/472 asserções, todos aprovados. Lint: 371 arquivos PHP sem erros. A tentativa da Feature completa mantém pendências de DSN/artefato/engine e uma expectativa antiga de projeção, sem mudança no controller desde o baseline desta rodada; não se declara a suíte completa verde.
 
-Checkpoint visual: `dist/clipforge-visual-20260907-checkpoint.zip`, gerado separadamente sem sobrescrever o anterior e sujeito à verificação de manifesto. Não houve SMTP real, envio de mídia ou publicação externa nesta atualização. Gmail/Outlook reais e Hostinger seguem exigindo homologação. O relatório detalhado e capturas permanecem na pasta principal do projeto: `docs/RELATORIO_VISUAL_2026-09-07.md` e `dist/visual-polish/`.
+Checkpoint visual: `dist/cliplab-visual-20260907-checkpoint.zip`, gerado separadamente sem sobrescrever o anterior e sujeito à verificação de manifesto. Não houve SMTP real, envio de mídia ou publicação externa nesta atualização. Gmail/Outlook reais e Hostinger seguem exigindo homologação. O relatório detalhado e capturas permanecem na pasta principal do projeto: `docs/RELATORIO_VISUAL_2026-09-07.md` e `dist/visual-polish/`.

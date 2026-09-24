@@ -235,7 +235,7 @@ final class MediaPipeRequirementsTest extends TestCase
     /** @return array{string,string} */
     private function fixture(): array
     {
-        $root = sys_get_temp_dir() . '/clipforge-requirements-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-requirements-' . bin2hex(random_bytes(6));
         $storage = $root . '/private-storage';
         mkdir($storage, 0700, true);
         mkdir($root . '/app/Middleware', 0700, true);
@@ -255,7 +255,7 @@ final class MediaPipeRequirementsTest extends TestCase
     /** @param array<string,string> $overrides @return array{exit:int,stdout:string,stderr:string} */
     private function runChecker(string $root, string $storage, array $overrides = [], string $driver = 'mysql', string $version = '10.4.32-MariaDB', ?bool $checks = true): array
     {
-        $prepend = tempnam(sys_get_temp_dir(), 'clipforge-requirements-prepend-');
+        $prepend = tempnam(sys_get_temp_dir(), 'cliplab-requirements-prepend-');
         self::assertNotFalse($prepend);
         file_put_contents($prepend, <<<'PHP'
 <?php

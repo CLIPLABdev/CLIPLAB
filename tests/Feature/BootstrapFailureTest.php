@@ -10,7 +10,7 @@ final class BootstrapFailureTest extends TestCase
 {
     public function testBootstrapFailureDoesNotExposeItsMessageOrPath(): void
     {
-        $directory = sys_get_temp_dir() . '/clipforge-bootstrap-' . bin2hex(random_bytes(4));
+        $directory = sys_get_temp_dir() . '/cliplab-bootstrap-' . bin2hex(random_bytes(4));
         self::assertTrue(mkdir($directory . '/public', 0777, true));
         $entryPoint = $directory . '/public/index.php';
         self::assertTrue(copy(dirname(__DIR__, 2) . '/public/index.php', $entryPoint));

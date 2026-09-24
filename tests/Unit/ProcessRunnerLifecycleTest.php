@@ -15,7 +15,7 @@ final class ProcessRunnerLifecycleTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-runner-lifecycle-' . bin2hex(random_bytes(8));
+        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-runner-lifecycle-' . bin2hex(random_bytes(8));
         mkdir($this->temporaryDirectory, 0700);
         @chmod($this->temporaryDirectory, 0700);
     }
@@ -39,7 +39,7 @@ final class ProcessRunnerLifecycleTest extends TestCase
 
     public function testRejectsAnUnavailableConfiguredPrivateTemporaryDirectory(): void
     {
-        $missingDirectory = sys_get_temp_dir() . '/clipforge-missing-' . bin2hex(random_bytes(6));
+        $missingDirectory = sys_get_temp_dir() . '/cliplab-missing-' . bin2hex(random_bytes(6));
 
         $this->expectException(InvalidArgumentException::class);
         new ProcessRunner([PHP_BINARY], $missingDirectory);

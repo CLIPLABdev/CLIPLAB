@@ -1,15 +1,15 @@
-# ClipForge redesign Implementation Plan
+# ClipLab redesign Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development. Steps use checkbox syntax for tracking.
 
 **Goal:** Entregar a reformulação original da landing e experiência do SaaS preservando seus fluxos reais.
 **Architecture:** PHP server-rendered existente, tokens CSS compartilhados, módulos de landing locais e catálogo público restrito com conteúdo aprovado pelo admin.
 **Tech Stack:** PHP 8.0+, MySQL/MariaDB, CSS, JavaScript sem frameworks novos, PHPUnit e Playwright existentes.
-**Spec:** docs/superpowers/specs/2026-09-06-clipforge-redesign-design.md
+**Spec:** docs/superpowers/specs/2026-09-06-cliplab-redesign-design.md
 
 ## Global Constraints
 - Preservar PHP/MySQL, Hostinger como destino e localhost 127.0.0.1:8093.
-- Marca ClipForge; paleta #0b0d10, #12161b, #191f26, #303942, #f4f6f8, #aab4c0, #d2f86b, #142009, #8cdce8.
+- Marca ClipLab; paleta #0b0d10, #12161b, #191f26, #303942, #f4f6f8, #aab4c0, #d2f86b, #142009, #8cdce8.
 - Sem novas dependências, segredos expostos, alterações de .env, dados pessoais públicos, métricas/depoimentos inventados ou publicação automática anunciada.
 - Preservar POST, CSRF, IDs/names/data-* dos formulários, CSP sem unsafe-inline e lógica funcional existente.
 - Alterações somente no worktree fase1-worktree; não commit/push/merge nem sobrescrever mudanças anteriores. Relatórios persistidos.
@@ -24,7 +24,7 @@ $html = (new \App\Core\View())->render('auth/login', ['errors'=>[], 'old'=>[], '
 Adaptar ao acesso real de Response já usado em testes existentes; testar DOM, não texto de arquivos.
 - [x] Criar folha com tokens, controles, foco, estados, breakpoints e reduced-motion; incluir depois do CSS principal por layout. Aplicar a jornada: dashboard primeiro vídeo e retomada; estados vazios orientam ação real; login/cadastro com identidade e valor claro; projetos/clipes/admin/conta com escala consistente. Preservar labels funcionais e hooks.
 - [x] Executar teste focado e testes de apresentação existentes; registrar RED/GREEN. Sem chamadas externas.
-- [x] Ler diff e escrever .superpowers/sdd/2026-09-06-clipforge-redesign/task-1-report.md.
+- [x] Ler diff e escrever .superpowers/sdd/2026-09-06-cliplab-redesign/task-1-report.md.
 
 ### Task 2: Landing original demonstrável
 **Files:** Modify app/Views/home.php, layouts/marketing.php, public/assets/js/app.js; create public/assets/css/landing.css, public/assets/js/landing-demo.js e tests/Browser/landing-demo.test.js, tests/Feature/LandingPresentationTest.php.
@@ -37,7 +37,7 @@ await expect(page.locator('[data-demo-stage="2"]')).toBeVisible();
 ```
 - [x] Criar hero forte e original, demo acessível explicitamente ilustrativo, problema, etapas, produto, benefícios, planos include, prova include, FAQ e CTA. Copy curta, PT-BR, sem promessas não implementadas. Levar o usuário ao cadastro e /projetos/novo após entrar, sem fakeinput.
 - [x] CSS responsivo próprio com boa hierarquia e identidade editorial; animar só interface de modo opcional. Melhorar menu móvel Escape/foco se necessário.
-- [x] Testes focados e relatório .superpowers/sdd/2026-09-06-clipforge-redesign/task-2-report.md.
+- [x] Testes focados e relatório .superpowers/sdd/2026-09-06-cliplab-redesign/task-2-report.md.
 
 ### Task 3: Planos reais e prova social administrável
 **Files:** HomeController.php, routes/web.php/admin.php, novos serviço/repositorio/controller de MarketingContent, app/Views/admin/content.php, components/marketing-plans.php e marketing-proof.php, entrada navegação no array layouts/admin.php, testes Unit/Feature correspondentes.
@@ -49,13 +49,13 @@ self::assertSame([], $service->publicTestimonials()); // banco sem configuraçã
 ```
 - [x] Implementar módulo separado de segredos reutilizando armazenamento de settings se seguro, senão tabela aditiva/migração idempotente. Não alterar dados de planos ou credenciais. Saída pública somente whitelist, limites atuais normalizados; falha de DB não inventa preços.
 - [x] Construir partials server-rendered com dados escapados, plano recomendado editorialmente sem falsificar popularidade; sem checkout fake. Admin com campos textuais simples até3, autorização explícita e toggle publicado; vazio oculta seção pública.
-- [x] Executar testes focados sem DDL destrutivo e relatório .superpowers/sdd/2026-09-06-clipforge-redesign/task-3-report.md.
+- [x] Executar testes focados sem DDL destrutivo e relatório .superpowers/sdd/2026-09-06-cliplab-redesign/task-3-report.md.
 
 ### Task 4: Integração e revisão
 **Files:** tests/Browser/redesign.spec.mjs e config quando necessário; docs/VERIFICACAO_REDESIGN.md.
 **Interfaces:** todas as entregas; não consumir Gemini.
 - [x] Verificar HTTP das rotas principais, assets e links; navegador desktop/mobile, login, CTA, demo, FAQ, admin, responsividade, CSP.
-- [x] Executar Unit,Feature em clipforge_phase5_test (não testes destrutivos); frontend intake e Gemini regressions.
+- [x] Executar Unit,Feature em cliplab_phase5_test (não testes destrutivos); frontend intake e Gemini regressions.
 - [x] Revisão independente das três tarefas e revisão final; corrigir achados importantes com testes antes da entrega.
 - [x] Registrar evidências e pendências reais de produção; exibir landing no localhost. Não alegar implantação Hostinger.
 

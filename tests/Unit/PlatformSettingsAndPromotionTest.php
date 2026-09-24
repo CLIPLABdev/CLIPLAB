@@ -29,7 +29,7 @@ final class PlatformSettingsAndPromotionTest extends TestCase
     public function testEmptySettingsReturnCompleteBrandingShape(): void
     {
         $branding=(new PlatformSettingsService(new PlatformSettingsRepository($this->pdo())))->branding();
-        self::assertSame('ClipForge',$branding['name']); self::assertNull($branding['logo_url']); self::assertNull($branding['favicon_url']);
+        self::assertSame('ClipLab',$branding['name']); self::assertNull($branding['logo_url']); self::assertNull($branding['favicon_url']);
     }
 
     public function testPromotionVisibilityHonorsStatusPlanScheduleAndAudience(): void

@@ -18,7 +18,7 @@ final class SmtpMailer implements Mailer
         private string $username,
         private string $password,
         private string $fromAddress,
-        private string $fromName = 'ClipForge',
+        private string $fromName = 'ClipLab',
         private int $timeout = 10,
         private ?SmtpSocket $socket = null
     ) {

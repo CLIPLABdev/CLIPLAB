@@ -13,7 +13,7 @@ final class CurlHttpTransport implements HttpTransport
         $prefix=$host==='api.stripe.com'?'/v1/':'/core/v5/';
         if(!$parts || !in_array($host,['api.stripe.com','api.pagar.me','sdx-api.pagar.me'],true) || ($parts['scheme']??'')!=='https' || isset($parts['port']) || isset($parts['user']) || isset($parts['pass']) || isset($parts['fragment']) || !in_array($method,['GET','POST','DELETE','PATCH'],true) || !str_starts_with($path,$prefix) || str_contains($path,'..') || preg_match('/[\r\n]/',$url))throw new DomainException('Destino financeiro inválido.');
         if(!function_exists('curl_init'))throw new RuntimeException('Transporte financeiro indisponível.');
-        $allowed=['Authorization','Content-Type','Stripe-Version','Idempotency-Key'];$lines=['Accept: application/json','User-Agent: ClipForge-Billing/1.0'];
+        $allowed=['Authorization','Content-Type','Stripe-Version','Idempotency-Key'];$lines=['Accept: application/json','User-Agent: ClipLab-Billing/1.0'];
         foreach($headers as $key=>$value){if(!in_array($key,$allowed,true) || !is_string($value) || preg_match('/[\r\n]/',$value))throw new DomainException('Cabeçalho financeiro inválido.');$lines[]=$key.': '.$value;}
         $payload=$host==='api.stripe.com'?http_build_query($body,'','&',PHP_QUERY_RFC3986):json_encode($body,JSON_THROW_ON_ERROR);
         $response='';$tooLarge=false;$handle=curl_init($url);

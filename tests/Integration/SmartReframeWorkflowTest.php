@@ -54,8 +54,8 @@ final class SmartReframeWorkflowTest extends TestCase
         $this->ffmpegBinary = $this->requiredBinary('TEST_FFMPEG_BIN');
         $this->ffprobeBinary = $this->requiredBinary('TEST_FFPROBE_BIN');
         $this->runToken = bin2hex(random_bytes(8));
-        $this->storageRoot = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-reframe-workflow-storage-' . $this->runToken;
-        $this->renderRoot = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-reframe-workflow-render-' . $this->runToken;
+        $this->storageRoot = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-reframe-workflow-storage-' . $this->runToken;
+        $this->renderRoot = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-reframe-workflow-render-' . $this->runToken;
 
         try {
             $username = $this->presentEnvironment('TEST_DB_USERNAME');
@@ -91,7 +91,7 @@ final class SmartReframeWorkflowTest extends TestCase
             );
             $this->pdo->exec("SET time_zone = '+00:00'");
             (new Migrator($this->pdo, dirname(__DIR__, 2) . '/database/migrations'))->run();
-            self::assertSame('clipforge_phase5_test', (string) $this->pdo->query('SELECT DATABASE()')->fetchColumn());
+            self::assertSame('cliplab_phase5_test', (string) $this->pdo->query('SELECT DATABASE()')->fetchColumn());
             self::assertSame(0, (int) $this->pdo->query(
                 "SELECT COUNT(*) FROM processing_jobs WHERE queue_name = 'media' AND status IN ('queued','running','retry')"
             )->fetchColumn(), 'The dedicated media queue must be empty before this workflow starts.');

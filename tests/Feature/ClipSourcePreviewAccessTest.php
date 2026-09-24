@@ -231,8 +231,8 @@ final class ClipSourcePreviewAccessTest extends TestCase
         self::assertNotSame('', $dsn, 'TEST_DB_DSN must target the isolated Task 4 test database.');
         self::assertSame(
             1,
-            preg_match('/(?:^|;)dbname=clipforge_phase5_test(?:;|$)/D', $dsn),
-            'TEST_DB_DSN must target clipforge_phase5_test.'
+            preg_match('/(?:^|;)dbname=cliplab_phase5_test(?:;|$)/D', $dsn),
+            'TEST_DB_DSN must target cliplab_phase5_test.'
         );
         $this->pdo = new PDO($dsn, getenv('TEST_DB_USERNAME') ?: null, getenv('TEST_DB_PASSWORD') ?: null, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

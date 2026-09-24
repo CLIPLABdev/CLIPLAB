@@ -1,4 +1,4 @@
-# ClipForge — homologação real e estúdio de cortes
+# ClipLab — homologação real e estúdio de cortes
 Data: 6 de setembro de 2026. Pedido integral e aprovação anterior do usuário; autorização explícita confirmada para o vídeo informado.
 
 ## Objetivo

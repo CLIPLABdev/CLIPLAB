@@ -1,5 +1,5 @@
 {
-  "name": "clipforge/app",
+  "name": "cliplab/app",
   "type": "project",
   "require": {
     "php": ">=8.0",

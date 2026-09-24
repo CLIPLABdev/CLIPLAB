@@ -1,4 +1,4 @@
-# Entrega técnica do ClipForge
+# Entrega técnica do ClipLab
 
 ## Estado
 
@@ -77,7 +77,7 @@ Comandos de referência:
 composer install --no-dev --optimize-autoloader
 php bin/migrate.php
 php bin/create-admin.php --email=operador@dominio.example --name=Operador
-php bin/build-release.php --output=/caminho-privado/clipforge.zip
+php bin/build-release.php --output=/caminho-privado/cliplab.zip
 php bin/check-production.php --role=all-in-one --verify-http --verify-gemini
 php bin/process-jobs.php --queue=media --limit=1 --time-budget=50
 ```

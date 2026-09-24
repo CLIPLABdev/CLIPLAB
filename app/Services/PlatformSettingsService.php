@@ -15,7 +15,7 @@ final class PlatformSettingsService
     public function branding(): array
     {
         $values = $this->settings->all();
-        return ['name' => $values['name'] ?? 'ClipForge', 'description' => $values['description'] ?? '', 'logo_url' => ($values['logo_url'] ?? '') ?: null, 'favicon_url' => ($values['favicon_url'] ?? '') ?: null];
+        return ['name' => $values['name'] ?? 'ClipLab', 'description' => $values['description'] ?? '', 'logo_url' => ($values['logo_url'] ?? '') ?: null, 'favicon_url' => ($values['favicon_url'] ?? '') ?: null];
     }
 
     /** @param array<string,mixed> $input */

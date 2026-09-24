@@ -28,7 +28,7 @@ final class SmartReframeFfmpegTest extends TestCase
     {
         $this->ffmpegBinary = $this->requiredBinary('TEST_FFMPEG_BIN');
         $this->ffprobeBinary = $this->requiredBinary('TEST_FFPROBE_BIN');
-        $this->root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-smart-reframe-' . bin2hex(random_bytes(8));
+        $this->root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-smart-reframe-' . bin2hex(random_bytes(8));
         $this->storageRoot = $this->root . DIRECTORY_SEPARATOR . 'storage';
         $this->renderRoot = $this->root . DIRECTORY_SEPARATOR . 'render';
 

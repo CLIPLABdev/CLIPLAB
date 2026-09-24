@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Produção continua em PHP 8.0+ e exige MySQL 8.0.16+ ou MariaDB 10.4+ com CHECK habilitado; o SQL e a introspecção devem passar nos dois engines suportados. Node, pnpm e Playwright são exclusivamente de desenvolvimento.
-- Todo teste que altera schema/fila usa exclusivamente `clipforge_phase5_test`, recusa DSN cujo `dbname` não termine em `_test` e nunca toca o banco da demonstração em 8093.
+- Todo teste que altera schema/fila usa exclusivamente `cliplab_phase5_test`, recusa DSN cujo `dbname` não termine em `_test` e nunca toca o banco da demonstração em 8093.
 - `@mediapipe/tasks-vision` deve ser exatamente `1.0.1`; modelo exatamente `blaze_face_short_range/float16/1`; nenhum `latest`, CDN ou download em runtime.
 - Assets MediaPipe devem sair de `public/assets/vendor/mediapipe-tasks-vision-1.0.1/`, com licença, origem, tamanho e SHA-256 verificáveis offline.
 - Formatos aceitos: `original`, `9:16` 720x1280, `1:1` 720x720, `16:9` 1280x720 e `4:5` 720x900.
@@ -414,8 +414,8 @@ self::assertSame([], $migrator->run());
 Run:
 
 ```powershell
-& 'C:\xampp\mysql\bin\mysql.exe' -u root -e "CREATE DATABASE IF NOT EXISTS clipforge_phase5_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+& 'C:\xampp\mysql\bin\mysql.exe' -u root -e "CREATE DATABASE IF NOT EXISTS cliplab_phase5_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-phpunit-files.ps1 -PhpBin C:\xampp\php\php.exe -TestPath tests\Integration\ClipRenderProfileMigrationTest.php tests\Integration\ReframeKeyframeMigrationTest.php tests\Integration\UserConsentMigrationTest.php
@@ -519,7 +519,7 @@ self::assertSame('legacy', $repository->resolveForJob($legacyClipId, 1)->state()
 Execute o novo teste antes da implementação:
 
 ```powershell
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 C:\xampp\php\php.exe vendor\bin\phpunit tests\Integration\ClipRenderProfileRepositoryTest.php
@@ -538,7 +538,7 @@ Para consentimento, grant ativo é no-op; grant de linha revogada atualiza `gran
 Run:
 
 ```powershell
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-phpunit-files.ps1 -PhpBin C:\xampp\php\php.exe -TestPath tests\Integration\ClipRenderProfileMigrationTest.php tests\Integration\ReframeKeyframeMigrationTest.php tests\Integration\UserConsentMigrationTest.php tests\Integration\ClipRenderProfileRepositoryTest.php tests\Unit\MigratorTest.php
@@ -710,7 +710,7 @@ self::assertSame(1, $this->countProfiles($pdo, $clipId, $revision));
 Run:
 
 ```powershell
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-phpunit-files.ps1 -PhpBin C:\xampp\php\php.exe -TestPath tests\Unit\ClipRenderRequestServiceTest.php tests\Integration\ClipRenderRequestIntegrationTest.php tests\Integration\ClipReframeConcurrencyTest.php tests\Feature\ClipRenderAccessTest.php
@@ -751,7 +751,7 @@ Atualize `$requestClipRender` em `routes/web.php` para cinco argumentos e instan
 Run:
 
 ```powershell
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-phpunit-files.ps1 -PhpBin C:\xampp\php\php.exe -TestPath tests\Unit\ClipRenderRequestServiceTest.php tests\Integration\ClipRenderRequestIntegrationTest.php tests\Integration\ClipReframeConcurrencyTest.php tests\Integration\RenderClipLifecycleTest.php tests\Feature\ClipRenderAccessTest.php tests\Feature\ProjectSuggestionRouteIntegrationTest.php tests\Integration\ClipRenderRepositoryTest.php
@@ -931,7 +931,7 @@ No fixture existente, teste matched original/manual/auto, legacy sem linha, mism
 Run:
 
 ~~~powershell
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-phpunit-files.ps1 -PhpBin C:\xampp\php\php.exe -TestPath tests\Unit\RenderClipHandlerTest.php tests\Integration\RenderClipLifecycleTest.php tests\Feature\RenderWorkerCompositionTest.php
@@ -983,7 +983,7 @@ Em bin/process-jobs.php, crie um ClipRenderProfileRepository($pdo), injete no ha
 Run:
 
 ~~~powershell
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-phpunit-files.ps1 -PhpBin C:\xampp\php\php.exe -TestPath tests\Unit\RenderClipHandlerTest.php tests\Integration\RenderClipLifecycleTest.php tests\Integration\RenderedClipWorkflowTest.php tests\Feature\RenderWorkerCompositionTest.php tests\Feature\ProcessJobsCommandHardeningTest.php tests\Feature\ClipRoutesIntegrationTest.php tests\Unit\QueueWorkerTest.php
@@ -1385,7 +1385,7 @@ Expected: PASS sem skip; MP4 é H.264/AAC, JPEG segue a proporção final e auto
 
 - [ ] **Step 3: Escrever workflow completo no banco SQL suportado**
 
-Seed owner, foreign user, projeto, source privado real ready com width/height, análise atual e clip suggested no schema `clipforge_phase5_test` após o guard `_test`. Gere a source H.264/AAC a partir da mesma fixture facial sintética, sem download/Gemini e sem reutilizar mídia ou clip demo. Conceda consentimento, peça preview 206, submeta plano auto, reivindique job, execute handler, consulte status e assets. Exija um job, um profile da revisão, 2..32 keyframes, completed, owner 200, foreign/stale 404, guest redirect/401, ledger do user igual, outbox do clip 0 e diretório temporário do run vazio; não use contagens globais. `finally` remove linhas e storage do run.
+Seed owner, foreign user, projeto, source privado real ready com width/height, análise atual e clip suggested no schema `cliplab_phase5_test` após o guard `_test`. Gere a source H.264/AAC a partir da mesma fixture facial sintética, sem download/Gemini e sem reutilizar mídia ou clip demo. Conceda consentimento, peça preview 206, submeta plano auto, reivindique job, execute handler, consulte status e assets. Exija um job, um profile da revisão, 2..32 keyframes, completed, owner 200, foreign/stale 404, guest redirect/401, ledger do user igual, outbox do clip 0 e diretório temporário do run vazio; não use contagens globais. `finally` remove linhas e storage do run.
 
 ~~~php
 self::assertSame(1, $this->jobCount($clipId, $revision));
@@ -1430,7 +1430,7 @@ const testEnv = {
   FFMPEG_BINARY: requiredEnv('TEST_FFMPEG_BIN'),
   FFPROBE_BINARY: requiredEnv('TEST_FFPROBE_BIN'),
   MAIL_TRANSPORT: 'log',
-  MAIL_FROM_ADDRESS: 'e2e@clipforge.test',
+  MAIL_FROM_ADDRESS: 'e2e@cliplab.test',
   MAIL_LOG_FILE: path.join(runRoot, 'mail.log'),
   GEMINI_API_KEY: '',
   GEMINI_MODEL: ''
@@ -1458,11 +1458,11 @@ Espere exit 0 e status completed, abra thumbnail/download e valide 320/768/1440.
 Run:
 
 ~~~powershell
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 $env:TEST_PHP_BIN='C:\xampp\php\php.exe'
-$env:TEST_MEDIA_PRIVATE_ROOT=(Join-Path $env:TEMP 'clipforge-smart-reframe-e2e')
+$env:TEST_MEDIA_PRIVATE_ROOT=(Join-Path $env:TEMP 'cliplab-smart-reframe-e2e')
 $env:TEST_FFMPEG_BIN='C:\Users\Acer\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffmpeg.exe'
 $env:TEST_FFPROBE_BIN='C:\Users\Acer\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffprobe.exe'
 C:\xampp\php\php.exe vendor\bin\phpunit tests\Integration\SmartReframeWorkflowTest.php
@@ -1476,11 +1476,11 @@ Expected: PASS sem Gemini, sem estado demo prévio e sem skip de DB/media/browse
 Run:
 
 ~~~powershell
-$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=clipforge_phase5_test;charset=utf8mb4'
+$env:TEST_DB_DSN='mysql:host=127.0.0.1;port=3306;dbname=cliplab_phase5_test;charset=utf8mb4'
 $env:TEST_DB_USERNAME='root'
 $env:TEST_DB_PASSWORD=''
 $env:TEST_PHP_BIN='C:\xampp\php\php.exe'
-$env:TEST_MEDIA_PRIVATE_ROOT=(Join-Path $env:TEMP 'clipforge-smart-reframe-e2e')
+$env:TEST_MEDIA_PRIVATE_ROOT=(Join-Path $env:TEMP 'cliplab-smart-reframe-e2e')
 $env:TEST_FFMPEG_BIN='C:\Users\Acer\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffmpeg.exe'
 $env:TEST_FFPROBE_BIN='C:\Users\Acer\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffprobe.exe'
 C:\xampp\php\php.exe vendor\bin\phpunit tests\Unit
@@ -1524,7 +1524,7 @@ $phpBin = if ([string]::IsNullOrWhiteSpace($env:TEST_PHP_BIN)) { 'C:\xampp\php\p
 Start-Process -FilePath $phpBin -ArgumentList @('-S','127.0.0.1:8093','-t','public','public\index.php') -WorkingDirectory (Get-Location) -WindowStyle Hidden -PassThru
 ~~~
 
-Abra http://127.0.0.1:8093/projetos/{id}, faça uma render auto completa, valide preview seek/status/thumbnail/download e deixe essa página aberta. Credenciais demo permanecem demo@clipforge.local / ClipForge#Demo2026; não exponha credenciais reais.
+Abra http://127.0.0.1:8093/projetos/{id}, faça uma render auto completa, valide preview seek/status/thumbnail/download e deixe essa página aberta. Credenciais demo permanecem demo@cliplab.local / ClipLab#Demo2026; não exponha credenciais reais.
 
 - [ ] **Step 10: Commit do gate**
 

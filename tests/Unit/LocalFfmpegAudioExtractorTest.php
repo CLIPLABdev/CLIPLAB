@@ -50,7 +50,7 @@ final class LocalFfmpegAudioExtractorTest extends TestCase
         } catch (SubtitleException $error) {
             self::assertSame('subtitle_audio_missing',$error->publicCode());
             self::assertStringNotContainsString($source,$error->getMessage());
-            self::assertSame([],glob($dir.'/clipforge-audio-*.wav'));
+            self::assertSame([],glob($dir.'/cliplab-audio-*.wav'));
         } finally {
             @unlink($source);
             @rmdir($dir);

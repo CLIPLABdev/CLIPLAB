@@ -42,7 +42,7 @@
 
 ```json
 {
-  "name": "clipforge/app",
+  "name": "cliplab/app",
   "type": "project",
   "require": {"php": ">=8.1", "ext-pdo": "*", "ext-mbstring": "*"},
   "require-dev": {"phpunit/phpunit": "^10.5"},
@@ -55,9 +55,9 @@
 public function testLoadsQuotedAndPlainValues(): void
 {
     $file = tempnam(sys_get_temp_dir(), 'env');
-    file_put_contents($file, "APP_NAME=ClipForge\nAPP_ENV=\"testing\"\n");
+    file_put_contents($file, "APP_NAME=ClipLab\nAPP_ENV=\"testing\"\n");
     Env::load($file);
-    self::assertSame('ClipForge', Env::get('APP_NAME'));
+    self::assertSame('ClipLab', Env::get('APP_NAME'));
     self::assertSame('testing', Env::get('APP_ENV'));
     unlink($file);
 }

@@ -17,7 +17,7 @@ final class ProcessRunnerTest extends TestCase
     protected function setUp(): void
     {
         $this->phpBinary = PHP_BINARY;
-        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-runner-' . bin2hex(random_bytes(8));
+        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-runner-' . bin2hex(random_bytes(8));
         mkdir($this->temporaryDirectory, 0700);
         @chmod($this->temporaryDirectory, 0700);
         $this->runner = new ProcessRunner([$this->phpBinary], $this->temporaryDirectory);
@@ -52,7 +52,7 @@ final class ProcessRunnerTest extends TestCase
 
     public function testMissingAllowlistedBareExecutableIsReportedAsUnavailable(): void
     {
-        $missingBinary = 'clipforge-missing-' . bin2hex(random_bytes(12));
+        $missingBinary = 'cliplab-missing-' . bin2hex(random_bytes(12));
         $runner = new ProcessRunner([$missingBinary], $this->temporaryDirectory);
 
         try {
@@ -104,7 +104,7 @@ final class ProcessRunnerTest extends TestCase
         }
 
         foreach (['bat', 'cmd'] as $extension) {
-            $script = $this->temporaryDirectory . DIRECTORY_SEPARATOR . 'clipforge-script-' . bin2hex(random_bytes(8)) . '.' . $extension;
+            $script = $this->temporaryDirectory . DIRECTORY_SEPARATOR . 'cliplab-script-' . bin2hex(random_bytes(8)) . '.' . $extension;
             self::assertTrue(copy($this->phpBinary, $script));
             $runner = new ProcessRunner([$script], $this->temporaryDirectory);
 
@@ -128,7 +128,7 @@ final class ProcessRunnerTest extends TestCase
             self::markTestSkipped('Windows PATHEXT behavior is Windows-specific.');
         }
 
-        $binary = 'clipforge-native-' . bin2hex(random_bytes(8));
+        $binary = 'cliplab-native-' . bin2hex(random_bytes(8));
         $scriptDirectory = $this->temporaryDirectory . DIRECTORY_SEPARATOR . 'script-bin';
         $nativeDirectory = $this->temporaryDirectory . DIRECTORY_SEPARATOR . 'native-bin';
         mkdir($scriptDirectory, 0700);
@@ -167,7 +167,7 @@ final class ProcessRunnerTest extends TestCase
     public function testIgnoresEmptyPathEntriesInsteadOfLaunchingFromTheWorkingDirectory(): void
     {
         $extension = DIRECTORY_SEPARATOR === '\\' ? '.exe' : '';
-        $binary = 'clipforge-unsafe-path-' . bin2hex(random_bytes(12)) . $extension;
+        $binary = 'cliplab-unsafe-path-' . bin2hex(random_bytes(12)) . $extension;
         $previousWorkingDirectory = getcwd();
         self::assertIsString($previousWorkingDirectory);
         $workingCopy = $this->temporaryDirectory . DIRECTORY_SEPARATOR . $binary;
@@ -200,7 +200,7 @@ final class ProcessRunnerTest extends TestCase
     public function testResolvesBareExecutableFromAnAbsolutePathEntry(): void
     {
         $windows = DIRECTORY_SEPARATOR === '\\';
-        $binary = 'clipforge-safe-path-' . bin2hex(random_bytes(12));
+        $binary = 'cliplab-safe-path-' . bin2hex(random_bytes(12));
         $filename = $binary . ($windows ? '.EXE' : '');
         $directory = $this->temporaryDirectory . DIRECTORY_SEPARATOR . 'bin';
         mkdir($directory, 0700);

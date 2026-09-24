@@ -11,7 +11,7 @@
 - PHP 8.0+, sem Node em produção, sem provedor externo ou cópia de mídia.
 - Owner exclusivamente da sessão; análise atual e revisão exata; nenhum path/chave privada na projeção.
 - GET /clips é somente leitura; prepared statements, escape HTML, Cache-Control: private, no-store.
-- Testes DB usam exclusivamente clipforge_phase5_test; preservar .env e localhost 8093.
+- Testes DB usam exclusivamente cliplab_phase5_test; preservar .env e localhost 8093.
 - Worktree compartilhado: cada implementador altera e stageia somente os paths atribuídos. Commits são coordenados pelo root.
 - Ruling: backend e view podem ser implementados paralelamente após congelar este contrato; arquivos não se sobrepõem, atendendo ao pedido do usuário por agilidade/subagentes.
 

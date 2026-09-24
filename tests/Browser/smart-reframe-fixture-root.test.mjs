@@ -22,7 +22,7 @@ if (typeof phpBin !== 'string' || phpBin.trim() === ''
   throw new Error('The real PHP, FFmpeg, FFprobe, and isolated test database are required.');
 }
 
-const testRoot = await mkdtemp(join(tmpdir(), 'clipforge-fixture-root-'));
+const testRoot = await mkdtemp(join(tmpdir(), 'cliplab-fixture-root-'));
 const authorizedRoot = join(testRoot, 'authorized');
 const outsideRoot = join(testRoot, 'outside');
 const runId = `sr_${randomUUID().replaceAll('-', '')}`;

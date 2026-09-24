@@ -38,7 +38,7 @@ final class DesignSystemPresentationTest extends TestCase
         $authentication = ['errors' => [], 'old' => [], 'message' => null, 'token' => 'test-token'];
 
         return [
-            'marketing' => ['layouts.marketing', ['title' => 'ClipForge', 'content' => '']],
+            'marketing' => ['layouts.marketing', ['title' => 'ClipLab', 'content' => '']],
             'app' => ['layouts.app', [
                 'title' => 'Visão geral', 'content' => '',
                 'user' => ['id' => 17, 'name' => 'Ana', 'email' => 'ana@example.test', 'credits' => 7, 'plan_name' => 'Free', 'monthly_minutes' => 60],

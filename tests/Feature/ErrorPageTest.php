@@ -16,7 +16,7 @@ final class ErrorPageTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->directory = sys_get_temp_dir() . '/clipforge-errors-' . bin2hex(random_bytes(4));
+        $this->directory = sys_get_temp_dir() . '/cliplab-errors-' . bin2hex(random_bytes(4));
         self::assertTrue(mkdir($this->directory));
         $this->logFile = $this->directory . '/app.log';
     }

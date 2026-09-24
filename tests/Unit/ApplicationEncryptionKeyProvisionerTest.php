@@ -16,7 +16,7 @@ final class ApplicationEncryptionKeyProvisionerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-key-' . bin2hex(random_bytes(8));
+        $this->root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-key-' . bin2hex(random_bytes(8));
         mkdir($this->root, 0700, true);
         mkdir($this->root . DIRECTORY_SEPARATOR . 'public', 0700, true);
         mkdir($this->root . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'cache', 0700, true);
@@ -43,7 +43,7 @@ final class ApplicationEncryptionKeyProvisionerTest extends TestCase
     {
         $pdo = AdminTestDatabase::create();
         $env = $this->root . DIRECTORY_SEPARATOR . '.env';
-        file_put_contents($env, "APP_NAME=ClipForge\nGEMINI_MODEL=gemini-test\n");
+        file_put_contents($env, "APP_NAME=ClipLab\nGEMINI_MODEL=gemini-test\n");
         clearstatcache(true, $env);
         $originalFileId = fileinode($env);
 
@@ -54,7 +54,7 @@ final class ApplicationEncryptionKeyProvisionerTest extends TestCase
         $decoded = isset($match[1]) ? base64_decode($match[1], true) : false;
 
         self::assertSame('created', $result);
-        self::assertStringContainsString("APP_NAME=ClipForge\n", $contents);
+        self::assertStringContainsString("APP_NAME=ClipLab\n", $contents);
         self::assertStringContainsString("GEMINI_MODEL=gemini-test\n", $contents);
         self::assertIsString($decoded);
         self::assertSame(32, strlen($decoded));
@@ -66,7 +66,7 @@ final class ApplicationEncryptionKeyProvisionerTest extends TestCase
     {
         $pdo = AdminTestDatabase::create();
         $env = $this->root . DIRECTORY_SEPARATOR . '.env';
-        $contents = 'APP_ENCRYPTION_KEY=' . base64_encode(str_repeat("\x61", 32)) . "\nAPP_NAME=ClipForge\n";
+        $contents = 'APP_ENCRYPTION_KEY=' . base64_encode(str_repeat("\x61", 32)) . "\nAPP_NAME=ClipLab\n";
         file_put_contents($env, $contents);
 
         self::assertSame('already_configured', $this->provisioner($pdo)->provision($env));
@@ -77,7 +77,7 @@ final class ApplicationEncryptionKeyProvisionerTest extends TestCase
     {
         $pdo = AdminTestDatabase::create();
         $env = $this->root . DIRECTORY_SEPARATOR . '.env';
-        file_put_contents($env, "APP_NAME=ClipForge\r\nAPP_ENCRYPTION_KEY=invalid\r\nGEMINI_MODEL=gemini-test\r\n");
+        file_put_contents($env, "APP_NAME=ClipLab\r\nAPP_ENCRYPTION_KEY=invalid\r\nGEMINI_MODEL=gemini-test\r\n");
 
         self::assertSame('created', $this->provisioner($pdo)->provision($env));
         $contents = (string) file_get_contents($env);
@@ -90,7 +90,7 @@ final class ApplicationEncryptionKeyProvisionerTest extends TestCase
         $pdo = AdminTestDatabase::create();
         $env = $this->root . DIRECTORY_SEPARATOR . '.env';
         $stale = $this->root . DIRECTORY_SEPARATOR . '.env.tmp.0123456789abcdef';
-        file_put_contents($env, "APP_NAME=ClipForge\n");
+        file_put_contents($env, "APP_NAME=ClipLab\n");
         file_put_contents($stale, "DATABASE_PASSWORD=stale-secret\n");
 
         self::assertSame('created', $this->provisioner($pdo)->provision($env));
@@ -102,7 +102,7 @@ final class ApplicationEncryptionKeyProvisionerTest extends TestCase
         $pdo = AdminTestDatabase::create();
         $pdo->exec("INSERT INTO gemini_settings (id, api_key_ciphertext, model) VALUES (1, 'v1.existing-ciphertext', 'gemini-test')");
         $env = $this->root . DIRECTORY_SEPARATOR . '.env';
-        $contents = "APP_NAME=ClipForge\n";
+        $contents = "APP_NAME=ClipLab\n";
         file_put_contents($env, $contents);
 
         try {
@@ -139,7 +139,7 @@ final class ApplicationEncryptionKeyProvisionerTest extends TestCase
     {
         $pdo = AdminTestDatabase::create();
         $publicEnv = $this->root . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . '.env';
-        file_put_contents($publicEnv, "APP_NAME=ClipForge\n");
+        file_put_contents($publicEnv, "APP_NAME=ClipLab\n");
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('The environment file must be the private project-root .env file.');

@@ -158,7 +158,7 @@ final class ProductionEnvironmentProbe
         $video=$directory.DIRECTORY_SEPARATOR.'sample.mp4';
         $wav=$directory.DIRECTORY_SEPARATOR.'sample.wav';
         try {
-            $transcript=SrtCodec::parse("1\n00:00:00,000 --> 00:00:01,000\nClipForge\n",1000);
+            $transcript=SrtCodec::parse("1\n00:00:00,000 --> 00:00:01,000\nClipLab\n",1000);
             $document=AssDocumentBuilder::build($transcript,EditorOptions::fromArray(['style'=>'minimal']),160,90,1000);
             if (file_put_contents($ass,$document)!==strlen($document)) return $caps;
             @chmod($ass,0600);

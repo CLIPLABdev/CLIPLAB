@@ -14,7 +14,7 @@ final class LoggerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->directory = sys_get_temp_dir() . '/clipforge-logger-' . bin2hex(random_bytes(4));
+        $this->directory = sys_get_temp_dir() . '/cliplab-logger-' . bin2hex(random_bytes(4));
         self::assertTrue(mkdir($this->directory));
         $this->logFile = $this->directory . '/app.log';
     }

@@ -59,11 +59,11 @@ final class HostingerMediaRequirementsTest extends TestCase
 
     public function testUnavailableLocalProcessorIsOnlyAWarnWithVpsAction(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-check-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-check-' . bin2hex(random_bytes(6));
         mkdir($root, 0700, true);
         $environment = getenv();
         $environment = array_merge(is_array($environment) ? $environment : [], [
-            'APP_ENV_FILE' => sys_get_temp_dir() . '/clipforge-no-env-file',
+            'APP_ENV_FILE' => sys_get_temp_dir() . '/cliplab-no-env-file',
             'DB_DSN' => (string) getenv('TEST_DB_DSN'),
             'DB_USERNAME' => (string) getenv('TEST_DB_USERNAME'),
             'DB_PASSWORD' => (string) getenv('TEST_DB_PASSWORD'),
@@ -94,7 +94,7 @@ final class HostingerMediaRequirementsTest extends TestCase
 
     public function testCheckerPassesThePrivateMediaRootToTheProcessRunner(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-check-runner-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-check-runner-' . bin2hex(random_bytes(6));
         mkdir($root, 0700, true);
         $capture = tempnam(sys_get_temp_dir(), 'checker-runner-root-');
         $prepend = tempnam(sys_get_temp_dir(), 'checker-runner-prepend-');
@@ -104,7 +104,7 @@ final class HostingerMediaRequirementsTest extends TestCase
         file_put_contents($prepend, "<?php\nnamespace { require {$autoload}; }\nnamespace App\\Process { final class ProcessRunner { public function __construct(array \$allowedBinaries, string \$temporaryDirectory) { file_put_contents((string) getenv('RUNNER_ROOT_CAPTURE'), \$temporaryDirectory); } public function run(array \$command, int \$timeoutSeconds, int \$outputLimitBytes): ProcessResult { return new ProcessResult(1, '', ''); } } }\n");
         $environment = getenv();
         $environment = array_merge(is_array($environment) ? $environment : [], [
-            'APP_ENV_FILE' => sys_get_temp_dir() . '/clipforge-no-env-file',
+            'APP_ENV_FILE' => sys_get_temp_dir() . '/cliplab-no-env-file',
             'DB_DSN' => (string) getenv('TEST_DB_DSN'),
             'DB_USERNAME' => (string) getenv('TEST_DB_USERNAME'),
             'DB_PASSWORD' => (string) getenv('TEST_DB_PASSWORD'),

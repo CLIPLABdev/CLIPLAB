@@ -32,7 +32,7 @@ Em Recentes, polling atualiza os cards já carregados. Um filtro aberto não rec
 ## Compatibilidade e segurança
 PHP 8.0+, PDO, MySQL/MariaDB suportados, HTML/CSS/JS existentes; nenhum Node em produção. Usar prepared statements, limites de paginação e escape HTML de toda informação variável. Parâmetros array/numéricos/expoente/overflow não causam warnings nem erro 500. Query user_id é ignorada. Projeção ownership/latest deve concordar com status/assets.
 Usar os índices existentes e registrar EXPLAIN; criar índice adicional somente se evidência mostrar necessidade. Não executar migration em GET.
-Não alterar .env, provedor IA, demonstração 8093 nem dados fora das fixtures criadas em clipforge_phase5_test. Não publicar na Hostinger nesta fatia.
+Não alterar .env, provedor IA, demonstração 8093 nem dados fora das fixtures criadas em cliplab_phase5_test. Não publicar na Hostinger nesta fatia.
 
 ## Verificação
 Repo real DB: dois owners, vários projetos/análises, quatro filtros, paginação 25+, desempate, limites, paths ausentes, duração e perfil exato, flags de assets.

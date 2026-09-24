@@ -7,7 +7,7 @@ import { startLocalPhpServer } from './support/local-php-server.mjs';
 
 test('local PHP server helper rejects an unlaunchable executable without an unhandled error', async () => {
   await expect(startLocalPhpServer({
-    phpBin: '__clipforge_missing_php_binary__',
+    phpBin: '__cliplab_missing_php_binary__',
     port: 8194,
     root: process.cwd(),
   })).rejects.toThrow();
@@ -18,8 +18,8 @@ test('local PHP server helper passes only its explicit environment', async () =>
   if (typeof phpBin !== 'string' || phpBin.trim() === '') {
     throw new Error('TEST_PHP_BIN is required');
   }
-  const root = await mkdtemp(join(tmpdir(), 'clipforge-server-env-'));
-  const inheritedProbe = 'CLIPFORGE_SERVER_ENV_LEAK_PROBE';
+  const root = await mkdtemp(join(tmpdir(), 'cliplab-server-env-'));
+  const inheritedProbe = 'CLIPLAB_SERVER_ENV_LEAK_PROBE';
   const previous = process.env[inheritedProbe];
   process.env[inheritedProbe] = 'must-not-leak';
   let server;
@@ -27,15 +27,15 @@ test('local PHP server helper passes only its explicit environment', async () =>
     await writeFile(
       join(root, 'index.php'),
       '<?php header("Content-Type: application/json"); echo json_encode(['
-        + '"inherited" => getenv("CLIPFORGE_SERVER_ENV_LEAK_PROBE") !== false,'
-        + '"allowed" => getenv("CLIPFORGE_SERVER_ALLOWED")]);',
+        + '"inherited" => getenv("CLIPLAB_SERVER_ENV_LEAK_PROBE") !== false,'
+        + '"allowed" => getenv("CLIPLAB_SERVER_ALLOWED")]);',
       'utf8'
     );
     server = await startLocalPhpServer({
       phpBin,
       port: 8195,
       root,
-      env: { CLIPFORGE_SERVER_ALLOWED: 'explicit' },
+      env: { CLIPLAB_SERVER_ALLOWED: 'explicit' },
     });
     const response = await fetch(server.baseUrl);
     expect(await response.json()).toEqual({ inherited: false, allowed: 'explicit' });
@@ -52,7 +52,7 @@ test('local PHP server helper rejects a foreign service already occupying the po
   if (typeof phpBin !== 'string' || phpBin.trim() === '') {
     throw new Error('TEST_PHP_BIN is required');
   }
-  const candidateRoot = await mkdtemp(join(tmpdir(), 'clipforge-server-candidate-'));
+  const candidateRoot = await mkdtemp(join(tmpdir(), 'cliplab-server-candidate-'));
   const occupied = createServer((request, response) => {
     response.writeHead(200, { 'Content-Type': 'text/plain' });
     response.end('occupied');

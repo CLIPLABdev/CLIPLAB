@@ -183,7 +183,7 @@ final class AiProjectWorkflowTest extends TestCase
             'unconfigured'
         ))->schedule($this->projectId, $this->sourceId, 121);
         $transport = new WorkflowNoNetworkTransport();
-        $root = sys_get_temp_dir() . '/clipforge-ai-unconfigured-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-ai-unconfigured-' . bin2hex(random_bytes(6));
         mkdir($root, 0700, true);
         try {
             $provider = new GeminiService(

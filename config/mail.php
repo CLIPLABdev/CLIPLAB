@@ -11,7 +11,7 @@ return [
     'environment' => $environment,
     'transport' => Env::get('MAIL_TRANSPORT', $environment === 'local' ? 'log' : 'smtp'),
     'from_address' => Env::get('MAIL_FROM_ADDRESS', ''),
-    'from_name' => Env::get('MAIL_FROM_NAME', 'ClipForge'),
+    'from_name' => Env::get('MAIL_FROM_NAME', 'ClipLab'),
     // Password-reset links are recoverable only from this protected, development-only log.
     'log_file' => Env::get('MAIL_LOG_FILE', $defaultLogFile),
     'smtp_host' => Env::get('MAIL_SMTP_HOST', ''),

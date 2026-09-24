@@ -21,8 +21,8 @@ export async function startLocalPhpServer({ phpBin, port, root, env = {} }) {
     windowsHide: true,
     env: {
       ...env,
-      CLIPFORGE_TEST_SERVER_NONCE: nonce,
-      CLIPFORGE_TEST_SERVER_ROOT: documentRoot,
+      CLIPLAB_TEST_SERVER_NONCE: nonce,
+      CLIPLAB_TEST_SERVER_ROOT: documentRoot,
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
@@ -35,7 +35,7 @@ export async function startLocalPhpServer({ phpBin, port, root, env = {} }) {
   try {
     for (let attempt = 0; attempt < 50; attempt += 1) {
       const terminal = await Promise.race([
-        fetch(`${baseUrl}/__clipforge_test_server_ready`, { signal: AbortSignal.timeout(500) })
+        fetch(`${baseUrl}/__cliplab_test_server_ready`, { signal: AbortSignal.timeout(500) })
           .then(async response => ({ response, body: await response.text() }))
           .catch(() => ({ response: null })),
         exited,

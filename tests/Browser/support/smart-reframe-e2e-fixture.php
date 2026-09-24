@@ -61,10 +61,10 @@ function fixtureIdentity(string $runId): array
     return [
         'run_id' => $runId,
         'plan_slug' => 'sr-' . $hex,
-        'owner_email' => 'sr-owner+' . $hex . '@clipforge.test',
-        'foreign_email' => 'sr-foreign+' . $hex . '@clipforge.test',
-        'owner_password' => 'ClipForge#' . substr($hex, 0, 16),
-        'foreign_password' => 'ClipForge#' . substr($hex, 16, 16),
+        'owner_email' => 'sr-owner+' . $hex . '@cliplab.test',
+        'foreign_email' => 'sr-foreign+' . $hex . '@cliplab.test',
+        'owner_password' => 'ClipLab#' . substr($hex, 0, 16),
+        'foreign_password' => 'ClipLab#' . substr($hex, 16, 16),
         'ingest_key' => hash('sha256', 'smart-reframe-e2e-' . $runId),
     ];
 }
@@ -225,7 +225,7 @@ function fixtureDatabase(): PDO
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
     $pdo->exec("SET time_zone = '+00:00'");
-    if ((string) $pdo->query('SELECT DATABASE()')->fetchColumn() !== 'clipforge_phase5_test') {
+    if ((string) $pdo->query('SELECT DATABASE()')->fetchColumn() !== 'cliplab_phase5_test') {
         throw new RuntimeException('invalid_database');
     }
 
@@ -1002,9 +1002,9 @@ function fixtureTemporaryCount(array $tree): int
     $count = 0;
     foreach ($tree['files'] as $path) {
         $name = basename($path);
-        if (str_starts_with($name, 'clipforge-process-')
-            || str_starts_with($name, 'clipforge-video-')
-            || str_starts_with($name, 'clipforge-thumbnail-')
+        if (str_starts_with($name, 'cliplab-process-')
+            || str_starts_with($name, 'cliplab-video-')
+            || str_starts_with($name, 'cliplab-thumbnail-')
             || str_ends_with($name, '.download.part')) {
             ++$count;
         }

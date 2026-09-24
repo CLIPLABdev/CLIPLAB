@@ -32,7 +32,7 @@ final class LocalFfmpegClipRendererTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge renderer-' . bin2hex(random_bytes(8));
+        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab renderer-' . bin2hex(random_bytes(8));
         self::assertTrue(mkdir($this->temporaryDirectory, 0700));
         $this->sourcePath = $this->temporaryDirectory . DIRECTORY_SEPARATOR . 'source-input.mp4';
         self::assertSame(6, file_put_contents($this->sourcePath, 'source'));

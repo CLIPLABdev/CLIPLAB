@@ -1,6 +1,6 @@
 # Implantação na Hostinger
 
-Este guia instala o ClipForge sem servidor Node.js, Docker, Redis, WebSocket ou processo permanente da aplicação. A importação do YouTube requer yt-dlp e um runtime JavaScript local compatível (por exemplo Node.js), configurado em YTDLP_JS_RUNTIME. Para o sistema completo na Hostinger, a opção operacional é um VPS com PHP/MySQL e FFmpeg; hospedagem Web/Cloud isolada não executa a renderização. Uma web separada exige worker e armazenamento privado realmente compartilhado. Consulte a seção 15 antes de publicar.
+Este guia instala o ClipLab sem servidor Node.js, Docker, Redis, WebSocket ou processo permanente da aplicação. A importação do YouTube requer yt-dlp e um runtime JavaScript local compatível (por exemplo Node.js), configurado em YTDLP_JS_RUNTIME. Para o sistema completo na Hostinger, a opção operacional é um VPS com PHP/MySQL e FFmpeg; hospedagem Web/Cloud isolada não executa a renderização. Uma web separada exige worker e armazenamento privado realmente compartilhado. Consulte a seção 15 antes de publicar.
 
 Precisão de duração sem nova coluna de banco: novos pedidos de exportação, inclusive no editor, executam um preflight FFprobe no POST web autenticado antes de abrir a transação. Portanto, **o host web também precisa de proc_open, FFprobe e acesso aos mesmos arquivos privados**; apenas mover o worker para VPS não basta para esses envios. A construção do serviço/GET não executa o probe. Sem medição precisa o envio falha com orientação, sem fallback para a duração inteira usada por créditos/quotas. Um fim além do EOF é recusado com limite em milissegundos, sem cortar o SRT silenciosamente. Configure FFPROBE_BINARY, PROCESS_TIMEOUT_SECONDS e PROCESS_OUTPUT_LIMIT_BYTES no web e no worker; não exponha mídia ou crie rota pública de probe.
 
@@ -55,7 +55,7 @@ Crie .env na raiz a partir de .env.example e preencha valores reais somente no s
 
 Em produção, `APP_ENV_FILE` normalmente deve ficar ausente. Assim o bootstrap carrega somente o `.env` da raiz. Valor vazio desabilita arquivo de ambiente; path explícito não vazio carrega somente aquele arquivo, sem fallback adicional.
 
-    APP_NAME=ClipForge
+    APP_NAME=ClipLab
     APP_ENV=production
     APP_DEBUG=false
     APP_URL=https://seu-dominio.example
@@ -66,7 +66,7 @@ Em produção, `APP_ENV_FILE` normalmente deve ficar ausente. Assim o bootstrap 
     DB_PASSWORD=defina_uma_senha_forte
     MAIL_TRANSPORT=smtp
     MAIL_FROM_ADDRESS=no-reply@seu-dominio.example
-    MAIL_FROM_NAME=ClipForge
+    MAIL_FROM_NAME=ClipLab
     MAIL_SMTP_HOST=smtp.hostinger.com
     MAIL_SMTP_PORT=587
     MAIL_SMTP_ENCRYPTION=tls
@@ -166,7 +166,7 @@ Sempre que o plano permitir, mantenha a raiz do projeto e `MEDIA_PRIVATE_ROOT` f
 Configure estas variáveis sem incluir chaves, credenciais ou URLs privadas no código:
 
     MEDIA_DISK=local
-    MEDIA_PRIVATE_ROOT=/home/conta/clipforge-private/media
+    MEDIA_PRIVATE_ROOT=/home/conta/cliplab-private/media
     MEDIA_MAX_UPLOAD_BYTES=524288000
     MEDIA_DOWNLOAD_TIMEOUT_SECONDS=120
     MEDIA_MAX_REDIRECTS=2
@@ -268,7 +268,7 @@ Sem override administrativo, a aplicação usa `GEMINI_API_KEY` e `GEMINI_MODEL`
 Em uma área de preparação limpa da máquina de entrega, instale as dependências de produção com `composer install --no-dev --optimize-autoloader` e verifique os assets locais. Em seguida, gere um ZIP novo, em um diretório já existente fora da origem, de `public`/`public_html` e de `storage`:
 
 ```sh
-php bin/build-release.php --output=/caminho-privado-de-entrega/clipforge-20260906.zip
+php bin/build-release.php --output=/caminho-privado-de-entrega/cliplab-20260906.zip
 ```
 
 O gerador recusa sobrescrita e caminhos de saída com `.` ou `..`. Inclui código, dependências de execução, assets, migrations, seeds e licenças por allowlist; não inclui `.env`, armazenamento, logs, testes, fixtures, caches ou links simbólicos. Não use cópias de produção como área de preparação. A filtragem de nomes e extensões não substitui revisar dependências e conteúdo antes de distribuir: um segredo embutido em código PHP legítimo ainda precisa ser removido pelo responsável.

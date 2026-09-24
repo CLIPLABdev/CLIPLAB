@@ -84,7 +84,7 @@ PHP
         try {
             $environment = getenv();
             $environment = array_merge(is_array($environment) ? $environment : [], [
-                'APP_ENV_FILE' => sys_get_temp_dir() . '/clipforge-no-env-file',
+                'APP_ENV_FILE' => sys_get_temp_dir() . '/cliplab-no-env-file',
                 'DATABASE_EFFECT_MARKER' => $marker,
                 'GEMINI_HTTP_TIMEOUT_SECONDS' => '10',
                 'RENDER_TIMEOUT_SECONDS' => '5',
@@ -144,7 +144,7 @@ PHP
     {
         $environment = getenv();
         $environment = array_merge(is_array($environment) ? $environment : [], [
-            'APP_ENV_FILE' => sys_get_temp_dir() . '/clipforge-no-env-file',
+            'APP_ENV_FILE' => sys_get_temp_dir() . '/cliplab-no-env-file',
         ]);
         $process = proc_open(array_merge([PHP_BINARY, dirname(__DIR__, 2) . '/bin/process-jobs.php'], $arguments), [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $environment, ['bypass_shell' => true]);
         self::assertIsResource($process);

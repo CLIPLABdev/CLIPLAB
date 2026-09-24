@@ -11,7 +11,7 @@ use Throwable;
 
 final class SmartReframeGateMutex
 {
-    private const LOCK_NAME = 'clipforge_phase5_smart_reframe_gate_v1';
+    private const LOCK_NAME = 'cliplab_phase5_smart_reframe_gate_v1';
 
     private bool $held = true;
 

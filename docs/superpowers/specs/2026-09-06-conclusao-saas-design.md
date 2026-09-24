@@ -1,4 +1,4 @@
-# Conclusão do ClipForge — escopo restante aprovado
+# Conclusão do ClipLab — escopo restante aprovado
 
 Data: 2026-09-06. Base: c7c2c4f. Fonte: especificação completa fornecida pelo usuário em 2026-09-03 e ordem explícita de concluir todas as tarefas em 2026-09-06.
 
@@ -12,7 +12,7 @@ Frentes independentes: administração; planos/créditos/limites; preparação d
 - Hospedagem web compartilhada, cron e workers finitos. FFmpeg/FFprobe/proc_open no host de processamento; não presumir capacidade na Hostinger sem verificar.
 - Prepared statements, escape HTML, CSRF em toda mutação e autorização server-side a cada requisição. Nenhuma confiança em role/user_id enviado pelo cliente.
 - Mídia privada fora de public. Nenhuma chave/timestamp de sessão/path privado/stack trace em HTML, JSON público ou logs.
-- Testes com rede fake e somente banco clipforge_phase5_test; DB tests coordenados pelo root, nunca simultâneos a outro gate destrutivo. Preserve dados de demonstração 8093.
+- Testes com rede fake e somente banco cliplab_phase5_test; DB tests coordenados pelo root, nunca simultâneos a outro gate destrutivo. Preserve dados de demonstração 8093.
 - Staging e commits exatos coordenados pelo root. Nenhum push, merge ou deploy automático durante implementação.
 
 ## Administração

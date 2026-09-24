@@ -56,7 +56,7 @@ try {
       await first.screenshot({path:path.join(output,`after-expanded-${width}.png`),animations:'disabled'});
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
       await page.goto('http://email-studio.test/admin/emails?modelo=auth.password_reset#email-editor');
-      assert.equal(await page.getByLabel('Assunto',{exact:true}).inputValue(),'Redefina sua senha do ClipForge');
+      assert.equal(await page.getByLabel('Assunto',{exact:true}).inputValue(),'Redefina sua senha do ClipLab');
       assert.equal(await page.locator('[data-email-variables]:visible').count(),1);
       assert.equal(await page.locator('[data-email-variables]:visible').getAttribute('data-email-variables'),'auth.password_reset');
       await page.getByLabel('Evento da mensagem').selectOption('marketing.campaign');

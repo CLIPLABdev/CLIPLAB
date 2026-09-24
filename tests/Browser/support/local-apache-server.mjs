@@ -14,7 +14,7 @@ async function stopChild(child, exited) {
 }
 
 export async function startLocalApacheServer({ port, root }) {
-  const temporaryRoot = await mkdtemp(join(tmpdir(), 'clipforge-mediapipe-apache-'));
+  const temporaryRoot = await mkdtemp(join(tmpdir(), 'cliplab-mediapipe-apache-'));
   const configPath = join(temporaryRoot, 'httpd.conf');
   const config = [
     `ServerRoot "${apachePathValue(apacheRoot)}"`,

@@ -25,7 +25,7 @@
     });
     let popupShown = false;
     document.querySelectorAll('[data-promotion-key]').forEach((notice) => {
-        const key = `clipforge:notice:${notice.dataset.promotionKey}`;
+        const key = `cliplab:notice:${notice.dataset.promotionKey}`;
         let dismissed = false;
         try { dismissed = window.localStorage.getItem(key) === 'dismissed'; } catch (_) { /* Private browsing still supports dismissal in this page. */ }
         if (dismissed) { notice.hidden = true; return; }

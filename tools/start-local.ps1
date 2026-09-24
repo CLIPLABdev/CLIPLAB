@@ -229,7 +229,7 @@ try {
         if ($webProcess.HasExited) {
             throw 'web_process_exited'
         }
-        $runDirectory = Join-Path ([IO.Path]::GetTempPath()) ('clipforge-local-worker-' + [Guid]::NewGuid().ToString('N'))
+        $runDirectory = Join-Path ([IO.Path]::GetTempPath()) ('cliplab-local-worker-' + [Guid]::NewGuid().ToString('N'))
         [IO.Directory]::CreateDirectory($runDirectory) | Out-Null
         $stdoutPath = Join-Path $runDirectory 'stdout.log'
         $stderrPath = Join-Path $runDirectory 'stderr.log'

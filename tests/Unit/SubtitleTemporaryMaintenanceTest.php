@@ -15,9 +15,9 @@ final class SubtitleTemporaryMaintenanceTest extends TestCase
     {
         $dir=sys_get_temp_dir().'/subtitle-maintenance-'.bin2hex(random_bytes(8));
         mkdir($dir,0700);
-        $audio=$dir.'/clipforge-audio-'.str_repeat('a',32).'.wav';
-        $ass=$dir.'/clipforge-subtitles-'.str_repeat('b',32).'.ass';
-        $recent=$dir.'/clipforge-audio-'.str_repeat('c',32).'.wav';
+        $audio=$dir.'/cliplab-audio-'.str_repeat('a',32).'.wav';
+        $ass=$dir.'/cliplab-subtitles-'.str_repeat('b',32).'.ass';
+        $recent=$dir.'/cliplab-audio-'.str_repeat('c',32).'.wav';
         $other=$dir.'/user-source.wav';
         try {
             foreach ([$audio,$ass,$recent,$other] as $file) file_put_contents($file,'test');

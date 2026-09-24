@@ -10,7 +10,7 @@ final class UploadLimitCheckerTest extends TestCase
 {
     public function testCheckerWarnsWhenTheConfiguredLimitExceedsPhpCapacityWithoutPrintingSecrets(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-check-limit-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-check-limit-' . bin2hex(random_bytes(6));
         mkdir($root, 0700, true);
         $environment = getenv();
         $environment = array_merge(is_array($environment) ? $environment : [], [
@@ -47,7 +47,7 @@ final class UploadLimitCheckerTest extends TestCase
 
     public function testCheckerDoesNotReportAnAppLimitWarningWhenItFitsPhpCapacity(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-check-fitting-limit-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-check-fitting-limit-' . bin2hex(random_bytes(6));
         mkdir($root, 0700, true);
         $environment = getenv();
         $environment = array_merge(is_array($environment) ? $environment : [], [

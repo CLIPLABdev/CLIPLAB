@@ -61,7 +61,7 @@ self::assertTrue($this->hasColumn('clips', 'rendered_at'));
 
 - [ ] **Step 2: Run the migration test and confirm RED**
 
-Run with `TEST_DB_DSN=mysql:host=127.0.0.1;port=3306;dbname=clipforge;charset=utf8mb4`, user `root`, empty password:
+Run with `TEST_DB_DSN=mysql:host=127.0.0.1;port=3306;dbname=cliplab;charset=utf8mb4`, user `root`, empty password:
 
     C:\xampp\php\php.exe vendor\bin\phpunit tests\Integration\AiAnalysisMigrationTest.php
 

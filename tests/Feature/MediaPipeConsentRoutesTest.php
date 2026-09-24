@@ -32,7 +32,7 @@ final class MediaPipeConsentRoutesTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logFile = sys_get_temp_dir() . '/clipforge-consent-routes-' . bin2hex(random_bytes(8)) . '.log';
+        $this->logFile = sys_get_temp_dir() . '/cliplab-consent-routes-' . bin2hex(random_bytes(8)) . '.log';
         $dsn = SafePhase5TestDatabase::validatedDsn(getenv('TEST_DB_DSN'));
         putenv('DB_DSN=' . $dsn);
         putenv('DB_USERNAME=' . (getenv('TEST_DB_USERNAME') ?: ''));

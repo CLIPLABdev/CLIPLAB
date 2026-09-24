@@ -62,7 +62,7 @@ Mantida a pasta principal solicitada, com snapshots locais e sem commits/worktre
 
 Revisão independente final aprovada, sem achados pendentes no escopo. A observação final sobre detecção de suporte a blur no canvas foi corrigida e testada com e sem API. Sintaxe de 374 arquivos PHP aprovada; reexecução final do navegador: 16 testes em 27,9 s; 18 testes Feature/183 asserções aprovados. Localhost `/login` retornou HTTP 200 ao encerrar.
 
-Pacote novo: `dist/clipforge-import-templates-20260907.zip`, 9.420.033 bytes, 1.574 arquivos mais manifesto. Todos os hashes do manifesto conferem com os arquivos atuais; nenhuma entrada `.env`, mídia privada, banco local ou logs. Este relatório é entregue separadamente do ZIP.
+Pacote novo: `dist/cliplab-import-templates-20260907.zip`, 9.420.033 bytes, 1.574 arquivos mais manifesto. Todos os hashes do manifesto conferem com os arquivos atuais; nenhuma entrada `.env`, mídia privada, banco local ou logs. Este relatório é entregue separadamente do ZIP.
 
 SHA-256 do ZIP: `7adcaf6cf03f321ee21449d68decf5c42af9a0ca78d1255bcde0fc5fce0f9c69`.
 

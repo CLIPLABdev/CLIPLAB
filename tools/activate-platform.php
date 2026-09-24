@@ -50,7 +50,7 @@ try {
     }
     echo json_encode(['mode'=>$apply?'apply':'check','pending'=>$pending,'existing_tables'=>count($tableNames),'additions'=>$newColumns],JSON_UNESCAPED_SLASHES).PHP_EOL;
     if(!$apply || $pending===[])exit(0);
-    if((int)$pdo->query("SELECT GET_LOCK('clipforge_platform_upgrade',0)")->fetchColumn()!==1)throw new RuntimeException('Upgrade already running');
+    if((int)$pdo->query("SELECT GET_LOCK('cliplab_platform_upgrade',0)")->fetchColumn()!==1)throw new RuntimeException('Upgrade already running');
     $phase='private-backup';
     $directory=$root.'/.local-history/platform-improvement-20260907/db-'.gmdate('Ymd-His').'-'.bin2hex(random_bytes(3));
     if(!mkdir($directory,0700,true))throw new RuntimeException('Backup directory failed');
@@ -76,7 +76,7 @@ try {
     foreach($sqlFiles as $name=>$sql)if(file_put_contents($staging.'/'.$name,$sql)!==strlen($sql))throw new RuntimeException('SQL snapshot failed');
     $executed=(new Migrator($pdo,$staging))->run();
     echo json_encode(['executed'=>$executed,'private_backup'=>$directory,'backup_bytes'=>$manifest['bytes'],'backup_sha256'=>$manifest['sha256']],JSON_UNESCAPED_SLASHES).PHP_EOL;
-    $pdo->query("SELECT RELEASE_LOCK('clipforge_platform_upgrade')");
+    $pdo->query("SELECT RELEASE_LOCK('cliplab_platform_upgrade')");
 } catch(Throwable $error) {
     if($pdo instanceof PDO && $pdo->inTransaction())$pdo->rollBack();
     fwrite(STDERR,json_encode(['failed_phase'=>$phase,'table'=>$table,'error_class'=>get_class($error),'error_code'=>$error->getCode(),'action'=>'Stop and inspect; never retry a partial migration blindly.']).PHP_EOL);exit(1);

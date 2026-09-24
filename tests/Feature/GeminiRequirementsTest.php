@@ -88,7 +88,7 @@ final class GeminiRequirementsTest extends TestCase
     /** @param array<string, string> $overrides @return array{exit:int,stdout:string,stderr:string} */
     private function runChecker(array $overrides): array
     {
-        $root = sys_get_temp_dir() . '/clipforge-gemini-check-' . bin2hex(random_bytes(6));
+        $root = sys_get_temp_dir() . '/cliplab-gemini-check-' . bin2hex(random_bytes(6));
         mkdir($root, 0700, true);
         $environment = getenv();
         $environment = array_merge(is_array($environment) ? $environment : [], [

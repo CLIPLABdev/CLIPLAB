@@ -31,7 +31,7 @@ final class MediaMigrationRecoveryTest extends TestCase
         }
         $dsn = SafePhase5TestDatabase::validatedDsn(getenv('TEST_DB_DSN'));
         $this->pdo = new PDO($dsn, getenv('TEST_DB_USERNAME') ?: null, getenv('TEST_DB_PASSWORD') ?: null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-        self::assertSame('clipforge_phase5_test', $this->pdo->query('SELECT DATABASE()')->fetchColumn());
+        self::assertSame('cliplab_phase5_test', $this->pdo->query('SELECT DATABASE()')->fetchColumn());
         (new Migrator($this->pdo, dirname(__DIR__, 2) . '/database/migrations'))->run();
         foreach (self::TABLES as $table) {
             self::assertSame(0, (int) $this->pdo->query("SELECT COUNT(*) FROM {$table}")->fetchColumn(), "Recovery requires empty {$table}.");

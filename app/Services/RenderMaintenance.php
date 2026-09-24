@@ -58,7 +58,7 @@ final class RenderMaintenance implements WorkerMaintenance
         $threshold = time() - $this->staleAfterSeconds;
         foreach (scandir($this->temporaryDirectory) ?: [] as $entry) {
             if (preg_match(
-                '/\Aclipforge-(?:video-[a-f0-9]{32}\.mp4|thumbnail-[a-f0-9]{32}\.jpg|audio-[a-f0-9]{32}\.wav|subtitles-[a-f0-9]{32}\.ass)\z/D',
+                '/\A(?:cliplab|clipforge)-(?:video-[a-f0-9]{32}\.mp4|thumbnail-[a-f0-9]{32}\.jpg|audio-[a-f0-9]{32}\.wav|subtitles-[a-f0-9]{32}\.ass)\z/D',
                 $entry
             ) !== 1) {
                 continue;

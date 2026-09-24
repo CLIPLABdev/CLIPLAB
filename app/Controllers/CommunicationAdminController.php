@@ -58,7 +58,7 @@ final class CommunicationAdminController
             $config=$this->settings->effective();if(($config['transport']??'')!=='smtp')throw new \RuntimeException('SMTP indisponível.');
             MailerFactory::make($config); // Validate before using the injected transport factory; no network activity.
             $mailer=($this->mailerFactory)($config);if($mailer instanceof LogMailer)throw new \RuntimeException('Log não entrega e-mails.');
-            $id=(int)$r->input('template_id',0);[$subject,$html]=$id>0?$this->rendered($id):['Teste de SMTP ClipForge',(new EmailDocument())->render('Teste de SMTP ClipForge','<h1>Seu teste de envio.</h1><p>Este e-mail foi solicitado no painel de administração do ClipForge para conferir a configuração SMTP.</p><p>Se você recebeu esta mensagem, confira também o nome e o endereço do remetente.</p>')];
+            $id=(int)$r->input('template_id',0);[$subject,$html]=$id>0?$this->rendered($id):['Teste de SMTP ClipLab',(new EmailDocument())->render('Teste de SMTP ClipLab','<h1>Seu teste de envio.</h1><p>Este e-mail foi solicitado no painel de administração do ClipLab para conferir a configuração SMTP.</p><p>Se você recebeu esta mensagem, confira também o nome e o endereço do remetente.</p>')];
             (new EmailTestSendService($mailer))->send($email,$recipient,$subject,$html);$this->settings->recordTest(true);Session::flash('communications_admin_message','Servidor SMTP aceitou o e-mail de teste. Confira a caixa de entrada e spam; o aceite não comprova entrega.');
         }catch(\Throwable){$this->settings->recordTest(false);return Response::text('O teste não foi aceito. Verifique a configuração SMTP e as credenciais.',422);}
         return Response::redirect('/admin/email-configuracao');

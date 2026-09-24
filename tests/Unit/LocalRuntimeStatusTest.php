@@ -16,7 +16,7 @@ final class LocalRuntimeStatusTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'clipforge-local-status-' . bin2hex(random_bytes(8));
+        $this->temporaryDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cliplab-local-status-' . bin2hex(random_bytes(8));
         mkdir($this->temporaryDirectory, 0700, true);
     }
 

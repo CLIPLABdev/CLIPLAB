@@ -10,7 +10,7 @@ final class PostBootstrapFatalHandlerTest extends TestCase
 {
     public function testPostBootstrapFatalUsesOnlyTheCompleteErrorHandler(): void
     {
-        $root = sys_get_temp_dir() . '/clipforge-post-bootstrap-' . bin2hex(random_bytes(4));
+        $root = sys_get_temp_dir() . '/cliplab-post-bootstrap-' . bin2hex(random_bytes(4));
         self::assertTrue(mkdir($root . '/public', 0777, true));
         self::assertTrue(mkdir($root . '/bootstrap'));
         self::assertTrue(mkdir($root . '/routes'));
@@ -36,7 +36,7 @@ final class PostBootstrapFatalHandlerTest extends TestCase
             self::assertStringContainsString('Handler completo', $output);
             self::assertStringNotContainsString('Erro temporário. Tente novamente.', $output);
             self::assertStringContainsString('complete error handler', $log);
-            self::assertStringNotContainsString('ClipForge bootstrap failure', $log);
+            self::assertStringNotContainsString('ClipLab bootstrap failure', $log);
         } finally {
             if (is_file($logFile)) {
                 unlink($logFile);

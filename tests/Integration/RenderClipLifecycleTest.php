@@ -556,8 +556,8 @@ final class RenderClipLifecycleTest extends TestCase
             . 'VALUES (?, ?, UTC_TIMESTAMP() - INTERVAL 1 SECOND)'
         )->execute([$key, $jobId]);
 
-        $stale = $this->renderRoot . '/clipforge-video-' . str_repeat('a', 32) . '.mp4';
-        $fresh = $this->renderRoot . '/clipforge-thumbnail-' . str_repeat('b', 32) . '.jpg';
+        $stale = $this->renderRoot . '/cliplab-video-' . str_repeat('a', 32) . '.mp4';
+        $fresh = $this->renderRoot . '/cliplab-thumbnail-' . str_repeat('b', 32) . '.jpg';
         $unrelated = $this->renderRoot . '/keep-' . str_repeat('c', 32) . '.mp4';
         file_put_contents($stale, 'stale');
         file_put_contents($fresh, 'fresh');

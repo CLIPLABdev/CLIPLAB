@@ -35,7 +35,7 @@ final class CampaignServiceTest extends TestCase
         $this->pdo->exec("INSERT INTO communication_email_templates VALUES (4,'marketing.campaign','{{titulo}}','<p>{{conteudo}}</p>','{{conteudo}}',1,3)");
         $this->cipher = new SecretCipher(base64_encode(str_repeat('c', 32)));
         $this->now = new DateTimeImmutable('2026-09-07 12:00:00');
-        $unsub = new CampaignUnsubscribeService($this->pdo, $this->cipher, 'https://clipforge.example', fn (): DateTimeImmutable => $this->now);
+        $unsub = new CampaignUnsubscribeService($this->pdo, $this->cipher, 'https://cliplab.example', fn (): DateTimeImmutable => $this->now);
         $this->campaigns = new CampaignService($this->pdo, $this->cipher, $unsub, fn (): DateTimeImmutable => $this->now);
     }
 
@@ -52,7 +52,7 @@ final class CampaignServiceTest extends TestCase
         $payload = json_decode($this->cipher->decrypt($row['payload_ciphertext'], 'clipforge:communications:v1'), true, 512, JSON_THROW_ON_ERROR);
         self::assertSame(['nome_usuario'=>'Ana','titulo'=>'Novo','conteudo'=>'Conteúdo'], $payload['variables']);
         self::assertSame('<p>{{conteudo}}</p>', $payload['template_snapshot']['html_template']);
-        self::assertStringStartsWith('https://clipforge.example/cancelar-inscricao?token=', $payload['unsubscribe_url']);
+        self::assertStringStartsWith('https://cliplab.example/cancelar-inscricao?token=', $payload['unsubscribe_url']);
         self::assertStringNotContainsString('ALTERADO', json_encode($payload, JSON_THROW_ON_ERROR));
     }
 
@@ -71,9 +71,9 @@ final class CampaignServiceTest extends TestCase
 
     public function testUnsubscribeTokenExpiresAndCancelsQueuedCampaignsIdempotently(): void
     {
-        $token = (new CampaignUnsubscribeService($this->pdo, $this->cipher, 'https://clipforge.example', fn (): DateTimeImmutable => $this->now))->tokenFor(7);
+        $token = (new CampaignUnsubscribeService($this->pdo, $this->cipher, 'https://cliplab.example', fn (): DateTimeImmutable => $this->now))->tokenFor(7);
         $this->pdo->exec("INSERT INTO communication_email_outbox (user_id,recipient,event,category,payload_ciphertext,dedupe_key,status,available_at) VALUES (7,'ana@example.test','marketing.campaign','marketing','cipher','campaign:99:user:7','pending','2026-09-07 12:00:00')");
-        $unsub = new CampaignUnsubscribeService($this->pdo, $this->cipher, 'https://clipforge.example', fn (): DateTimeImmutable => $this->now);
+        $unsub = new CampaignUnsubscribeService($this->pdo, $this->cipher, 'https://cliplab.example', fn (): DateTimeImmutable => $this->now);
         $unsub->unsubscribe($token);
         $unsub->unsubscribe($token);
         self::assertSame(0, (int) $this->pdo->query("SELECT email_enabled FROM communication_preferences WHERE user_id=7 AND category='marketing'")->fetchColumn());

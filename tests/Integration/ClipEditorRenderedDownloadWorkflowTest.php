@@ -68,7 +68,7 @@ final class ClipEditorRenderedDownloadWorkflowTest extends TestCase
         $this->pdo->exec("SET time_zone = '+00:00'");
         (new Migrator($this->pdo,dirname(__DIR__,2).'/database/migrations'))->run();
 
-        $this->root=sys_get_temp_dir().DIRECTORY_SEPARATOR.'clipforge-editor-e2e-'.bin2hex(random_bytes(8));
+        $this->root=sys_get_temp_dir().DIRECTORY_SEPARATOR.'cliplab-editor-e2e-'.bin2hex(random_bytes(8));
         $this->storageRoot=$this->root.DIRECTORY_SEPARATOR.'private-storage';
         $this->renderRoot=$this->root.DIRECTORY_SEPARATOR.'render-work';
         self::assertTrue(mkdir($this->storageRoot,0700,true));

@@ -3,7 +3,7 @@
 **Atualização posterior:** a análise foi recuperada e o projeto 2016 concluiu três exportações reais com legendas, downloads e reprodução verificados. Consulte [o relatório da correção](RESILIENCIA_GEMINI_2026-09-07.md). O relato abaixo preserva a execução anterior, que falhou; não deve ser interpretado como o estado atual do projeto.
 
 Vídeo: https://www.youtube.com/watch?v=O1FZD5Zove0.
-Conta: Demo ClipForge. Projeto criado pela interface: **2016**, nome **Homologação pela interface — YouTube O1FZD5Zove0**.
+Conta: Demo ClipLab. Projeto criado pela interface: **2016**, nome **Homologação pela interface — YouTube O1FZD5Zove0**.
 
 ## Etapas observadas
 
