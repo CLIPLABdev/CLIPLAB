@@ -12,9 +12,9 @@
 .clip-library-hero {
     align-items:end;
     background:
-        radial-gradient(circle at 90% 5%,rgba(168,85,247,.22),transparent 38%),
-        linear-gradient(135deg,rgba(124,58,237,.13),rgba(21,21,21,.96) 48%);
-    border:1px solid rgba(192,132,252,.2);
+        radial-gradient(circle at 90% 5%,rgba(99,245,216,.22),transparent 38%),
+        linear-gradient(135deg,rgba(23,240,197,.13),rgba(21,21,21,.96) 48%);
+    border:1px solid rgba(99,245,216,.2);
     border-radius:22px;
     display:grid;
     gap:2rem;
@@ -33,11 +33,10 @@
 
 .clip-library-heading h2 {
     font-size:clamp(1.75rem,3.6vw,3rem);
-    letter-spacing:-.055em;
+    letter-spacing:-.025em;
     line-height:1.04;
     margin:0;
-    max-width:720px;
-}
+    max-width:720px;font-weight:300}
 
 .clip-library-heading > p:last-child {
     color:var(--muted);
@@ -55,9 +54,9 @@
 }
 
 .clip-library-summary > span {
-    color:#f5f3ff;
+    color:#F4FEFC;
     font-size:clamp(1.4rem,2.5vw,2rem);
-    font-weight:780;
+    font-weight:300;
     letter-spacing:-.045em;
     white-space:nowrap;
 }
@@ -66,10 +65,10 @@
 .clip-project-action,
 .clip-secondary-action {
     align-items:center;
-    color:#d8b4fe;
+    color:#B9F9EC;
     display:inline-flex;
     font-size:.84rem;
-    font-weight:700;
+    font-weight:500;
     gap:.45rem;
     min-height:44px;
 }
@@ -108,9 +107,9 @@
 .clip-library-filters a {
     border:1px solid transparent;
     border-radius:10px;
-    color:#a1a1aa;
+    color:#A5A5A5;
     font-size:.82rem;
-    font-weight:700;
+    font-weight:500;
     min-height:42px;
     padding:.62rem .85rem;
 }
@@ -121,9 +120,9 @@
 }
 
 .clip-library-filters a[aria-current="page"] {
-    background:rgba(124,58,237,.18);
-    border-color:rgba(192,132,252,.28);
-    color:#f5f3ff;
+    background:rgba(23,240,197,.18);
+    border-color:rgba(99,245,216,.28);
+    color:#F4FEFC;
 }
 
 .clip-library-range {
@@ -135,7 +134,7 @@
 
 .clip-score-note {
     align-items:center;
-    color:#a1a1aa;
+    color:#A5A5A5;
     display:flex;
     font-size:.78rem;
     gap:.5rem;
@@ -143,7 +142,7 @@
 }
 
 .clip-score-note svg {
-    color:#c4b5fd;
+    color:#B9F9EC;
     flex:none;
     height:15px;
     width:15px;
@@ -169,7 +168,7 @@
 }
 
 .clip-library-card:hover {
-    border-color:#49365f;
+    border-color:#079A7F;
     box-shadow:0 24px 58px rgba(0,0,0,.3);
     transform:translateY(-3px);
 }
@@ -177,7 +176,7 @@
 .clip-media {
     aspect-ratio:16/9;
     background:
-        linear-gradient(145deg,rgba(124,58,237,.28),rgba(12,12,13,.8)),
+        linear-gradient(145deg,rgba(23,240,197,.28),rgba(12,12,12,.8)),
         repeating-linear-gradient(90deg,transparent 0 11%,rgba(255,255,255,.025) 11% 12%);
     border-bottom:1px solid var(--border);
     isolation:isolate;
@@ -197,7 +196,7 @@
 
 .clip-media-placeholder {
     align-items:center;
-    color:rgba(233,213,255,.7);
+    color:rgba(216,252,245,.7);
     display:flex;
     inset:0;
     justify-content:center;
@@ -205,7 +204,7 @@
 }
 
 .clip-media-placeholder:before {
-    border:1px solid rgba(233,213,255,.22);
+    border:1px solid rgba(216,252,245,.22);
     border-radius:50%;
     content:"";
     height:62px;
@@ -249,27 +248,27 @@
     border:1px solid rgba(255,255,255,.11);
     border-radius:999px;
     font-size:.69rem;
-    font-weight:750;
+    font-weight:500;
 }
 
 .clip-status {
     background:rgba(8,8,8,.72);
-    color:#e4e4e7;
+    color:#E6E6E6;
     padding:.35rem .62rem;
 }
 
 .clip-status-completed .clip-status {
-    background:rgba(20,83,45,.78);
-    border-color:rgba(74,222,128,.3);
-    color:#dcfce7;
+    background:rgba(28,75,65,.78);
+    border-color:rgba(23,240,197,.3);
+    color:#DCFCF6;
 }
 
 .clip-status-rendering .clip-status,
 .clip-status-approved .clip-status,
 .clip-status-queued .clip-status {
-    background:rgba(76,29,149,.76);
-    border-color:rgba(192,132,252,.32);
-    color:#f3e8ff;
+    background:rgba(7,154,127,.76);
+    border-color:rgba(99,245,216,.32);
+    color:#EAFDF9;
 }
 
 .clip-status-failed .clip-status {
@@ -292,7 +291,7 @@
 }
 
 .clip-score small {
-    color:#c4b5fd;
+    color:#B9F9EC;
     font-size:.61rem;
 }
 
@@ -310,7 +309,7 @@
 
 .clip-source {
     align-items:center;
-    color:#a1a1aa;
+    color:#A5A5A5;
     display:flex;
     flex-wrap:wrap;
     font-size:.72rem;
@@ -321,7 +320,7 @@
 }
 
 .clip-source svg {
-    color:#c084fc;
+    color:#63F5D8;
     flex:none;
     height:14px;
     width:14px;
@@ -353,16 +352,16 @@
 }
 
 .clip-meta dt {
-    color:#71717a;
+    color:#767676;
     font-size:.65rem;
-    font-weight:700;
+    font-weight:500;
     letter-spacing:.06em;
     text-transform:uppercase;
 }
 
 .clip-meta dd {
     align-items:center;
-    color:#d4d4d8;
+    color:#D6D6D6;
     display:flex;
     font-size:.75rem;
     gap:.35rem;
@@ -372,7 +371,7 @@
 }
 
 .clip-meta dd svg {
-    color:#8b5cf6;
+    color:#63F5D8;
     flex:none;
     height:13px;
     width:13px;
@@ -386,25 +385,25 @@
 }
 
 .clip-insights section {
-    background:#101011;
-    border:1px solid #252527;
+    background:#101010;
+    border:1px solid #262626;
     border-radius:11px;
     min-width:0;
     padding:.75rem;
 }
 
 .clip-insights section > span {
-    color:#c4b5fd;
+    color:#B9F9EC;
     display:block;
     font-size:.63rem;
-    font-weight:750;
+    font-weight:500;
     letter-spacing:.07em;
     margin-bottom:.25rem;
     text-transform:uppercase;
 }
 
 .clip-copy {
-    color:#c4c4ca;
+    color:#C7C7C7;
     font-size:.78rem;
     line-height:1.5;
     margin:0;
@@ -418,8 +417,8 @@
 }
 
 .clip-category {
-    background:rgba(124,58,237,.11);
-    color:#ddd6fe;
+    background:rgba(23,240,197,.11);
+    color:#D8FCF5;
     display:inline-flex;
     max-width:100%;
     overflow-wrap:anywhere;
@@ -427,7 +426,7 @@
 }
 
 .clip-card-footer > p {
-    color:#a1a1aa;
+    color:#A5A5A5;
     font-size:.73rem;
     margin:.7rem 0 0;
     min-height:2.25em;
@@ -455,8 +454,8 @@
 
 .clip-library-empty {
     align-items:center;
-    background:linear-gradient(145deg,rgba(124,58,237,.08),rgba(15,15,16,.94));
-    border:1px dashed #49365f;
+    background:linear-gradient(145deg,rgba(23,240,197,.08),rgba(16,16,16,.94));
+    border:1px dashed #079A7F;
     border-radius:20px;
     display:flex;
     flex-direction:column;
@@ -467,10 +466,10 @@
 
 .clip-empty-icon {
     align-items:center;
-    background:rgba(124,58,237,.16);
-    border:1px solid rgba(192,132,252,.24);
+    background:rgba(23,240,197,.16);
+    border:1px solid rgba(99,245,216,.24);
     border-radius:16px;
-    color:#e9d5ff;
+    color:#D8FCF5;
     display:flex;
     height:58px;
     justify-content:center;
@@ -486,8 +485,7 @@
 .clip-library-empty h3 {
     font-size:clamp(1.35rem,3vw,2rem);
     letter-spacing:-.04em;
-    margin:0;
-}
+    margin:0;font-weight:300}
 
 .clip-library-empty > p:not(.eyebrow) {
     color:var(--muted);
@@ -516,10 +514,10 @@
     align-items:center;
     border:1px solid var(--border);
     border-radius:10px;
-    color:#d4d4d8;
+    color:#D6D6D6;
     display:inline-flex;
     font-size:.8rem;
-    font-weight:700;
+    font-weight:500;
     gap:.45rem;
     justify-content:center;
     min-height:44px;
@@ -534,12 +532,12 @@
 
 .clip-pagination a:hover {
     background:#1c1c1c;
-    border-color:#49365f;
+    border-color:#079A7F;
     color:#fff;
 }
 
 .clip-pagination > span[aria-disabled="true"] {
-    color:#62626b;
+    color:#666666;
 }
 
 .clip-pagination svg {
@@ -548,21 +546,21 @@
 }
 
 .clip-pagination strong {
-    color:#f4f4f5;
+    color:#F4F4F4;
     font-size:.9rem;
     text-align:center;
 }
 
 .clip-pagination strong small {
-    color:#71717a;
+    color:#767676;
     font-size:.72rem;
-    font-weight:600;
+    font-weight:500;
 }
 
 .clip-library a:focus-visible,
 .clip-library button:focus-visible {
     border-radius:8px;
-    outline:3px solid rgba(192,132,252,.78);
+    outline:3px solid rgba(99,245,216,.78);
     outline-offset:3px;
 }
 
