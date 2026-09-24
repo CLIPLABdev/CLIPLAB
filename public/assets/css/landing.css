@@ -185,8 +185,8 @@
 .landing-hero {
     position: relative;
     background-image:
-        linear-gradient(90deg, var(--bg) 0%, var(--bg) 32%, rgba(8,8,8,.68) 55%, rgba(8,8,8,0) 82%),
-        url('/assets/images/mascote-cliplab-bg.jpg');
+        linear-gradient(90deg, var(--bg) 0%, var(--bg) 32%, rgba(0,0,0,.68) 55%, rgba(0,0,0,0) 82%),
+        url('/assets/images/mascote-cliplab-ocean.jpg');
     background-repeat: no-repeat;
     background-position: right center;
     background-size: auto, cover;
@@ -227,8 +227,8 @@
 @media (max-width: 900px) {
     .landing-hero {
         background-image:
-            linear-gradient(180deg, var(--bg) 0%, rgba(8,8,8,.38) 52%, rgba(8,8,8,.92) 100%),
-            url('/assets/images/mascote-cliplab-bg.jpg');
+            linear-gradient(180deg, var(--bg) 0%, rgba(0,0,0,.38) 52%, rgba(0,0,0,.92) 100%),
+            url('/assets/images/mascote-cliplab-ocean.jpg');
         background-position: right top;
         background-size: auto, cover;
         min-height: 520px;
