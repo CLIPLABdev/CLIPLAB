@@ -8,9 +8,9 @@
 .marketing-page .nav-login { margin-left:auto; }
 .marketing-page .nav-login { border:1px solid rgb(255 255 255 / 42%); border-radius:8px; color:#FFFFFF !important; padding:9px 16px; }
 .marketing-page .nav-login:hover { background:rgb(255 255 255 / 8%); border-color:#FFFFFF; }
-.marketing-page .brand-mark { display:none; }
-.marketing-page .brand-wordmark { color:#FFFFFF; text-transform:uppercase; }
-.marketing-page .brand-wordmark span { color:var(--secondary); }
+.marketing-page .brand-mark { display:inline-flex; }
+.marketing-page .brand-wordmark { color:#FFFFFF; }
+.marketing-page .brand-wordmark span { color:inherit; }
 .marketing-page .nav-links>a:not(.button) { font-size:14px; color:#FFFFFF; }
 .marketing-page .nav-links>a:hover { color:var(--text); }
 .marketing-page .button { min-height:50px; padding:14px 21px; }
@@ -24,7 +24,9 @@
 .landing-hero-copy h1 { font-size:clamp(48px,5.2vw,74px); font-weight:300; letter-spacing:-.025em; line-height:1.025; margin:0; }
 .landing-hero-copy { margin-left:0; }
 .marketing-page em { font-style:normal; color:var(--accent); }
-.landing-hero-copy h1 em { display:block; }
+.landing-hero-copy h1 :is(.landing-hero-line,.landing-hero-result) { display:block; white-space:nowrap; }
+.landing-hero-copy h1 .landing-hero-result { font-size:.81em; line-height:1.12; }
+.landing-hero-copy h1 em { display:inline; }
 .landing-lede { font-size:17px; color:var(--muted); line-height:1.75; max-width:455px; margin:28px 0 29px; }
 .landing-actions { display:flex; flex-wrap:wrap; gap:20px 24px; align-items:center; }
 .landing-demo-link { display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:500; border-bottom:1px solid #505050; padding:5px 0; }

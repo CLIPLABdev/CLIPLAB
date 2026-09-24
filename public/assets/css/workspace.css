@@ -1,5 +1,5 @@
 /* Shared workspace presentation. Public/auth pages and business behaviour stay untouched. */
-.app-body,.admin-body{--workspace-muted:var(--muted);--workspace-line:var(--border);--workspace-ease:cubic-bezier(.2,.7,.3,1);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.app-body,.admin-body{--workspace-muted:var(--muted);--workspace-line:var(--border);--workspace-ease:cubic-bezier(.2,.7,.3,1);font-family:"Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 :where(.app-body,.admin-body) :where(button,a,input,select,textarea){-webkit-tap-highlight-color:transparent}
 :where(.app-body,.admin-body) :where(button,.button,.btn,a){transition:background-color .16s var(--workspace-ease),border-color .16s var(--workspace-ease),color .16s var(--workspace-ease),box-shadow .16s var(--workspace-ease)}
 :where(.app-body,.admin-body) :where(button,.button,.btn):active{translate:0 1px}

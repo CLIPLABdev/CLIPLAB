@@ -68,7 +68,7 @@ if ($activeHref === null) foreach ($navigation as $links) foreach ($links as $hr
     <button type="button" class="admin-drawer-backdrop" data-admin-drawer-backdrop aria-label="Fechar navegação" tabindex="-1" hidden></button>
     <aside id="admin-navigation" class="admin-sidebar" aria-label="Navegação administrativa" data-admin-drawer>
         <button type="button" class="admin-drawer-close" data-admin-drawer-close aria-label="Fechar navegação"><i data-lucide="x" aria-hidden="true"></i><span>Fechar menu</span></button>
-        <a class="admin-brand" href="/admin"><span aria-hidden="true"><?= e(mb_strtoupper(mb_substr($platformBranding['name'],0,2))) ?></span><strong><?= e($platformBranding['name']) ?></strong><small>Administração</small></a>
+        <a class="admin-brand" href="/admin"><span aria-hidden="true"><img src="/assets/images/logo-symbol.svg" alt="" width="30" height="24"></span><strong><?= e($platformBranding['name']) ?></strong><small>Administração</small></a>
         <nav class="admin-nav" aria-label="Administração">
             <?php foreach ($navigation as $group => $links): if ($links === []) continue; ?>
                 <div class="admin-nav-group"><p><?= e($group) ?></p>

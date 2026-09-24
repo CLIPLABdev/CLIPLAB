@@ -10,7 +10,7 @@
 </head>
 <body class="error-body">
     <main class="error-card">
-        <a class="brand" href="/" aria-label="ClipLab, início">ClipLab</a>
+        <a class="brand" href="/" aria-label="ClipLab, início"><span class="brand-mark" aria-hidden="true"><img src="/assets/images/logo-symbol.svg" alt=""></span><span class="brand-wordmark">ClipLab</span></a>
         <p class="eyebrow">500 / Pausa no estúdio</p>
         <h1>Ocorreu um erro inesperado.</h1>
         <p>Tente novamente em alguns instantes.</p>

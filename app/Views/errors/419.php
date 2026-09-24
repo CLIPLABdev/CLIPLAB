@@ -10,7 +10,7 @@
 </head>
 <body class="error-body">
     <main class="error-card">
-        <a class="brand" href="/" aria-label="ClipLab, início">ClipLab</a>
+        <a class="brand" href="/" aria-label="ClipLab, início"><span class="brand-mark" aria-hidden="true"><img src="/assets/images/logo-symbol.svg" alt=""></span><span class="brand-wordmark">ClipLab</span></a>
         <p class="eyebrow">419 / Vamos retomar</p>
         <h1>Sua sessão expirou</h1>
         <p>Atualize a página e envie o formulário novamente.</p>
