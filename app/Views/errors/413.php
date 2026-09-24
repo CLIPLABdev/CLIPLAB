@@ -10,7 +10,7 @@
 </head>
 <body class="error-body">
     <main class="error-card">
-        <a class="brand" href="/" aria-label="ClipLab, início"><span class="brand-mark" aria-hidden="true"><img src="/assets/images/logo-symbol.svg" alt=""></span><span class="brand-wordmark">ClipLab</span></a>
+        <a class="brand" href="/" aria-label="ClipLab, início"><span class="brand-mark" aria-hidden="true"><img src="/assets/images/logo-symbol.svg" alt=""></span><span class="brand-wordmark">Clip<span>Lab</span></span></a>
         <p class="eyebrow">413 / Ajuste a origem</p>
         <h1>O envio ultrapassa o limite permitido</h1>
         <p>O servidor não recebeu este formulário. Escolha um vídeo menor ou verifique o limite mostrado na tela de envio.</p>

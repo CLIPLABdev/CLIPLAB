@@ -10,7 +10,7 @@
 .marketing-page .nav-login:hover { background:rgb(255 255 255 / 8%); border-color:#FFFFFF; }
 .marketing-page .brand-mark { display:inline-flex; }
 .marketing-page .brand-wordmark { color:#FFFFFF; }
-.marketing-page .brand-wordmark span { color:inherit; }
+.marketing-page .brand-wordmark span { color:var(--gray-500); }
 .marketing-page .nav-links>a:not(.button) { font-size:14px; color:#FFFFFF; }
 .marketing-page .nav-links>a:hover { color:var(--text); }
 .marketing-page .button { min-height:50px; padding:14px 21px; }

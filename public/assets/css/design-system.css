@@ -261,7 +261,7 @@ body ::selection { background:var(--ocean); color:var(--black); }
 body .brand { gap:.6rem; letter-spacing:-.03em; }
 body .brand-mark { background:none; border-radius:0; box-shadow:none; display:inline-flex; flex:none; height:22px; width:28px; }
 body .brand-mark :is(svg,img) { display:block; fill:initial; height:100%; stroke:none; width:100%; }
-body .brand-wordmark { color:var(--text); font-weight:500; }
-body .brand-wordmark span { color:inherit; }
+body .brand-wordmark { color:var(--text); font-weight:500; letter-spacing:.02em; text-transform:uppercase; }
+body .brand-wordmark span { color:var(--gray-500); }
 .admin-body .admin-brand>span { background:none; }
 .admin-body .admin-brand>span img { display:block; height:24px; width:30px; }

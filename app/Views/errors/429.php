@@ -10,7 +10,7 @@
 </head>
 <body class="error-body">
     <main class="error-card">
-        <a class="brand" href="/" aria-label="ClipLab, início"><span class="brand-mark" aria-hidden="true"><img src="/assets/images/logo-symbol.svg" alt=""></span><span class="brand-wordmark">ClipLab</span></a>
+        <a class="brand" href="/" aria-label="ClipLab, início"><span class="brand-mark" aria-hidden="true"><img src="/assets/images/logo-symbol.svg" alt=""></span><span class="brand-wordmark">Clip<span>Lab</span></span></a>
         <p class="eyebrow">429 / Uma breve pausa</p>
         <h1>Muitas tentativas</h1>
         <p>Aguarde alguns minutos antes de tentar novamente.</p>
