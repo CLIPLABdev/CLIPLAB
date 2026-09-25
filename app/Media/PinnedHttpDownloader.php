@@ -25,7 +25,8 @@ final class PinnedHttpDownloader
         private ?ProcessRunner $mergeRunner = null,
         private string $ffmpegBinary = 'ffmpeg',
         private int $mergeTimeoutSeconds = 120,
-        private int $mergeOutputLimitBytes = 1048576
+        private int $mergeOutputLimitBytes = 1048576,
+        private ?YtDlpMediaFetcher $youtubeFetcher = null
     ) {
         if ($timeoutSeconds < 1 || $maxRedirects < 0 || $mergeTimeoutSeconds < 1 || $mergeOutputLimitBytes < 1) {
             throw new \InvalidArgumentException('Invalid download limits.');
@@ -58,6 +59,9 @@ final class PinnedHttpDownloader
         int $maxBytes
     ): StoredObject
     {
+        if ($this->youtubeFetcher !== null && $this->youtubeFetcher->supports($media)) {
+            return $this->youtubeFetcher->fetch($media, $storage, $objectKey, $maxBytes);
+        }
         if ($media->isAdaptive()) {
             return $this->downloadAdaptiveYoutube($media, $storage, $objectKey, $maxBytes);
         }

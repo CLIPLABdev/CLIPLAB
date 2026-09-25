@@ -30,6 +30,7 @@ return [
     'yt_dlp_js_runtime' => Env::get('YTDLP_JS_RUNTIME'),
     'yt_dlp_cookies_file' => Env::get('YTDLP_COOKIES_FILE'),
     'yt_dlp_remote_components' => Env::get('YTDLP_REMOTE_COMPONENTS'),
+    'yt_dlp_cache_dir' => Env::get('YTDLP_CACHE_DIR'),
     'yt_dlp_force_ipv4' => filter_var(Env::get('YTDLP_FORCE_IPV4', 'true'), FILTER_VALIDATE_BOOL),
     'yt_dlp_timeout_seconds' => max(5, (int) Env::get('YTDLP_TIMEOUT_SECONDS', '60')),
     'yt_dlp_output_limit_bytes' => max(4096, (int) Env::get('YTDLP_OUTPUT_LIMIT_BYTES', '1048576')),

@@ -21,7 +21,8 @@ final class YtDlpYoutubeResolver implements BudgetedYoutubeMediaResolver
         private bool $forceIpv4 = true,
         private $report = null,
         private ?string $cookiesFile = null,
-        private ?string $remoteComponents = null
+        private ?string $remoteComponents = null,
+        private ?string $cacheDirectory = null
     ) {
         if (trim($binary) === '' || $timeoutSeconds < 1 || $outputLimitBytes < 1024) {
             throw new \InvalidArgumentException('YouTube resolver configuration is invalid.');
@@ -77,6 +78,10 @@ final class YtDlpYoutubeResolver implements BudgetedYoutubeMediaResolver
         ];
         // Sem o script de desafio (EJS) o yt-dlp devolve URLs com o parâmetro "n" sem resolver,
         // e o googlevideo responde 403. Ex.: YTDLP_REMOTE_COMPONENTS=ejs:github
+        if (is_string($this->cacheDirectory) && trim($this->cacheDirectory) !== '' && is_dir(trim($this->cacheDirectory))) {
+            $position = array_search('--no-cache-dir', $command, true);
+            array_splice($command, (int) $position, 1, ['--cache-dir', trim($this->cacheDirectory)]);
+        }
         if (is_string($this->remoteComponents) && preg_match('/^[a-z]+:[a-z]+$/', trim($this->remoteComponents)) === 1) {
             $position = array_search('--no-remote-components', $command, true);
             array_splice($command, (int) $position, 1, ['--remote-components', trim($this->remoteComponents)]);
@@ -128,7 +133,8 @@ final class YtDlpYoutubeResolver implements BudgetedYoutubeMediaResolver
         }
 
         if ($this->progressiveMetadataIsAllowed($metadata)) {
-            return new ResolvedYoutubeMedia($this->validatedCdnUrl((string) $metadata['url']));
+            return (new ResolvedYoutubeMedia($this->validatedCdnUrl((string) $metadata['url'])))
+                ->withSource($url->url(), $this->formatId($metadata));
         }
 
         $formats = $metadata['requested_formats'] ?? null;
@@ -139,10 +145,19 @@ final class YtDlpYoutubeResolver implements BudgetedYoutubeMediaResolver
             throw MediaValidationException::withCode('youtube_response_invalid');
         }
 
+        $videoId = $this->formatId($formats[0]);
+        $audioId = $this->formatId($formats[1]);
         return ResolvedYoutubeMedia::adaptive(
             new ResolvedYoutubeTrack($this->validatedCdnUrl((string) $formats[0]['url']), 'video', 'mp4', 'video/mp4'),
             new ResolvedYoutubeTrack($this->validatedCdnUrl((string) $formats[1]['url']), 'audio', 'm4a', 'audio/mp4')
-        );
+        )->withSource($url->url(), $videoId !== null && $audioId !== null ? $videoId . '+' . $audioId : null);
+    }
+
+    /** @param array<string, mixed> $format */
+    private function formatId(array $format): ?string
+    {
+        $id = $format['format_id'] ?? null;
+        return is_string($id) && preg_match('/^[A-Za-z0-9_-]{1,32}$/', $id) === 1 ? $id : null;
     }
 
     private function validatedCdnUrl(string $directUrl): ValidatedRemoteUrl

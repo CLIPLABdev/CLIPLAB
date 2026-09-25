@@ -56,7 +56,8 @@ try {
         (bool) ($media['yt_dlp_force_ipv4'] ?? true),
         null,
         is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null,
-            is_string($media['yt_dlp_remote_components'] ?? null) ? $media['yt_dlp_remote_components'] : null
+            is_string($media['yt_dlp_remote_components'] ?? null) ? $media['yt_dlp_remote_components'] : null,
+            is_string($media['yt_dlp_cache_dir'] ?? null) ? $media['yt_dlp_cache_dir'] : null
     );
     $resolved = $resolver->resolveWithinLimit((new YoutubeUrlValidator())->validate($link), $maxBytes);
 } catch (Throwable $e) {
@@ -67,7 +68,7 @@ $tracks = $resolved->isAdaptive() ? $resolved->tracks() : [];
 $urls = $resolved->isAdaptive() ? array_map(static fn ($t) => $t->url(), $tracks) : [$resolved->url()];
 echo "1) yt-dlp OK — formato " . ($resolved->isAdaptive() ? 'adaptativo (vídeo + áudio separados)' : 'progressivo (arquivo único)') . "\n";
 
-// 2) Primeiro 1 MB de cada trilha com as MESMAS opções de cURL do sistema
+// 2) Caminho ANTIGO: primeiro 1 MB de cada trilha com o cURL do PHP (só comparação)
 foreach ($urls as $i => $url) {
     $transport = new CurlDownloadTransport();
     $bytes = 0;
@@ -90,8 +91,8 @@ foreach ($urls as $i => $url) {
     }
 }
 
-// 3) Etapas do download separadas, para achar exatamente onde quebra
-echo "3) Etapas:\n";
+// 3) Caminho ANTIGO (PHP baixando o endereço do googlevideo), só para comparação
+echo "3) Caminho antigo (PHP), só comparação:\n";
 echo "   extensão fileinfo: " . (class_exists(\finfo::class) ? 'OK' : 'AUSENTE') . "\n";
 if (!$resolved->isAdaptive()) {
     $storageStep = new LocalPrivateStorage($privateRoot, $maxBytes);
@@ -116,13 +117,26 @@ if (!$resolved->isAdaptive()) {
     }
 }
 
-// 4) Download completo pelo mesmo caminho do worker
+// 4) Download completo pelo mesmo caminho do worker (yt-dlp baixa o arquivo)
+echo "   formato escolhido: " . var_export($resolved->formatSelector(), true) . "\n";
 $storage = new LocalPrivateStorage($privateRoot, $maxBytes);
+$fetcherReport = static function (array $context): void { echo "   relatório yt-dlp: " . json_encode($context, JSON_UNESCAPED_UNICODE) . "\n"; };
+$fetcher = new \App\Media\YtDlpMediaFetcher(
+    new ProcessRunner([$binary], $privateRoot), new UploadValidator($maxBytes), $privateRoot, $binary,
+    (int) ($media['download_timeout_seconds'] ?? 120) + (int) ($media['process_timeout_seconds'] ?? 60),
+    is_string($media['yt_dlp_js_runtime'] ?? null) ? $media['yt_dlp_js_runtime'] : null,
+    (bool) ($media['yt_dlp_force_ipv4'] ?? true),
+    is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null,
+    is_string($media['yt_dlp_remote_components'] ?? null) ? $media['yt_dlp_remote_components'] : null,
+    is_string($media['yt_dlp_cache_dir'] ?? null) ? $media['yt_dlp_cache_dir'] : null,
+    $ffmpeg, $fetcherReport
+);
 $downloader = new PinnedHttpDownloader(
     new DirectUrlValidator(), new UploadValidator($maxBytes),
     (int) ($media['download_timeout_seconds'] ?? 120), (int) ($media['max_redirects'] ?? 2),
     $storage, null, new ProcessRunner([$ffmpeg], $privateRoot), $ffmpeg,
-    (int) ($media['process_timeout_seconds'] ?? 60), (int) ($media['process_output_limit_bytes'] ?? 1048576)
+    (int) ($media['process_timeout_seconds'] ?? 60), (int) ($media['process_output_limit_bytes'] ?? 1048576),
+    $fetcher
 );
 $key = 'imports/diagnostico/' . bin2hex(random_bytes(8)) . '.mp4';
 $started = microtime(true);

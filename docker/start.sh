@@ -8,15 +8,31 @@ MEDIA_DIR="${MEDIA_PRIVATE_ROOT:-/app/storage/media}"
 mkdir -p "$MEDIA_DIR" /app/storage/logs 2>/dev/null || true
 
 # Cookies do YouTube (opcional): cole o cookies.txt em base64 na variável YTDLP_COOKIES_B64.
-if [ -n "${YTDLP_COOKIES_B64:-}" ] && [ -z "${YTDLP_COOKIES_FILE:-}" ]; then
-    if printf '%s' "$YTDLP_COOKIES_B64" | tr -d ' \r\n' | base64 -d > /tmp/yt-cookies.txt 2>/dev/null && [ -s /tmp/yt-cookies.txt ]; then
-        chmod 600 /tmp/yt-cookies.txt
-        export YTDLP_COOKIES_FILE=/tmp/yt-cookies.txt
+COOKIES_TARGET="${YTDLP_COOKIES_FILE:-/tmp/yt-cookies.txt}"
+if [ -n "${YTDLP_COOKIES_B64:-}" ]; then
+    if printf '%s' "$YTDLP_COOKIES_B64" | tr -d ' \r\n' | base64 -d > "$COOKIES_TARGET" 2>/dev/null && [ -s "$COOKIES_TARGET" ]; then
+        chmod 600 "$COOKIES_TARGET"
+        export YTDLP_COOKIES_FILE="$COOKIES_TARGET"
         echo "[start] Cookies do YouTube carregados"
     else
+        rm -f "$COOKIES_TARGET"
         echo "[start] YTDLP_COOKIES_B64 inválido; seguindo sem cookies"
     fi
 fi
+
+# Mantém o yt-dlp atualizado: o YouTube muda com frequência e versões antigas passam a falhar.
+if [ "${YTDLP_AUTO_UPDATE:-true}" = "true" ]; then
+    timeout 60 yt-dlp -U >/tmp/yt-dlp-update.log 2>&1 && echo "[start] yt-dlp: $(yt-dlp --version)" \
+        || echo "[start] Não foi possível atualizar o yt-dlp; seguindo com $(yt-dlp --version 2>/dev/null)"
+fi
+
+# Cache do yt-dlp (guarda o solucionador de desafio do YouTube entre execuções).
+if [ -n "${YTDLP_CACHE_DIR:-}" ]; then
+    mkdir -p "$YTDLP_CACHE_DIR" 2>/dev/null || true
+fi
+
+# Restos de downloads interrompidos (ex.: container reiniciado no meio de um vídeo).
+rm -rf "$MEDIA_DIR"/.ytdlp-* 2>/dev/null || true
 
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     echo "[start] Aplicando migrations..."

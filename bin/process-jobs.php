@@ -133,6 +133,33 @@ try {
     $ffprobe = (string) ($media['ffprobe_binary'] ?? 'ffprobe');
     $ffmpeg = (string) ($media['ffmpeg_binary'] ?? 'ffmpeg');
     $runner = new ProcessRunner([$ffprobe, $ffmpeg], $privateRoot);
+    $youtubeFetcher = null;
+    if ($media['youtube_import_enabled'] ?? false) {
+        // O yt-dlp baixa o arquivo na mesma execução em que obtém o endereço (evita 403 do googlevideo).
+        $youtubeFetcherBinary = (string) ($media['yt_dlp_binary'] ?? 'yt-dlp');
+        // Mesmo orçamento do PinnedHttpDownloader: download + junção de vídeo/áudio (já coberto pelo lease).
+        $youtubeMergeTimeoutSeconds = $processTimeoutSeconds;
+        $youtubeFetcher = new \App\Media\YtDlpMediaFetcher(
+            new ProcessRunner([$youtubeFetcherBinary], $privateRoot),
+            $uploads,
+            $privateRoot,
+            $youtubeFetcherBinary,
+            $downloadTimeoutSeconds + $youtubeMergeTimeoutSeconds,
+            is_string($media['yt_dlp_js_runtime'] ?? null) ? $media['yt_dlp_js_runtime'] : null,
+            (bool) ($media['yt_dlp_force_ipv4'] ?? true),
+            is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null,
+            is_string($media['yt_dlp_remote_components'] ?? null) ? $media['yt_dlp_remote_components'] : null,
+            is_string($media['yt_dlp_cache_dir'] ?? null) ? $media['yt_dlp_cache_dir'] : null,
+            $ffmpeg,
+            static function (array $context) use ($systemLogs): void {
+                $systemLogs->tryRecord(
+                    ($context['result'] ?? '') === 'downloaded' ? 'info' : 'warning',
+                    'youtube.download_diagnostic',
+                    $context
+                );
+            }
+        );
+    }
     $downloader = new PinnedHttpDownloader(
         new DirectUrlValidator(),
         $uploads,
@@ -143,7 +170,8 @@ try {
         $runner,
         $ffmpeg,
         $processTimeoutSeconds,
-        (int) ($media['process_output_limit_bytes'] ?? 1048576)
+        (int) ($media['process_output_limit_bytes'] ?? 1048576),
+        $youtubeFetcher
     );
     $youtubeResolver = null;
     if ($media['youtube_import_enabled'] ?? false) {
@@ -164,7 +192,8 @@ try {
                 );
             },
             is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null,
-            is_string($media['yt_dlp_remote_components'] ?? null) ? $media['yt_dlp_remote_components'] : null
+            is_string($media['yt_dlp_remote_components'] ?? null) ? $media['yt_dlp_remote_components'] : null,
+            is_string($media['yt_dlp_cache_dir'] ?? null) ? $media['yt_dlp_cache_dir'] : null
         );
     }
     $mediaProcessor = new LocalFfprobeProcessor(

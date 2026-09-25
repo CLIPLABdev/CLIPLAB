@@ -92,6 +92,18 @@ final class YtDlpYoutubeResolverTest extends TestCase
         self::assertSame('ejs:github', $runner->command[$index + 1]);
     }
 
+    public function testKeepsTheSourceLinkAndChosenFormatForTheDownloader(): void
+    {
+        $runner = new RecordingYoutubeResolverRunner();
+        $runner->result = new ProcessResult(0, json_encode(['format_id' => '18'] + $this->metadata(), JSON_THROW_ON_ERROR), '');
+        $resolver = new YtDlpYoutubeResolver($runner, new DirectUrlValidator(static fn (): array => ['8.8.8.8']));
+
+        $media = $resolver->resolve(new ValidatedYoutubeUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'www.youtube.com', 'dQw4w9WgXcQ'));
+
+        self::assertSame('https://www.youtube.com/watch?v=dQw4w9WgXcQ', $media->sourceUrl());
+        self::assertSame('18', $media->formatSelector());
+    }
+
     public function testCanOptOutOfIpv4OnIpv6OnlyHosts(): void
     {
         $runner = new RecordingYoutubeResolverRunner();
