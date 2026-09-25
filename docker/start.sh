@@ -7,6 +7,17 @@ cd /app
 MEDIA_DIR="${MEDIA_PRIVATE_ROOT:-/app/storage/media}"
 mkdir -p "$MEDIA_DIR" /app/storage/logs 2>/dev/null || true
 
+# Cookies do YouTube (opcional): cole o cookies.txt em base64 na variável YTDLP_COOKIES_B64.
+if [ -n "${YTDLP_COOKIES_B64:-}" ] && [ -z "${YTDLP_COOKIES_FILE:-}" ]; then
+    if printf '%s' "$YTDLP_COOKIES_B64" | tr -d ' \r\n' | base64 -d > /tmp/yt-cookies.txt 2>/dev/null && [ -s /tmp/yt-cookies.txt ]; then
+        chmod 600 /tmp/yt-cookies.txt
+        export YTDLP_COOKIES_FILE=/tmp/yt-cookies.txt
+        echo "[start] Cookies do YouTube carregados"
+    else
+        echo "[start] YTDLP_COOKIES_B64 inválido; seguindo sem cookies"
+    fi
+fi
+
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     echo "[start] Aplicando migrations..."
     php bin/migrate.php >/tmp/migrate.log 2>&1 && echo "[start] Migrations OK" \

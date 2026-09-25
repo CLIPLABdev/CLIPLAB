@@ -162,7 +162,8 @@ try {
                     'youtube.import_diagnostic',
                     $context
                 );
-            }
+            },
+            is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null
         );
     }
     $mediaProcessor = new LocalFfprobeProcessor(

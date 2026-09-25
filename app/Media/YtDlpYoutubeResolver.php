@@ -19,7 +19,8 @@ final class YtDlpYoutubeResolver implements BudgetedYoutubeMediaResolver
         private int $outputLimitBytes = 1048576,
         private ?string $javascriptRuntime = null,
         private bool $forceIpv4 = true,
-        private $report = null
+        private $report = null,
+        private ?string $cookiesFile = null
     ) {
         if (trim($binary) === '' || $timeoutSeconds < 1 || $outputLimitBytes < 1024) {
             throw new \InvalidArgumentException('YouTube resolver configuration is invalid.');
@@ -79,6 +80,12 @@ final class YtDlpYoutubeResolver implements BudgetedYoutubeMediaResolver
         }
         if ($this->forceIpv4) {
             $command[] = '--force-ipv4';
+        }
+        // Cookies de uma sessão do YouTube (formato Netscape) evitam a verificação
+        // anti-robô que o YouTube aplica a IPs de datacenter.
+        if (is_string($this->cookiesFile) && trim($this->cookiesFile) !== '' && is_readable(trim($this->cookiesFile))) {
+            $command[] = '--cookies';
+            $command[] = trim($this->cookiesFile);
         }
         $command[] = '--';
         $command[] = $url->url();

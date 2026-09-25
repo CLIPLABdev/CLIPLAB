@@ -52,6 +52,31 @@ final class YtDlpYoutubeResolverTest extends TestCase
         ], $runner->command);
     }
 
+    public function testPassesReadableCookiesFileAndIgnoresMissingOne(): void
+    {
+        $cookies = tempnam(sys_get_temp_dir(), 'yt-cookies-');
+        file_put_contents($cookies, "# Netscape HTTP Cookie File\n");
+        try {
+            foreach ([$cookies => true, $cookies . '-missing' => false] as $path => $expected) {
+                $runner = new RecordingYoutubeResolverRunner();
+                $runner->result = new ProcessResult(0, json_encode($this->metadata(), JSON_THROW_ON_ERROR), '');
+                $resolver = new YtDlpYoutubeResolver(
+                    $runner, new DirectUrlValidator(static fn (): array => ['8.8.8.8']),
+                    'yt-dlp', 45, 32768, null, true, null, $path
+                );
+                $resolver->resolve(new ValidatedYoutubeUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'www.youtube.com', 'dQw4w9WgXcQ'));
+                $index = array_search('--cookies', $runner->command, true);
+                self::assertSame($expected, $index !== false);
+                if ($expected) {
+                    self::assertSame($path, $runner->command[$index + 1]);
+                    self::assertLessThan(array_search('--', $runner->command, true), $index);
+                }
+            }
+        } finally {
+            @unlink($cookies);
+        }
+    }
+
     public function testCanOptOutOfIpv4OnIpv6OnlyHosts(): void
     {
         $runner = new RecordingYoutubeResolverRunner();
