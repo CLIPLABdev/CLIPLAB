@@ -39,7 +39,8 @@ ENV MEDIA_MAX_UPLOAD_BYTES=3221225472 \
     PROCESS_TIMEOUT_SECONDS=300 \
     QUEUE_LEASE_SECONDS=1800 \
     YTDLP_TIMEOUT_SECONDS=90 \
-    YTDLP_JS_RUNTIME=node:/usr/local/bin/node
+    YTDLP_JS_RUNTIME=node:/usr/local/bin/node \
+    YTDLP_REMOTE_COMPONENTS=ejs:github
 
 # O Railway injeta $PORT em tempo de execução.
 EXPOSE 8080

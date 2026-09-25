@@ -77,6 +77,21 @@ final class YtDlpYoutubeResolverTest extends TestCase
         }
     }
 
+    public function testCanAllowTheRemoteChallengeSolverComponent(): void
+    {
+        $runner = new RecordingYoutubeResolverRunner();
+        $runner->result = new ProcessResult(0, json_encode($this->metadata(), JSON_THROW_ON_ERROR), '');
+        $resolver = new YtDlpYoutubeResolver(
+            $runner, new DirectUrlValidator(static fn (): array => ['8.8.8.8']),
+            'yt-dlp', 45, 32768, 'node:/usr/local/bin/node', true, null, null, 'ejs:github'
+        );
+        $resolver->resolve(new ValidatedYoutubeUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'www.youtube.com', 'dQw4w9WgXcQ'));
+        self::assertNotContains('--no-remote-components', $runner->command);
+        $index = array_search('--remote-components', $runner->command, true);
+        self::assertIsInt($index);
+        self::assertSame('ejs:github', $runner->command[$index + 1]);
+    }
+
     public function testCanOptOutOfIpv4OnIpv6OnlyHosts(): void
     {
         $runner = new RecordingYoutubeResolverRunner();

@@ -20,7 +20,8 @@ final class YtDlpYoutubeResolver implements BudgetedYoutubeMediaResolver
         private ?string $javascriptRuntime = null,
         private bool $forceIpv4 = true,
         private $report = null,
-        private ?string $cookiesFile = null
+        private ?string $cookiesFile = null,
+        private ?string $remoteComponents = null
     ) {
         if (trim($binary) === '' || $timeoutSeconds < 1 || $outputLimitBytes < 1024) {
             throw new \InvalidArgumentException('YouTube resolver configuration is invalid.');
@@ -74,6 +75,12 @@ final class YtDlpYoutubeResolver implements BudgetedYoutubeMediaResolver
             '--use-extractors', 'youtube',
             '--format', 'best[ext=mp4][vcodec!=none][acodec!=none]/bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]',
         ];
+        // Sem o script de desafio (EJS) o yt-dlp devolve URLs com o parâmetro "n" sem resolver,
+        // e o googlevideo responde 403. Ex.: YTDLP_REMOTE_COMPONENTS=ejs:github
+        if (is_string($this->remoteComponents) && preg_match('/^[a-z]+:[a-z]+$/', trim($this->remoteComponents)) === 1) {
+            $position = array_search('--no-remote-components', $command, true);
+            array_splice($command, (int) $position, 1, ['--remote-components', trim($this->remoteComponents)]);
+        }
         if (is_string($this->javascriptRuntime) && trim($this->javascriptRuntime) !== '') {
             $command[] = '--js-runtimes';
             $command[] = trim($this->javascriptRuntime);

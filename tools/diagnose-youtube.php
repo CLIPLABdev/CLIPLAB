@@ -55,7 +55,8 @@ try {
         is_string($media['yt_dlp_js_runtime'] ?? null) ? $media['yt_dlp_js_runtime'] : null,
         (bool) ($media['yt_dlp_force_ipv4'] ?? true),
         null,
-        is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null
+        is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null,
+            is_string($media['yt_dlp_remote_components'] ?? null) ? $media['yt_dlp_remote_components'] : null
     );
     $resolved = $resolver->resolveWithinLimit((new YoutubeUrlValidator())->validate($link), $maxBytes);
 } catch (Throwable $e) {

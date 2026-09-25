@@ -163,7 +163,8 @@ try {
                     $context
                 );
             },
-            is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null
+            is_string($media['yt_dlp_cookies_file'] ?? null) ? $media['yt_dlp_cookies_file'] : null,
+            is_string($media['yt_dlp_remote_components'] ?? null) ? $media['yt_dlp_remote_components'] : null
         );
     }
     $mediaProcessor = new LocalFfprobeProcessor(
