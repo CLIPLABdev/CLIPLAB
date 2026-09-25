@@ -95,7 +95,8 @@ ob_start();
                 <div class="project-card-actions">
                     <?php if ($status === 'awaiting_credits'): ?><a class="button button-small" href="/projetos/<?= $id ?>">Retomar análise</a><?php endif; ?>
                     <?php if ($status === 'failed' && in_array($project['error_code'] ?? null, ['ai_unavailable','ai_timeout','ai_rate_limited'], true)): ?><a class="button button-small" href="/projetos/<?= $id ?>">Revisar análise</a><?php endif; ?>
-                    <a class="button button-small project-suggestions-link" data-project-suggestions-link<?= in_array($status, $suggestionStatuses, true) ? ' href="/projetos/' . $id . '"' : ' hidden' ?>>Ver sugestões</a>
+                    <a class="button button-small project-clips-link" data-project-clips-link<?= in_array($status, $suggestionStatuses, true) ? ' href="/clips?projeto=' . $id . '"' : ' hidden' ?>><i data-lucide="scissors" aria-hidden="true"></i>Ver cortes</a>
+                    <a class="project-suggestions-link text-link" data-project-suggestions-link<?= in_array($status, $suggestionStatuses, true) ? ' href="/projetos/' . $id . '"' : ' hidden' ?>>Ver sugestões</a>
                     <?php if (!in_array($status, $terminalStatuses, true)): ?><a class="project-refresh-link" href="/projetos">Atualizar status</a><?php endif; ?>
                 </div>
             </article>

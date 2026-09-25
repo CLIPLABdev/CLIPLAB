@@ -34,6 +34,8 @@ final class MarketingContentService
             'monthly_minutes' => $plan['monthly_minutes'],
             'credits' => $plan['credits'],
             'features' => $plan['features'],
+            'description' => (string) ($plan['description'] ?? ''),
+            'daily_credits' => (int) ($plan['daily_credits'] ?? 0),
         ], $this->accounts->activePlans());
     }
 

@@ -36,7 +36,10 @@ final class ClipLibraryController
 
         $filter = $this->filter($request->query('filter', 'recent'));
         $page = $this->page($request->query('page', '1'));
-        $library = ($this->library)($userId, $filter, $page, 24);
+        $projectId = $this->projectId($request->query('projeto', null));
+        $library = $projectId === null
+            ? ($this->library)($userId, $filter, $page, 24)
+            : ($this->library)($userId, $filter, $page, 24, $projectId);
 
         return $this->view->render('clips.index', [
             'title' => 'Clipes',
@@ -50,6 +53,15 @@ final class ClipLibraryController
         return is_string($value) && in_array($value, ['recent', 'processing', 'completed', 'failed'], true)
             ? $value
             : 'recent';
+    }
+
+    private function projectId(mixed $value): ?int
+    {
+        if (!is_string($value) || preg_match('/\A[1-9][0-9]{0,17}\z/D', $value) !== 1) {
+            return null;
+        }
+
+        return (int) $value;
     }
 
     private function page(mixed $value): int

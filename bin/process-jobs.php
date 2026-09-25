@@ -335,7 +335,10 @@ try {
             $credits,
             static function (array $event) use ($systemLogs): void {
                 $systemLogs->tryRecord('info', 'opusclip.raw_clip', $event);
-            }
+            },
+            $projects,
+            $runner,
+            $ffmpeg
         ),
         'generate_clips' => new GenerateClipsHandler(
             $analyses,

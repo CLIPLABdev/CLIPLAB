@@ -237,3 +237,13 @@
     }
     .landing-hero-copy { max-width: 600px; padding-right: 0; }
 }
+/* Planos "Cientista": 4 colunas, descrição e linha de upgrade. */
+.landing-plan-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.landing-plan-description { color:var(--muted); font-size:14px; line-height:1.6; margin:0 0 20px; min-height:6.4em; }
+.landing-plan-card li.landing-plan-upgrade { color:var(--text); font-weight:500; }
+.landing-plan-card li.landing-plan-upgrade::before { content:'↑'; }
+.landing-plan-card li strong { color:var(--text); font-weight:500; }
+@media(max-width:1150px) { .landing-plan-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:30px 18px; } }
+@media(max-width:767px) { .landing-plan-grid { grid-template-columns:1fr; } .landing-plan-description { min-height:0; } }
+.marketing-page .landing-plan-card.landing-plan-card--recommended .button { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+.marketing-page .landing-plan-card.landing-plan-card--recommended .button:hover { background:var(--electric); }

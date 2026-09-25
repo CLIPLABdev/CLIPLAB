@@ -6,9 +6,10 @@
   const statuses = new Set([
     'receiving', 'queued', 'fetching', 'probing', 'ready',
     'ai_queued', 'uploading_ai', 'waiting_ai_file', 'analyzing',
-    'identifying_clips', 'suggestions_ready', 'awaiting_credits', 'failed',
+    'identifying_clips', 'suggestions_ready', 'rendering', 'completed', 'awaiting_credits', 'failed',
   ]);
-  const terminal = new Set(['ready', 'suggestions_ready', 'awaiting_credits', 'failed']);
+  const terminal = new Set(['ready', 'suggestions_ready', 'completed', 'awaiting_credits', 'failed']);
+  const clipStatuses = new Set(['suggestions_ready', 'rendering', 'completed']);
   const safeSuggestionsPath = /^\/projetos\/[1-9][0-9]*$/;
   const delays = [3000, 5000, 8000, 15000];
 
@@ -19,6 +20,7 @@
     const progressText = card.querySelector('[data-project-progress-value]');
     const progress = card.querySelector('[data-project-progress]');
     const suggestionsLink = card.querySelector('[data-project-suggestions-link]');
+    const clipsLink = card.querySelector('[data-project-clips-link]');
     if (!url || !statusText || !messageText || !progressText || !progress) return;
 
     let timer = null;
@@ -82,6 +84,13 @@
         ) {
           suggestionsLink.href = payload.suggestions_url;
           suggestionsLink.hidden = false;
+        }
+
+        if (clipsLink && clipStatuses.has(nextStatus) && /^[1-9][0-9]*$/.test(card.dataset.projectId || '')) {
+          clipsLink.href = `/clips?projeto=${card.dataset.projectId}`;
+          clipsLink.hidden = false;
+          const refresh = card.querySelector('.project-refresh-link');
+          if (refresh && nextStatus === 'completed') refresh.hidden = true;
         }
 
         if (nextStage !== previousStage) {

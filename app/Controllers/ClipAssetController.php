@@ -11,6 +11,7 @@ use App\Core\Response;
 use App\Core\Session;
 use App\Repositories\ClipRepository;
 use App\Services\PrivateFileResponseFactory;
+use App\Services\PrivateRangeResponseFactory;
 use Throwable;
 
 final class ClipAssetController
@@ -29,7 +30,8 @@ final class ClipAssetController
         ClipRepository|callable $clips,
         PrivateStorage|callable $storage,
         private PrivateFileResponseFactory $files,
-        private ?ErrorHandler $errors = null
+        private ?ErrorHandler $errors = null,
+        private ?PrivateRangeResponseFactory $ranges = null
     ) {
         $this->artifact = $clips instanceof ClipRepository
             ? static fn (int $clipId, int $userId, string $kind): ?array => $clips->artifactForOwnedClip($clipId, $userId, $kind)
@@ -48,6 +50,39 @@ final class ClipAssetController
     public function download(Request $request, array $parameters): Response
     {
         return $this->asset($parameters, 'video');
+    }
+
+    /**
+     * Reproduz o arquivo final do corte no navegador (com suporte a Range),
+     * para a prévia mostrar exatamente o corte, e não o vídeo de origem.
+     * @param array<string, string> $parameters
+     */
+    public function preview(Request $request, array $parameters): Response
+    {
+        $userId = (int) Session::get('user_id', 0);
+        if ($userId < 1) {
+            return Response::redirect('/login');
+        }
+        $clipId = $this->clipId($parameters);
+        if ($clipId === null || $this->ranges === null) {
+            return $this->notFound();
+        }
+        try {
+            $artifact = ($this->artifact)($clipId, $userId, 'video');
+            if (!is_array($artifact) || !is_string($artifact['object_key'] ?? null) || $artifact['object_key'] === ''
+                || !is_int($artifact['size_bytes'] ?? null) || $artifact['size_bytes'] < 1
+            ) {
+                return $this->notFound();
+            }
+            $path = ($this->storage)()->absolutePath($artifact['object_key']);
+            if (!$this->isAbsolutePath($path)) {
+                return $this->notFound();
+            }
+
+            return $this->ranges->preview($path, $artifact['size_bytes'], 'video/mp4', $request->header('Range'));
+        } catch (Throwable) {
+            return $this->notFound();
+        }
     }
 
     /** @param array<string, string> $parameters */

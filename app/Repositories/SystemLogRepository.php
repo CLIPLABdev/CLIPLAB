@@ -31,6 +31,8 @@ final class SystemLogRepository
         'ai.validation_rejected' => 'Resposta de análise rejeitada pela validação local.',
         'ai.provider_failure' => 'Falha de comunicação com o provedor de análise de IA.',
         'youtube.import_diagnostic' => 'Diagnóstico da consulta de importação do YouTube.',
+        'youtube.download_diagnostic' => 'Diagnóstico do download do vídeo do YouTube.',
+        'opusclip.raw_clip' => 'Corte recebido da OpusClip.',
         'system.operation_failed' => 'Uma operação interna não pôde ser concluída.',
     ];
 
@@ -179,6 +181,38 @@ final class SystemLogRepository
                 if (is_int($context[$key] ?? null) && $context[$key] >= 0) {
                     $safe[$key] = $context[$key];
                 }
+            }
+            return $safe;
+        }
+        if ($eventCode === 'youtube.download_diagnostic') {
+            $safe = [];
+            if (in_array($context['result'] ?? null, ['downloaded', 'failed', 'no_output'], true)) {
+                $safe['result'] = $context['result'];
+            }
+            foreach (['exit_code', 'bytes', 'seconds'] as $key) {
+                if (is_int($context[$key] ?? null) && $context[$key] >= 0) {
+                    $safe[$key] = $context[$key];
+                }
+            }
+            if (is_string($context['error'] ?? null) && $context['error'] !== '') {
+                $safe['error'] = mb_substr((string) preg_replace(['#https?://\S+#', '/[\x00-\x1F\x7F]/u'], ['[url]', ''], $context['error']), 0, 300);
+            }
+            return $safe;
+        }
+        if ($eventCode === 'opusclip.raw_clip') {
+            $safe = [];
+            foreach (['project_id', 'analysis_id'] as $key) {
+                if (is_int($context[$key] ?? null) && $context[$key] > 0) {
+                    $safe[$key] = $context[$key];
+                }
+            }
+            $raw = is_array($context['raw'] ?? null) ? $context['raw'] : [];
+            $safe['fields'] = mb_substr(implode(',', array_filter(array_keys($raw), 'is_string')), 0, 300);
+            if (is_numeric($raw['durationMs'] ?? null)) {
+                $safe['duration_ms'] = (int) $raw['durationMs'];
+            }
+            if (array_key_exists('timeRanges', $raw)) {
+                $safe['time_ranges'] = mb_substr((string) json_encode($raw['timeRanges'], JSON_UNESCAPED_SLASHES), 0, 300);
             }
             return $safe;
         }

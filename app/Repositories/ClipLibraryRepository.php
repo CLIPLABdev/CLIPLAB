@@ -28,18 +28,26 @@ final class ClipLibraryRepository
      *   filter:string,page:int,per_page:int,total:int,last_page:int
      * }
      */
-    public function paginateForUser(int $userId, string $filter, int $page, int $perPage = 24): array
+    public function paginateForUser(int $userId, string $filter, int $page, int $perPage = 24, ?int $projectId = null): array
     {
         $filter = in_array($filter, self::FILTERS, true) ? $filter : 'recent';
         $perPage = max(1, min($perPage, self::MAX_PER_PAGE));
+        $projectId = $projectId !== null && $projectId > 0 ? $projectId : null;
         if ($userId < 1) {
             return $this->emptyPage($filter, $perPage);
         }
+        $project = $projectId === null ? null : $this->ownedProject($userId, $projectId);
+        if ($projectId !== null && $project === null) {
+            $projectId = null;
+        }
 
-        $where = $this->whereClause($filter);
+        $where = $this->whereClause($filter) . ($projectId !== null ? ' AND c.project_id = :project_id' : '');
         $from = $this->fromClause();
         $count = $this->pdo->prepare('SELECT COUNT(c.id) ' . $from . ' ' . $where);
         $count->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        if ($projectId !== null) {
+            $count->bindValue(':project_id', $projectId, PDO::PARAM_INT);
+        }
         $count->execute();
         $total = (int) $count->fetchColumn();
         $lastPage = max(1, (int) ceil($total / $perPage));
@@ -47,7 +55,7 @@ final class ClipLibraryRepository
         $offset = ($page - 1) * $perPage;
 
         if ($total === 0) {
-            return $this->emptyPage($filter, $perPage);
+            return $this->emptyPage($filter, $perPage) + ($project !== null ? ['project' => $project] : []);
         }
 
         $statement = $this->pdo->prepare(
@@ -79,10 +87,13 @@ final class ClipLibraryRepository
                         THEN 1 ELSE 0
                     END AS has_download
              ' . $from . ' ' . $where . '
-             ORDER BY c.updated_at DESC, c.id DESC
+             ORDER BY ' . ($projectId !== null ? 'c.suggestion_index ASC, c.id ASC' : 'c.updated_at DESC, c.id DESC') . '
              LIMIT :limit OFFSET :offset'
         );
         $statement->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        if ($projectId !== null) {
+            $statement->bindValue(':project_id', $projectId, PDO::PARAM_INT);
+        }
         $statement->bindValue(':limit', $perPage, PDO::PARAM_INT);
         $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
@@ -99,7 +110,17 @@ final class ClipLibraryRepository
             'per_page' => $perPage,
             'total' => $total,
             'last_page' => $lastPage,
-        ];
+        ] + ($project !== null ? ['project' => $project] : []);
+    }
+
+    /** @return array{id:int,name:string}|null */
+    private function ownedProject(int $userId, int $projectId): ?array
+    {
+        $statement = $this->pdo->prepare('SELECT id, name FROM projects WHERE id = :id AND user_id = :user_id LIMIT 1');
+        $statement->execute(['id' => $projectId, 'user_id' => $userId]);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return is_array($row) ? ['id' => (int) $row['id'], 'name' => (string) $row['name']] : null;
     }
 
     private function fromClause(): string

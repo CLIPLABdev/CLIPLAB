@@ -17,6 +17,7 @@
     const messageText = card.querySelector('[data-clip-message]');
     const thumbnail = card.querySelector('[data-clip-thumbnail]');
     const download = card.querySelector('[data-clip-download]');
+    const preview = card.querySelector('[data-clip-preview]');
     if (!Number.isSafeInteger(clipId) || !statusText || !messageText || !thumbnail || !download) return;
 
     const thumbnailPath = new RegExp('^/clips/' + rawClipId + '/thumbnail$');
@@ -34,6 +35,7 @@
       thumbnail.removeAttribute('src');
       download.hidden = true;
       download.removeAttribute('href');
+      if (preview) preview.hidden = true;
     };
 
     const stop = (feedback = '') => {
@@ -102,6 +104,7 @@
           thumbnail.hidden = false;
           download.href = payload.download_url;
           download.hidden = false;
+          if (preview) preview.hidden = false;
         }
 
         failures = 0;

@@ -47,7 +47,37 @@ final class AccountRepository
             ];
         }
 
+        $details = $this->planDetails();
+        foreach ($plans as $index => $plan) {
+            $plans[$index]['description'] = $details[$plan['id']]['description'] ?? '';
+            $plans[$index]['daily_credits'] = $details[$plan['id']]['daily_credits'] ?? 0;
+        }
+
         return $plans;
+    }
+
+    /**
+     * Descrição e créditos diários ficam em colunas opcionais: bancos antigos
+     * (ou fixtures de teste) sem essas colunas continuam funcionando.
+     * @return array<int, array{description:string,daily_credits:int}>
+     */
+    private function planDetails(): array
+    {
+        try {
+            $statement = $this->pdo->query('SELECT id, description, daily_credits FROM plans');
+            $rows = $statement === false ? [] : $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException) {
+            return [];
+        }
+        $details = [];
+        foreach ($rows as $row) {
+            $details[(int) $row['id']] = [
+                'description' => (string) ($row['description'] ?? ''),
+                'daily_credits' => max(0, (int) ($row['daily_credits'] ?? 0)),
+            ];
+        }
+
+        return $details;
     }
 
     /** @return array{items:list<array<string,mixed>>,filter:string,page:int,per_page:int,total:int,pages:int} */

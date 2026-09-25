@@ -7,7 +7,9 @@ namespace App\Queue;
 use App\Contracts\PrivateStorage;
 use App\Media\StoredObject;
 use App\OpusClip\OpusClipClient;
+use App\Process\ProcessRunner;
 use App\Repositories\AiAnalysisRepository;
+use App\Repositories\ProjectRepository;
 use App\Repositories\ProjectSourceRepository;
 use App\Services\CreditReservationService;
 use PDO;
@@ -35,7 +37,10 @@ final class OpusClipProcessHandler implements JobHandler
         private OpusClipClient $opusClip,
         private ProcessingEffectGuard $effects,
         private CreditReservationService $credits,
-        private ?\Closure $rawClipObserver = null
+        private ?\Closure $rawClipObserver = null,
+        private ?ProjectRepository $projects = null,
+        private ?ProcessRunner $ffmpegRunner = null,
+        private string $ffmpegBinary = 'ffmpeg'
     ) {
     }
 
@@ -92,6 +97,7 @@ final class OpusClipProcessHandler implements JobHandler
 
         try {
             $this->updateAnalysisStatus($analysisId, 'uploading');
+            $this->advanceProject($job->projectId(), 'uploading_ai');
 
             $absolutePath = $this->storage->absolutePath($source->objectKey());
             $fileSize = filesize($absolutePath);
@@ -110,7 +116,7 @@ final class OpusClipProcessHandler implements JobHandler
                  WHERE id = :id"
             )->execute(['id' => $analysisId, 'pid' => $project['projectId']]);
         } catch (Throwable) {
-            return $this->fail($analysisId, $reservationId, 'opusclip_unavailable');
+            return $this->fail($analysisId, $reservationId, 'opusclip_unavailable', $job->projectId());
         }
 
         return JobOutcome::deferred(self::POLL_SECONDS);
@@ -121,11 +127,12 @@ final class OpusClipProcessHandler implements JobHandler
         try {
             $clips = $this->opusClip->getClipsForProject($opusProjectId);
         } catch (Throwable) {
-            return $this->fail($analysisId, $reservationId, 'opusclip_unavailable');
+            return $this->fail($analysisId, $reservationId, 'opusclip_unavailable', $job->projectId());
         }
 
         if ($clips === []) {
             // Ainda processando do lado da OpusClip; tenta de novo mais tarde.
+            $this->advanceProject($job->projectId(), 'analyzing');
             return JobOutcome::deferred(self::POLL_SECONDS);
         }
 
@@ -134,9 +141,11 @@ final class OpusClipProcessHandler implements JobHandler
                 $this->materializeClips($job->projectId(), $analysisId, $clips);
                 $this->analyses->markCompleted($analysisId);
                 $this->credits->consume($reservationId);
+                // Os clipes da OpusClip já chegam renderizados: o projeto passa a "Concluído" (100%).
+                $this->projects?->synchronizeRenderState($job->projectId());
             });
         } catch (Throwable) {
-            return $this->fail($analysisId, $reservationId, 'processing_persistence_failed');
+            return $this->fail($analysisId, $reservationId, 'processing_persistence_failed', $job->projectId());
         }
 
         return $applied ? JobOutcome::completed() : JobOutcome::deferred(self::CHECKPOINT_DEFER_SECONDS);
@@ -170,13 +179,15 @@ final class OpusClipProcessHandler implements JobHandler
                 ($this->rawClipObserver)(['project_id' => $projectId, 'analysis_id' => $analysisId, 'raw' => $raw]);
             }
 
-            // uriForPreview/uriForThumbnail são os nomes reais confirmados na API da OpusClip.
-            $video = $this->downloadClipAsset($projectId, $raw, ['uriForPreview', 'downloadUrl', 'videoUrl', 'url', 'exportUrl']);
+            // uriForExport é o arquivo final (qualidade de download); uriForPreview é a versão de prévia.
+            $video = $this->downloadClipAsset($projectId, $raw, ['uriForExport', 'exportUrl', 'downloadUrl', 'uriForPreview', 'videoUrl', 'url']);
             if ($video === null) {
                 // Sem URL de vídeo utilizável, pula este clipe em vez de falhar o lote inteiro.
                 continue;
             }
-            $thumbnail = $this->downloadClipAsset($projectId, $raw, ['uriForThumbnail', 'thumbnailUrl', 'coverUrl', 'thumbnail']);
+            // A capa é gerada a partir do próprio corte, para nunca mostrar um quadro do vídeo inteiro.
+            $thumbnail = $this->thumbnailFromClip($projectId, $video)
+                ?? $this->downloadClipAsset($projectId, $raw, ['uriForThumbnail', 'thumbnailUrl', 'coverUrl', 'thumbnail']);
 
             $title = $this->firstString($raw, ['title', 'name', 'headline']) ?? ('Clipe OpusClip ' . ($index + 1));
             $hook = $this->firstString($raw, ['description', 'hook', 'caption']) ?? $title;
@@ -184,24 +195,51 @@ final class OpusClipProcessHandler implements JobHandler
             $durationMs = $this->firstFloat($raw, ['durationMs']);
             $duration = $durationMs !== null ? $durationMs / 1000 : ($this->firstFloat($raw, ['duration', 'durationSeconds', 'length']) ?? 0.0);
             $score = $this->firstInt($raw, ['score', 'viralityScore', 'virality']) ?? 70;
+            [$start, $end] = OpusClipTimeRanges::sourceWindow($raw['timeRanges'] ?? null) ?? [0.0, max($duration, 0.0)];
+            if ($duration <= 0.0) {
+                $duration = max(0.0, $end - $start);
+            }
+            $category = $this->firstString($raw, ['genre', 'subgenre']) ?? 'Corte automático';
 
             $insert->execute([
                 'project_id' => $projectId,
                 'analysis_id' => $analysisId,
                 'suggestion_index' => $index,
                 'title' => mb_substr($title, 0, 180),
-                'start_time' => '0.000',
-                'end_time' => number_format(max($duration, 0.0), 3, '.', ''),
+                'start_time' => number_format(max($start, 0.0), 3, '.', ''),
+                'end_time' => number_format(max($end, $start), 3, '.', ''),
                 'duration_seconds' => number_format(max($duration, 0.0), 3, '.', ''),
                 'viral_score' => max(0, min(100, $score)),
                 'hook' => mb_substr($hook, 0, 500),
-                'reason' => mb_substr('Gerado automaticamente pela OpusClip.', 0, 1000),
-                'category' => 'opusclip',
+                'reason' => mb_substr('Trecho escolhido automaticamente pela IA por ter começo, meio e fim com potencial de engajamento.', 0, 1000),
+                'category' => mb_substr($category, 0, 32),
                 'output_file' => $video->objectKey(),
                 'output_size_bytes' => $video->sizeBytes(),
                 'thumbnail' => $thumbnail?->objectKey(),
                 'thumbnail_size_bytes' => $thumbnail?->sizeBytes(),
             ]);
+        }
+    }
+
+    private function thumbnailFromClip(int $projectId, ?StoredObject $video): ?StoredObject
+    {
+        if ($video === null || $this->ffmpegRunner === null) {
+            return null;
+        }
+
+        return (new \App\Media\ClipFrameThumbnail($this->ffmpegRunner, $this->ffmpegBinary))->fromVideo(
+            $this->storage,
+            $video->objectKey(),
+            'clips/opusclip/' . $projectId . '/' . bin2hex(random_bytes(16)) . '.jpg'
+        );
+    }
+
+    private function advanceProject(int $projectId, string $status): void
+    {
+        try {
+            $this->projects?->advanceProcessingState($projectId, $status);
+        } catch (Throwable) {
+            // O status visual nunca interrompe o processamento.
         }
     }
 
@@ -280,12 +318,19 @@ final class OpusClipProcessHandler implements JobHandler
         )->execute(['id' => $analysisId, 'status' => $status]);
     }
 
-    private function fail(int $analysisId, int $reservationId, string $code): JobOutcome
+    private function fail(int $analysisId, int $reservationId, string $code, ?int $projectId = null): JobOutcome
     {
         $message = ProcessingErrorCatalog::requireMessage($code);
         try {
             $this->credits->refund($reservationId, $code);
             $this->analyses->markFailed($analysisId, $code, $message);
+            if ($projectId !== null) {
+                try {
+                    $this->projects?->advanceProcessingState($projectId, 'failed', $code, mb_substr($message, 0, 255));
+                } catch (Throwable) {
+                    // O status visual nunca bloqueia o reembolso.
+                }
+            }
         } catch (Throwable) {
             return JobOutcome::deferred(self::CHECKPOINT_DEFER_SECONDS);
         }

@@ -18,6 +18,20 @@ if (is_file($seed)) {
     $pdo->exec((string) file_get_contents($seed));
 }
 
+$details = dirname(__DIR__) . '/database/seeds/plans-details.sql';
+if (is_file($details)) {
+    try {
+        foreach (preg_split('/;\s*(?:\r?\n|$)/', (string) file_get_contents($details)) ?: [] as $statement) {
+            $statement = trim((string) preg_replace('/^\s*--.*$/m', '', $statement));
+            if ($statement !== '') {
+                $pdo->exec($statement);
+            }
+        }
+    } catch (\PDOException) {
+        // Colunas de descrição/créditos diários ainda não existem neste banco.
+    }
+}
+
 if ($executed === []) {
     echo "Nenhuma migration pendente\n";
     exit(0);

@@ -6,9 +6,13 @@ declare(strict_types=1);
 /** @var array<string,mixed> $snapshot */
 /** @var list<array<string,mixed>> $plans */
 
-$formatPrice = static fn (int $cents): string => $cents === 0
-    ? 'Grátis'
-    : 'R$ ' . number_format($cents / 100, 2, ',', '.');
+$formatPrice = static fn (int $cents): string => 'R$ ' . number_format($cents / 100, 2, ',', '.');
+$currentDaily = 0;
+foreach ($plans as $candidatePlan) {
+    if ((int) $candidatePlan['id'] === (int) $snapshot['plan']['id']) {
+        $currentDaily = (int) ($candidatePlan['daily_credits'] ?? 0);
+    }
+}
 $formatBytes = static function (int $bytes): string {
     $units = ['B', 'KB', 'MB', 'GB', 'TB'];
     $value = (float) max(0, $bytes);
@@ -35,7 +39,7 @@ ob_start();
 
 <section class="account-metrics" aria-label="Uso do plano">
     <article class="account-card"><span>Valor do plano</span><strong><?= e($formatPrice((int) $currentPlan['price_cents'])) ?></strong><small>por mês<?= $billingEnabled ? '; confira pagamentos ou revise um plano abaixo' : '; cobrança online será disponibilizada futuramente' ?></small></article>
-    <article class="account-card"><span>Créditos</span><strong><?= (int) $snapshot['credits'] ?></strong><small><?= (int) $currentPlan['included_credits'] ?> incluídos na configuração do plano</small></article>
+    <article class="account-card"><span>Créditos</span><strong><?= (int) $snapshot['credits'] ?></strong><small><?= $currentDaily > 0 ? $currentDaily . ' créditos novos por dia (acumulam por até 30 dias)' : (int) $currentPlan['included_credits'] . ' incluídos na configuração do plano' ?></small></article>
     <article class="account-card"><span>Upload por arquivo</span><strong><?= e($formatBytes((int) $currentLimits['max_upload_bytes'])) ?></strong><small>também sujeito ao limite seguro do servidor</small></article>
 </section>
 
@@ -48,7 +52,8 @@ ob_start();
 <?php foreach ($plans as $plan): $isCurrent = (int) $plan['id'] === (int) $currentPlan['id']; ?>
     <article class="plan-option<?= $isCurrent ? ' is-current' : '' ?>">
         <div class="plan-option-heading"><h3><?= e((string) $plan['name']) ?></h3><?php if ($isCurrent): ?><span>Plano atual</span><?php endif; ?></div>
-        <p class="plan-price"><?= e($formatPrice((int) $plan['price_cents'])) ?><small><?= (int) $plan['monthly_minutes'] ?> min/mês · <?= (int) $plan['credits'] ?> créditos</small></p>
+        <?php if (trim((string) ($plan['description'] ?? '')) !== ''): ?><p class="plan-description"><?= e((string) $plan['description']) ?></p><?php endif; ?>
+        <p class="plan-price"><?= e($formatPrice((int) $plan['price_cents'])) ?><small><?= (int) $plan['monthly_minutes'] ?> min/mês · <?= (int) ($plan['daily_credits'] ?? 0) > 0 ? (int) $plan['daily_credits'] . ' créditos por dia' : (int) $plan['credits'] . ' créditos' ?></small></p>
         <ul><li>Upload de até <?= e($formatBytes((int) $plan['features']['limits']['max_upload_bytes'])) ?></li><li>Armazenamento de <?= e($formatBytes((int) $plan['features']['limits']['storage_bytes'])) ?></li></ul>
         <?php if (!$isCurrent): ?><?php if ($billingEnabled): ?><a class="button button-small" href="/checkout/plano/<?= (int)$plan['id'] ?>">Revisar contratação</a><?php else: ?><p class="plan-note">Solicite a alteração à administração. Nenhuma cobrança é feita nesta tela.</p><?php endif; ?><?php endif; ?>
     </article>

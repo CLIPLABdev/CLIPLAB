@@ -154,8 +154,8 @@ $projects = new ProjectController(
 );
 $clipLibrary = new ClipLibraryController(
     $sharedView,
-    static fn (int $userId, string $filter, int $page, int $perPage): array =>
-        $clipLibraryRepository()->paginateForUser($userId, $filter, $page, $perPage),
+    static fn (int $userId, string $filter, int $page, int $perPage, ?int $projectId = null): array =>
+        $clipLibraryRepository()->paginateForUser($userId, $filter, $page, $perPage, $projectId),
     static fn (int $userId): ?array => $userRepository()->findDashboardProfile($userId)
 );
 $projectStatus = new ProjectStatusController(new ProjectStatusService(
@@ -231,7 +231,9 @@ $clipRender = new ClipRenderController($requestClipRender, $clipStatuses);
 $clipAssets = new ClipAssetController(
     static fn (int $clipId, int $userId, string $kind): ?array => $clipRepository()->artifactForOwnedClip($clipId, $userId, $kind),
     $storage,
-    new PrivateFileResponseFactory()
+    new PrivateFileResponseFactory(),
+    null,
+    new PrivateRangeResponseFactory()
 );
 $clipSourcePreview = new ClipSourcePreviewController(
     static fn (int $clipId, int $userId): ?array => $clipRepository()->sourceForOwnedPreview($clipId, $userId),
@@ -272,6 +274,7 @@ $router->get('/api/projects/{id}/status', static fn (Request $request, array $pa
 $router->get('/api/clips/{id}/status', static fn (Request $request, array $parameters) => $clipRender->status($request, $parameters), [$authenticated]);
 $router->get('/clips/{id}/thumbnail', static fn (Request $request, array $parameters) => $clipAssets->thumbnail($request, $parameters), [$authenticated]);
 $router->get('/clips/{id}/download', static fn (Request $request, array $parameters) => $clipAssets->download($request, $parameters), [$authenticated]);
+$router->get('/clips/{id}/preview', static fn (Request $request, array $parameters) => $clipAssets->preview($request, $parameters), [$authenticated]);
 $router->get('/clips/{id}/source-preview', static fn (Request $request, array $parameters) => $clipSourcePreview->show($request, $parameters), [$authenticated]);
 $router->get('/esqueci-minha-senha', static fn () => $passwordReset->showForgotPassword(), [GuestMiddleware::class]);
 $router->post('/esqueci-minha-senha', static fn (Request $request) => $passwordReset->requestReset($request), [GuestMiddleware::class]);

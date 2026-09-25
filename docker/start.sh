@@ -50,6 +50,16 @@ if [ "${RUN_WORKER:-true}" = "true" ]; then
     ) &
 fi
 
+if [ "${RUN_DAILY_CREDITS:-true}" = "true" ]; then
+    echo "[start] Créditos diários ativos"
+    (
+        while true; do
+            php bin/grant-daily-credits.php >/dev/null 2>&1 || true
+            sleep 3600
+        done
+    ) &
+fi
+
 if [ "${RUN_EMAIL_WORKER:-true}" = "true" ]; then
     echo "[start] Fila de e-mail ativa"
     (

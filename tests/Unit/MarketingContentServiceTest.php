@@ -34,8 +34,8 @@ final class MarketingContentServiceTest extends TestCase
         $insert->execute(['legacy', 'Legado', 9900, 999, 999, '{}', 0]);
 
         self::assertSame([
-            ['id' => 1, 'name' => 'Gratuito', 'slug' => 'free', 'price_cents' => 0, 'monthly_minutes' => 30, 'credits' => 10, 'features' => ['exports_hd' => false, 'priority_processing' => false, 'team_access' => false, 'limits' => ['max_upload_bytes' => 104857600, 'storage_bytes' => 1073741824]]],
-            ['id' => 2, 'name' => 'Pro', 'slug' => 'pro', 'price_cents' => 4900, 'monthly_minutes' => 300, 'credits' => 100, 'features' => ['exports_hd' => true, 'priority_processing' => true, 'team_access' => false, 'limits' => ['max_upload_bytes' => 104857600, 'storage_bytes' => 1073741824]]],
+            ['id' => 1, 'name' => 'Gratuito', 'slug' => 'free', 'price_cents' => 0, 'monthly_minutes' => 30, 'credits' => 10, 'features' => ['exports_hd' => false, 'priority_processing' => false, 'team_access' => false, 'limits' => ['max_upload_bytes' => 104857600, 'storage_bytes' => 1073741824]], 'description' => '', 'daily_credits' => 0],
+            ['id' => 2, 'name' => 'Pro', 'slug' => 'pro', 'price_cents' => 4900, 'monthly_minutes' => 300, 'credits' => 100, 'features' => ['exports_hd' => true, 'priority_processing' => true, 'team_access' => false, 'limits' => ['max_upload_bytes' => 104857600, 'storage_bytes' => 1073741824]], 'description' => '', 'daily_credits' => 0],
         ], $this->service->publicPlans());
     }
 

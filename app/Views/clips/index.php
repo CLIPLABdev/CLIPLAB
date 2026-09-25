@@ -78,9 +78,23 @@ $formatDate = static function (mixed $value): string {
         return $value;
     }
 };
-$pageUrl = static function (string $selectedFilter, int $selectedPage): string {
-    return '/clips?filter=' . $selectedFilter . '&page=' . $selectedPage;
+$project = is_array($library['project'] ?? null) ? $library['project'] : null;
+$projectQuery = $project !== null ? '&projeto=' . (int) $project['id'] : '';
+$pageUrl = static function (string $selectedFilter, int $selectedPage) use ($projectQuery): string {
+    return '/clips?filter=' . $selectedFilter . '&page=' . $selectedPage . $projectQuery;
 };
+$groups = [];
+foreach ($items as $candidate) {
+    if (!is_array($candidate) || !is_int($candidate['project_id'] ?? null)) {
+        continue;
+    }
+    $groups[$candidate['project_id']] ??= [
+        'name' => $text($candidate['project_name'] ?? null, 'Projeto sem nome'),
+        'source' => $text($candidate['source_name'] ?? null, 'Origem de vídeo'),
+        'items' => [],
+    ];
+    $groups[$candidate['project_id']]['items'][] = $candidate;
+}
 $emptyTitles = [
     'recent' => 'Sua biblioteca ainda está vazia',
     'processing' => 'Nenhum clipe em processamento',
@@ -96,47 +110,52 @@ $emptyMessages = [
 
 ob_start();
 ?>
-<link rel="stylesheet" href="/assets/css/clips.css">
 <link rel="stylesheet" href="/assets/css/studio-polish.css">
-<div class="clip-library">
-    <section class="clip-library-hero" aria-labelledby="clip-library-title">
-        <div class="clip-library-heading">
-            <p class="eyebrow">Biblioteca / Clipes</p>
-            <h2 id="clip-library-title">Seu conteúdo, em novos cortes.</h2>
-            <p>Revise, continue editando ou baixe seus vídeos. Todos os projetos se encontram aqui.</p>
+<link rel="stylesheet" href="/assets/css/clips-library.css">
+<div class="clip-library clip-shelf">
+    <header class="clip-shelf-header" aria-labelledby="clip-library-title">
+        <div>
+            <p class="eyebrow">Biblioteca</p>
+            <h2 id="clip-library-title"><?= $project !== null ? e((string) $project['name']) : 'Seus clipes' ?></h2>
+            <p><?= $project !== null ? 'Cortes gerados a partir deste projeto.' : 'Assista, baixe ou ajuste os cortes de todos os seus projetos.' ?></p>
         </div>
-        <div class="clip-library-summary" aria-label="Resumo da biblioteca">
-            <span><?= $total === 1 ? '1 clipe' : $total . ' clipes' ?></span>
-            <a href="<?= e('/clips?filter=' . $filter) ?>"><i data-lucide="refresh-cw" aria-hidden="true"></i>Atualizar</a>
+        <div class="clip-shelf-header-actions">
+            <span class="clip-shelf-count"><?= $total === 1 ? '1 clipe' : $total . ' clipes' ?></span>
+            <a class="button button-small" href="/projetos/novo"><i data-lucide="plus" aria-hidden="true"></i>Novo projeto</a>
         </div>
-    </section>
+    </header>
 
-    <section class="clip-library-toolbar" aria-label="Controles da biblioteca">
-        <nav class="clip-library-filters" aria-label="Filtrar clipes">
+    <section class="clip-shelf-toolbar" aria-label="Controles da biblioteca">
+        <nav class="clip-shelf-filters" aria-label="Filtrar clipes">
             <?php foreach ($filters as $value => $label): ?>
-                <a href="<?= e('/clips?filter=' . $value) ?>" aria-current="<?= $filter === $value ? 'page' : 'false' ?>"><?= e($label) ?></a>
+                <a href="<?= e('/clips?filter=' . $value . $projectQuery) ?>" aria-current="<?= $filter === $value ? 'page' : 'false' ?>"><?= e($label) ?></a>
             <?php endforeach; ?>
         </nav>
-        <p class="clip-library-range">Página <?= $page ?> de <?= $lastPage ?></p>
+        <div class="clip-shelf-toolbar-end">
+            <?php if ($project !== null): ?><a class="clip-shelf-chip" href="<?= e('/clips?filter=' . $filter) ?>" aria-label="Remover filtro do projeto"><i data-lucide="folder-open" aria-hidden="true"></i><?= e((string) $project['name']) ?><i data-lucide="x" aria-hidden="true"></i></a><?php endif; ?>
+            <a class="clip-shelf-refresh" href="<?= e('/clips?filter=' . $filter . $projectQuery) ?>"><i data-lucide="refresh-cw" aria-hidden="true"></i>Atualizar</a>
+        </div>
     </section>
 
-    <p class="clip-score-note" role="note"><i data-lucide="circle-alert" aria-hidden="true"></i>A pontuação é uma estimativa da IA e não garante viralização.</p>
-
     <?php if ($items === []): ?>
-        <section class="clip-library-empty" aria-labelledby="clip-library-empty-title">
-            <span class="clip-empty-icon" aria-hidden="true"><i data-lucide="scissors"></i></span>
-            <p class="eyebrow"><?= e($filters[$filter]) ?></p>
+        <section class="clip-shelf-empty" aria-labelledby="clip-library-empty-title">
+            <span class="clip-shelf-empty-icon" aria-hidden="true"><i data-lucide="scissors"></i></span>
             <h3 id="clip-library-empty-title"><?= e($emptyTitles[$filter]) ?></h3>
             <p><?= e($emptyMessages[$filter]) ?></p>
-            <div class="clip-empty-actions">
+            <div class="clip-shelf-empty-actions">
                 <a class="button button-small" href="/projetos/novo"><i data-lucide="plus" aria-hidden="true"></i>Criar projeto</a>
-                <a class="clip-secondary-action" href="/projetos">Abrir projetos</a>
+                <a class="clip-shelf-link" href="/projetos">Abrir projetos</a>
             </div>
         </section>
     <?php else: ?>
-        <section class="clip-library-grid" aria-label="Clipes da biblioteca">
-            <?php foreach ($items as $clip):
-                if (!is_array($clip)) { continue; }
+        <?php foreach ($groups as $groupProjectId => $group): ?>
+        <section class="clip-group" aria-labelledby="clip-group-<?= (int) $groupProjectId ?>">
+            <header class="clip-group-header">
+                <div><h3 id="clip-group-<?= (int) $groupProjectId ?>"><?= e($group['name']) ?></h3><span><?= count($group['items']) === 1 ? '1 corte' : count($group['items']) . ' cortes' ?> · <?= e($group['source']) ?></span></div>
+                <a class="clip-shelf-link" href="/projetos/<?= (int) $groupProjectId ?>">Abrir projeto <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+            </header>
+            <div class="clip-grid">
+            <?php foreach ($group['items'] as $clip):
                 $id = is_int($clip['id'] ?? null) ? $clip['id'] : 0;
                 $projectId = is_int($clip['project_id'] ?? null) ? $clip['project_id'] : 0;
                 if ($id <= 0 || $projectId <= 0) { continue; }
@@ -144,8 +163,6 @@ ob_start();
                     ? $clip['status']
                     : 'suggested';
                 $titleText = $text($clip['title'] ?? null, 'Clipe ' . $id);
-                $projectName = $text($clip['project_name'] ?? null, 'Projeto sem nome');
-                $sourceName = $text($clip['source_name'] ?? null, 'Origem de vídeo');
                 $hook = $text($clip['hook'] ?? null, 'Gancho não informado.');
                 $reason = $text($clip['reason'] ?? null, 'Motivo não informado.');
                 $category = $text($clip['category'] ?? null, 'Sem categoria');
@@ -153,55 +170,48 @@ ob_start();
                 $aspect = is_string($clip['output_aspect_ratio'] ?? null) && array_key_exists($clip['output_aspect_ratio'], $aspectLabels)
                     ? $clip['output_aspect_ratio']
                     : 'original';
-                $mode = is_string($clip['reframe_mode'] ?? null) && array_key_exists($clip['reframe_mode'], $modeLabels)
-                    ? $clip['reframe_mode']
-                    : 'original';
                 $isPollable = in_array($status, $pollableStatuses, true);
                 $hasThumbnail = $status === 'completed' && ($clip['has_thumbnail'] ?? false) === true;
                 $hasDownload = $status === 'completed' && ($clip['has_download'] ?? false) === true;
+                $duration = $formatDuration($clip['display_duration_seconds'] ?? null);
             ?>
-                <article class="clip-library-card clip-status-<?= e($status) ?>" aria-labelledby="clip-title-<?= $id ?>" data-clip-card="<?= $id ?>"<?= $isPollable ? ' data-clip-status-url="/api/clips/' . $id . '/status"' : '' ?>>
-                    <div class="clip-media">
-                        <div class="clip-media-placeholder" aria-hidden="true"><i data-lucide="play"></i></div>
-                        <img class="clip-thumbnail" alt="Prévia do corte <?= e($titleText) ?>" loading="lazy" decoding="async" data-clip-thumbnail<?= $hasThumbnail ? ' src="/clips/' . $id . '/thumbnail"' : ' hidden' ?>>
-                        <div class="clip-media-topline">
-                            <span class="clip-status" data-clip-status><?= e($statusLabels[$status]) ?></span>
-                            <span class="clip-score" aria-label="Pontuação estimada: <?= $score ?> de 100"><strong><?= $score ?></strong><small>/100</small></span>
-                        </div>
+                <article class="clip-card clip-status-<?= e($status) ?>" aria-labelledby="clip-title-<?= $id ?>" data-clip-card="<?= $id ?>"<?= $isPollable ? ' data-clip-status-url="/api/clips/' . $id . '/status"' : '' ?>>
+                    <div class="clip-card-media" data-clip-media>
+                        <span class="clip-card-placeholder" aria-hidden="true"><i data-lucide="clapperboard"></i></span>
+                        <img class="clip-card-thumbnail" alt="" loading="lazy" decoding="async" data-clip-thumbnail<?= $hasThumbnail ? ' src="/clips/' . $id . '/thumbnail"' : ' hidden' ?>>
+                        <button type="button" class="clip-card-play" data-clip-preview="/clips/<?= $id ?>/preview" aria-label="Assistir ao corte <?= e($titleText) ?>"<?= $hasDownload ? '' : ' hidden' ?>><i data-lucide="play" aria-hidden="true"></i></button>
+                        <span class="clip-card-status" data-clip-status><?= e($statusLabels[$status]) ?></span>
+                        <span class="clip-card-score" title="Pontuação estimada pela IA (não garante viralização)" aria-label="Pontuação estimada: <?= $score ?> de 100"><i data-lucide="sparkles" aria-hidden="true"></i><?= $score ?></span>
+                        <span class="clip-card-duration" aria-hidden="true"><?= e($duration) ?></span>
                     </div>
-                    <div class="clip-card-content">
-                        <div class="clip-card-heading">
-                            <p class="clip-source"><i data-lucide="folder-open" aria-hidden="true"></i><?= e($projectName) ?> <span aria-hidden="true">·</span> <?= e($sourceName) ?></p>
-                            <h3 id="clip-title-<?= $id ?>"><?= e($titleText) ?></h3>
-                        </div>
-
-                        <dl class="clip-meta">
-                            <div><dt>Duração</dt><dd><i data-lucide="clock-3" aria-hidden="true"></i><?= e($formatDuration($clip['display_duration_seconds'] ?? null)) ?></dd></div>
-                            <div><dt>Atualizado</dt><dd><i data-lucide="calendar-days" aria-hidden="true"></i><?= e($formatDate($clip['updated_at'] ?? null)) ?></dd></div>
-                            <div><dt>Formato</dt><dd><?= e($aspectLabels[$aspect]) ?> · <?= e($modeLabels[$mode]) ?></dd></div>
+                    <div class="clip-card-body">
+                        <h4 id="clip-title-<?= $id ?>"><?= e($titleText) ?></h4>
+                        <dl class="clip-card-facts">
+                            <div><dt>Duração</dt><dd><?= e($duration) ?></dd></div>
+                            <div><dt>Formato</dt><dd><?= e($aspectLabels[$aspect]) ?></dd></div>
+                            <div><dt>Categoria</dt><dd><?= e($category) ?></dd></div>
                         </dl>
-
-                        <div class="clip-insights">
-                            <section aria-label="Gancho do clipe"><span>Gancho</span><p class="clip-copy"><?= e($hook) ?></p></section>
-                            <section aria-label="Motivo da recomendação"><span>Por que a IA sugeriu</span><p class="clip-copy"><?= e($reason) ?></p></section>
-                        </div>
-
-                        <div class="clip-card-footer">
-                            <span class="clip-category"><?= e($category) ?></span>
-                            <p data-clip-message aria-live="polite"><?= e($statusMessages[$status]) ?></p>
-                            <div class="clip-card-actions">
-                                <a class="button button-small button-secondary" href="/clips/<?= $id ?>/editar">Editar corte</a>
-                                <a class="clip-project-action" href="/projetos/<?= $projectId ?>">Abrir projeto <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
-                                <a class="button button-small" data-clip-download<?= $hasDownload ? ' href="/clips/' . $id . '/download"' : ' hidden' ?>><i data-lucide="download" aria-hidden="true"></i>Baixar MP4</a>
-                            </div>
+                        <p class="clip-card-message" data-clip-message aria-live="polite"><?= e($statusMessages[$status]) ?></p>
+                        <details class="clip-card-why">
+                            <summary>Por que este corte?</summary>
+                            <p><strong>Gancho:</strong> <?= e($hook) ?></p>
+                            <p><?= e($reason) ?></p>
+                            <p class="clip-card-updated">Atualizado em <?= e($formatDate($clip['updated_at'] ?? null)) ?></p>
+                        </details>
+                        <div class="clip-card-actions">
+                            <a class="button button-small clip-card-download" data-clip-download<?= $hasDownload ? ' href="/clips/' . $id . '/download"' : ' hidden' ?>><i data-lucide="download" aria-hidden="true"></i>Baixar</a>
+                            <a class="button button-small button-secondary" href="/clips/<?= $id ?>/editar"><i data-lucide="sliders-horizontal" aria-hidden="true"></i>Editar</a>
+                            <?php if (!$hasDownload): ?><a class="clip-shelf-link" href="/projetos/<?= $projectId ?>">Abrir projeto</a><?php endif; ?>
                         </div>
                     </div>
                 </article>
             <?php endforeach; ?>
+            </div>
         </section>
+        <?php endforeach; ?>
 
         <?php if ($lastPage > 1): ?>
-            <nav class="clip-pagination" aria-label="Paginação dos clipes">
+            <nav class="clip-shelf-pagination" aria-label="Paginação dos clipes">
                 <?php if ($page > 1): ?>
                     <a href="<?= e($pageUrl($filter, $page - 1)) ?>" rel="prev"><i data-lucide="arrow-left" aria-hidden="true"></i>Anterior</a>
                 <?php else: ?>
@@ -216,6 +226,8 @@ ob_start();
             </nav>
         <?php endif; ?>
 
+        <p class="clip-shelf-note" role="note"><i data-lucide="sparkles" aria-hidden="true"></i>A pontuação é uma estimativa da IA e não garante viralização.</p>
+        <script src="/assets/js/clip-preview.js" defer></script>
         <?php if ($hasPollableClips): ?><script src="/assets/js/clip-status.js" defer></script><?php endif; ?>
     <?php endif; ?>
 </div>
