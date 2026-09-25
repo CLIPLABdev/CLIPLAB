@@ -45,5 +45,5 @@ if [ "${RUN_EMAIL_WORKER:-true}" = "true" ]; then
 fi
 
 echo "[start] Site na porta ${PORT:-8080}"
-exec php -d upload_max_filesize="${PHP_UPLOAD_MAX:-512M}" -d post_max_size="${PHP_POST_MAX:-520M}" \
+exec php -d upload_max_filesize="${PHP_UPLOAD_MAX:-4G}" -d post_max_size="${PHP_POST_MAX:-4100M}" \
     -S 0.0.0.0:"${PORT:-8080}" -t public public/index.php
